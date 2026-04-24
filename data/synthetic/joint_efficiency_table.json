@@ -1,0 +1,37 @@
+{
+  "source_paragraph": "B-12",
+  "title": "Joint Efficiency (Table B-12)",
+  "columns": ["Full RT", "Spot RT", "No RT"],
+  "joints": [
+    {
+      "type": 1,
+      "description": "Double-welded butt, full penetration",
+      "efficiencies": {"Full RT": 1.00, "Spot RT": 0.85, "No RT": 0.70}
+    },
+    {
+      "type": 2,
+      "description": "Single-welded butt with backing strip",
+      "efficiencies": {"Full RT": 0.90, "Spot RT": 0.80, "No RT": 0.65}
+    },
+    {
+      "type": 3,
+      "description": "Single-welded butt without backing",
+      "efficiencies": {"Full RT": 0.80, "Spot RT": 0.70, "No RT": 0.60}
+    },
+    {
+      "type": 4,
+      "description": "Double full-fillet lap",
+      "efficiencies": {"Full RT": 0.75, "Spot RT": 0.65, "No RT": 0.55}
+    },
+    {
+      "type": 5,
+      "description": "Single full-fillet lap with plug welds",
+      "efficiencies": {"Full RT": 0.70, "Spot RT": 0.60, "No RT": 0.50}
+    },
+    {
+      "type": 6,
+      "description": "Single full-fillet lap without plug welds",
+      "efficiencies": {"Full RT": 0.65, "Spot RT": 0.55, "No RT": 0.45}
+    }
+  ]
+}

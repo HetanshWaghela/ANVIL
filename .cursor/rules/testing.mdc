@@ -1,0 +1,19 @@
+---
+description: Testing requirements and patterns
+globs: ["tests/**/*.py"]
+alwaysApply: false
+---
+
+# Testing Rules
+
+- Every test must assert something meaningful about behavior, not just that code runs without error.
+- Unit tests: fast, isolated, no I/O. Use fixtures for shared setup.
+- Integration tests: can use filesystem, can use pre-recorded LLM responses.
+- Evaluation tests: run metrics on golden dataset, assert scores above threshold.
+- For calculation tests: verify against hand-calculated values with known inputs.
+- For retrieval tests: verify that the correct document sections are retrieved for domain queries.
+- For citation tests: verify that every claim in the response maps to a specific retrieved chunk.
+- For refusal tests: verify the system refuses when given queries outside its knowledge.
+- NEVER mock the core pipeline in integration tests. Use recorded responses or synthetic data.
+- Parametrize calculation tests across multiple materials, temperatures, and vessel geometries.
+- Test edge cases: temperature interpolation, boundary conditions (P = 0.385SE exactly), missing data.

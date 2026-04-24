@@ -1,0 +1,166 @@
+"""Markdown parser for the SPES-1 synthetic standard.
+
+The synthetic standard is distributed as Markdown to keep the repo simple
+and avoid a binary PDF dependency for tests. A PDF parser is provided in
+`pdf_parser.py` for real-world documents; both pipelines emit the same
+DocumentElement schema.
+
+Parsing strategy:
+1. Split on heading lines (`##` = Part, `###` = Section, numbered like `A-27`)
+2. For each section, classify nested content:
+   - Fenced code blocks containing `=` → formulas
+   - Pipe tables → tables
+   - Everything else → paragraph text
+3. Identify the paragraph reference from the heading (e.g. "### A-27 Thickness...")
+4. Emit DocumentElements with stable IDs, then run section_linker to resolve
+   cross-references.
+"""
+
+from __future__ import annotations
+
+import re
+from pathlib import Path
+
+from anvil.parsing.formula_extractor import extract_formulas
+from anvil.parsing.section_linker import link_elements
+from anvil.parsing.table_extractor import extract_markdown_table
+from anvil.schemas.document import DocumentElement, ElementType
+
+# Matches headings like "### A-27 Thickness of Shells" or "### B-12 Joint Efficiency"
+_HEADING_RE = re.compile(r"^(#{2,4})\s+(.+?)\s*$", re.MULTILINE)
+_PARA_REF_IN_HEADING = re.compile(r"^([A-Z]-\d+|M-\d+)\b", re.IGNORECASE)
+_CODE_FENCE_RE = re.compile(r"```.*?```", re.DOTALL)
+_TABLE_BLOCK_RE = re.compile(r"(?:^\s*\|.*\|\s*$\n?)+", re.MULTILINE)
+
+
+def _slugify(text: str) -> str:
+    s = text.strip().lower()
+    s = re.sub(r"[^a-z0-9]+", "-", s)
+    return s.strip("-")
+
+
+def _extract_paragraph_ref(heading_text: str) -> str | None:
+    m = _PARA_REF_IN_HEADING.match(heading_text.strip())
+    return m.group(1).upper() if m else None
+
+
+def parse_markdown_standard(source: str | Path) -> list[DocumentElement]:
+    """Parse a markdown standard into a flat list of DocumentElements.
+
+    Args:
+        source: Either a filesystem path to a .md file, or raw markdown text.
+
+    Returns:
+        A list of DocumentElements. The list is ordered as in the source.
+        Cross-references are populated via section_linker.
+    """
+    text = _load_text(source)
+    # Simulate pagination: ~40 lines per page (for provenance)
+    lines = text.splitlines()
+    line_to_page = {i: (i // 40) + 1 for i in range(len(lines))}
+
+    elements: list[DocumentElement] = []
+    parent_stack: list[tuple[int, str]] = []  # (heading_level, element_id)
+
+    # Find all heading spans; for each, the "content" runs until the next heading.
+    headings = list(_HEADING_RE.finditer(text))
+    if not headings:
+        return elements
+
+    for i, m in enumerate(headings):
+        level = len(m.group(1))
+        title_full = m.group(2).strip()
+        start_line = text[: m.start()].count("\n")
+        page = line_to_page.get(start_line, 1)
+
+        # Content extends to the next heading (or end of text)
+        end = headings[i + 1].start() if i + 1 < len(headings) else len(text)
+        body = text[m.end() : end].strip("\n")
+
+        para_ref = _extract_paragraph_ref(title_full)
+        element_id = f"sec-{_slugify(para_ref or title_full)}"
+
+        # Maintain parent stack
+        while parent_stack and parent_stack[-1][0] >= level:
+            parent_stack.pop()
+        parent_id = parent_stack[-1][1] if parent_stack else None
+
+        elements.append(
+            DocumentElement(
+                element_id=element_id,
+                element_type=ElementType.SECTION,
+                paragraph_ref=para_ref,
+                title=title_full,
+                content=body,
+                page_number=page,
+                parent_id=parent_id,
+            )
+        )
+        parent_stack.append((level, element_id))
+
+        # Extract child tables
+        for t_idx, tm in enumerate(_TABLE_BLOCK_RE.finditer(body)):
+            table_block = tm.group(0)
+            table_id = _detect_table_id(title_full, body, para_ref, t_idx)
+            table = extract_markdown_table(
+                table_id=table_id,
+                source_paragraph=para_ref or element_id,
+                source_page=page,
+                md_block=table_block,
+            )
+            if table is None:
+                continue
+            el_id = f"tbl-{_slugify(table_id)}"
+            elements.append(
+                DocumentElement(
+                    element_id=el_id,
+                    element_type=ElementType.TABLE,
+                    paragraph_ref=para_ref,
+                    title=f"Table {table_id}",
+                    content=table_block.strip(),
+                    page_number=page,
+                    parent_id=element_id,
+                    table=table,
+                )
+            )
+
+        # Extract child formulas
+        if para_ref:
+            formulas = extract_formulas(para_ref, body)
+            for f in formulas:
+                elements.append(
+                    DocumentElement(
+                        element_id=f"fml-{_slugify(f.formula_id)}",
+                        element_type=ElementType.FORMULA,
+                        paragraph_ref=para_ref,
+                        title=f.formula_id,
+                        content=f.plain_text,
+                        page_number=page,
+                        parent_id=element_id,
+                        formula=f,
+                    )
+                )
+
+    return link_elements(elements)
+
+
+def _detect_table_id(
+    heading: str, body: str, para_ref: str | None, index: int
+) -> str:
+    """Derive a canonical table id like 'M-1' or 'B-12' from surrounding text."""
+    # Look for "Table X-N" in heading first, then body
+    m = re.search(r"Table\s+([A-Z]-\d+[A-Za-z]?)", heading, re.IGNORECASE)
+    if not m:
+        m = re.search(r"Table\s+([A-Z]-\d+[A-Za-z]?)", body, re.IGNORECASE)
+    if m:
+        return m.group(1).upper()
+    # Fall back to paragraph ref + index
+    return f"{para_ref or 'TBL'}-{index}"
+
+
+def _load_text(source: str | Path) -> str:
+    if isinstance(source, Path) or (isinstance(source, str) and Path(source).exists()):
+        return Path(source).read_text(encoding="utf-8")
+    if isinstance(source, str):
+        return source
+    raise TypeError(f"Unsupported source type: {type(source)}")

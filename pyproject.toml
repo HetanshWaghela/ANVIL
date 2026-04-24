@@ -1,0 +1,86 @@
+[project]
+name = "anvil"
+version = "0.1.0"
+description = "Compliance-grade RAG over engineering standards (ASME BPVC-like)"
+readme = "README.md"
+requires-python = ">=3.12"
+authors = [{ name = "anvil contributors" }]
+license = { text = "MIT" }
+dependencies = [
+    "pydantic>=2.10",
+    "fastapi>=0.115",
+    "uvicorn>=0.30",
+    "pymupdf4llm>=0.0.17",
+    "sentence-transformers>=3.0",
+    "sqlite-vec>=0.1.6",
+    "networkx>=3.4",
+    "structlog>=24.4",
+    "httpx>=0.28",
+    "instructor>=1.7",
+    "openai>=1.50",
+    "bm25s>=0.2.0",
+    "numpy>=1.26",
+]
+
+[project.optional-dependencies]
+dev = [
+    "pytest>=8.0",
+    "pytest-asyncio>=0.24",
+    "pytest-cov>=5.0",
+    "ruff>=0.8",
+    "mypy>=1.13",
+    "rich>=13.0",
+    "httpx>=0.28",
+]
+
+[build-system]
+requires = ["hatchling"]
+build-backend = "hatchling.build"
+
+[tool.hatch.build.targets.wheel]
+packages = ["src/anvil"]
+
+[tool.pytest.ini_options]
+testpaths = ["tests"]
+asyncio_mode = "auto"
+filterwarnings = [
+    "ignore::DeprecationWarning",
+    "ignore::PendingDeprecationWarning",
+]
+
+[tool.ruff]
+target-version = "py312"
+line-length = 100
+src = ["src", "tests"]
+
+[tool.ruff.lint]
+# TCH (type-checking imports) is deliberately excluded — it pushes runtime-
+# used imports into TYPE_CHECKING blocks, which clutters the code without
+# changing behavior. Everything else in B/SIM/UP catches real issues.
+select = ["E", "F", "W", "I", "UP", "B", "SIM"]
+ignore = ["E501"]
+
+[tool.ruff.lint.per-file-ignores]
+# B023 fires on lambdas that capture loop variables. In our tests the
+# lambdas are invoked within the same iteration they are defined — no
+# late-binding hazard — but the linter can't see that.
+"tests/**/*.py" = ["B023"]
+
+[tool.mypy]
+python_version = "3.12"
+strict = true
+warn_return_any = true
+warn_unused_configs = true
+packages = ["anvil"]
+mypy_path = "src"
+
+[[tool.mypy.overrides]]
+module = [
+    "pymupdf4llm.*",
+    "sqlite_vec.*",
+    "bm25s.*",
+    "instructor.*",
+    "sentence_transformers.*",
+    "networkx.*",
+]
+ignore_missing_imports = true

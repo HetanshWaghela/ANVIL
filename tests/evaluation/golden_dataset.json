@@ -1,0 +1,412 @@
+[
+  {
+    "id": "gold-calc-001",
+    "query": "Calculate the minimum required wall thickness for a cylindrical shell with inside diameter 1800 mm, design pressure 1.5 MPa, design temperature 350\u00b0C, material SM-516 Gr 70, Type 1 joint with full radiography, corrosion allowance 3.0 mm.",
+    "category": "calculation",
+    "expected_refusal": false,
+    "expected_paragraph_refs": [
+      "A-27",
+      "B-12",
+      "M-1"
+    ],
+    "expected_values": {
+      "S_mpa": 114.0,
+      "E": 1.0,
+      "t_min_mm": 11.94,
+      "t_design_mm": 14.94,
+      "t_nominal_mm": 16.0,
+      "mawp_mpa": 1.633
+    },
+    "numeric_tolerance": 0.001,
+    "expected_materials": [
+      "SM-516 Gr 70"
+    ]
+  },
+  {
+    "id": "gold-calc-002",
+    "query": "Compute minimum thickness for a cylindrical pressure vessel: ID=1500 mm, P=2.0 MPa, T=200\u00b0C, material SM-516 Gr 70, Type 1 joint, full RT, CA=2.0 mm.",
+    "category": "calculation",
+    "expected_refusal": false,
+    "expected_paragraph_refs": [
+      "A-27",
+      "B-12",
+      "M-1"
+    ],
+    "expected_values": {
+      "S_mpa": 134.0,
+      "E": 1.0,
+      "t_min_mm": 11.3,
+      "t_nominal_mm": 14.0,
+      "mawp_mpa": 2.124
+    },
+    "numeric_tolerance": 0.001,
+    "expected_materials": [
+      "SM-516 Gr 70"
+    ]
+  },
+  {
+    "id": "gold-calc-003",
+    "query": "Find minimum required thickness for a cylindrical shell: ID=1200, P=1.0 MPa, T=300\u00b0C, SM-516 Gr 70, Type 2 with full radiography, corrosion allowance 1.5 mm.",
+    "category": "calculation",
+    "expected_refusal": false,
+    "expected_paragraph_refs": [
+      "A-27",
+      "B-12",
+      "M-1"
+    ],
+    "expected_values": {
+      "S_mpa": 121.0,
+      "E": 0.9,
+      "t_min_mm": 5.54,
+      "t_nominal_mm": 8.0,
+      "mawp_mpa": 1.172
+    },
+    "numeric_tolerance": 0.001
+  },
+  {
+    "id": "gold-calc-004",
+    "query": "Compute thickness for a spherical vessel with ID=2000 mm, P=2.5 MPa, T=250\u00b0C, material SM-515 Gr 70, Type 1 with full RT, CA=3.0 mm.",
+    "category": "calculation",
+    "expected_refusal": false,
+    "expected_paragraph_refs": [
+      "A-27",
+      "B-12",
+      "M-1"
+    ],
+    "expected_values": {
+      "S_mpa": 124.0,
+      "E": 1.0,
+      "t_min_mm": 10.1,
+      "t_nominal_mm": 14.0,
+      "mawp_mpa": 2.722
+    },
+    "numeric_tolerance": 0.001
+  },
+  {
+    "id": "gold-calc-005",
+    "query": "Compute minimum thickness for a small cylindrical pipe: ID=600 mm, P=3.0 MPa, T=150\u00b0C, SM-106 Gr B, Type 1 with spot radiography, CA=1.0 mm.",
+    "category": "calculation",
+    "expected_refusal": false,
+    "expected_paragraph_refs": [
+      "A-27",
+      "B-12",
+      "M-1"
+    ],
+    "expected_values": {
+      "S_mpa": 118.0,
+      "E": 0.85,
+      "t_min_mm": 9.14,
+      "mawp_mpa": 3.598
+    },
+    "numeric_tolerance": 0.001
+  },
+  {
+    "id": "gold-calc-006",
+    "query": "Compute thickness for a cylindrical shell ID=800 mm, P=1.2 MPa, T=450\u00b0C, material SM-240 Type 304, Type 1 Full RT, CA=1.5 mm.",
+    "category": "calculation",
+    "expected_refusal": false,
+    "expected_paragraph_refs": [
+      "A-27",
+      "B-12",
+      "M-1"
+    ],
+    "expected_values": {
+      "S_mpa": 95.0,
+      "t_min_mm": 5.09,
+      "mawp_mpa": 1.529
+    },
+    "numeric_tolerance": 0.001
+  },
+  {
+    "id": "gold-calc-007",
+    "query": "Compute cylindrical shell thickness: ID=1600, P=1.8 MPa, T=275\u00b0C, SM-516 Gr 70, Type 1 Full RT, CA=2.5 mm.",
+    "category": "edge_case",
+    "expected_refusal": false,
+    "expected_paragraph_refs": [
+      "A-27",
+      "B-12",
+      "M-1",
+      "A-23"
+    ],
+    "expected_values": {
+      "S_mpa": 124.0,
+      "t_min_mm": 11.71,
+      "mawp_mpa": 2.072
+    },
+    "numeric_tolerance": 0.001,
+    "notes": "Tests temperature interpolation between 250\u00b0C (127) and 300\u00b0C (121)."
+  },
+  {
+    "id": "gold-calc-008",
+    "query": "Compute thickness for cylindrical shell OD=1000 mm, P=1.0 MPa, T=200\u00b0C, SM-516 Gr 70, Type 2 Full RT, CA=1.5 mm.",
+    "category": "calculation",
+    "expected_refusal": false,
+    "expected_paragraph_refs": [
+      "A-27",
+      "B-12",
+      "M-1"
+    ],
+    "expected_values": {
+      "t_min_mm": 4.13,
+      "mawp_mpa": 1.089
+    },
+    "numeric_tolerance": 0.001,
+    "notes": "Outside-radius formulation A-27(c)(2)."
+  },
+  {
+    "id": "gold-calc-009",
+    "query": "Compute thickness for spherical vessel ID=1400 mm, P=4.0 MPa, T=400\u00b0C, SM-240 Type 316, Type 1 Full RT, CA=2.0 mm.",
+    "category": "calculation",
+    "expected_refusal": false,
+    "expected_paragraph_refs": [
+      "A-27",
+      "B-12",
+      "M-1"
+    ],
+    "expected_values": {
+      "S_mpa": 105.0,
+      "t_min_mm": 13.38,
+      "mawp_mpa": 4.183
+    },
+    "numeric_tolerance": 0.001
+  },
+  {
+    "id": "gold-calc-010",
+    "query": "Compute thickness for ID=500 mm, P=0.5 MPa, T=100\u00b0C, SM-106 Gr B, Type 3 joint with no radiography, CA=1.0 mm.",
+    "category": "calculation",
+    "expected_refusal": false,
+    "expected_paragraph_refs": [
+      "A-27",
+      "B-12",
+      "M-1"
+    ],
+    "expected_values": {
+      "S_mpa": 118.0,
+      "E": 0.6,
+      "t_min_mm": 1.77,
+      "mawp_mpa": 1.399
+    },
+    "numeric_tolerance": 0.001
+  },
+  {
+    "id": "gold-lookup-001",
+    "query": "What is the allowable stress of SM-516 Gr 70 at 300\u00b0C?",
+    "category": "lookup",
+    "expected_refusal": false,
+    "expected_paragraph_refs": [
+      "M-1"
+    ],
+    "expected_values": {},
+    "expected_materials": [
+      "SM-516 Gr 70"
+    ]
+  },
+  {
+    "id": "gold-lookup-002",
+    "query": "What joint efficiency applies to a Type 1 double-welded butt joint with full radiography?",
+    "category": "lookup",
+    "expected_refusal": false,
+    "expected_paragraph_refs": [
+      "B-12"
+    ],
+    "expected_values": {}
+  },
+  {
+    "id": "gold-lookup-003",
+    "query": "What is the maximum design temperature for SM-106 Gr B?",
+    "category": "lookup",
+    "expected_refusal": false,
+    "expected_paragraph_refs": [
+      "M-23"
+    ],
+    "expected_values": {},
+    "expected_materials": [
+      "SM-106 Gr B"
+    ]
+  },
+  {
+    "id": "gold-lookup-004",
+    "query": "What is the joint efficiency for a Type 4 double full-fillet lap joint with spot radiography?",
+    "category": "lookup",
+    "expected_refusal": false,
+    "expected_paragraph_refs": [
+      "B-12"
+    ],
+    "expected_values": {}
+  },
+  {
+    "id": "gold-lookup-005",
+    "query": "What is the allowable stress of SM-240 Type 304 at 500\u00b0C?",
+    "category": "lookup",
+    "expected_refusal": false,
+    "expected_paragraph_refs": [
+      "M-1"
+    ],
+    "expected_values": {},
+    "expected_materials": [
+      "SM-240 Type 304"
+    ]
+  },
+  {
+    "id": "gold-xref-001",
+    "query": "What inputs are required to apply the cylindrical shell thickness formula in A-27(c)(1)?",
+    "category": "cross_reference",
+    "expected_refusal": false,
+    "expected_paragraph_refs": [
+      "A-27",
+      "B-12",
+      "M-1"
+    ],
+    "expected_values": {}
+  },
+  {
+    "id": "gold-xref-002",
+    "query": "Where is the allowable stress for carbon steel defined in SPES-1?",
+    "category": "cross_reference",
+    "expected_refusal": false,
+    "expected_paragraph_refs": [
+      "A-23",
+      "M-1"
+    ],
+    "expected_values": {}
+  },
+  {
+    "id": "gold-xref-003",
+    "query": "Under what applicability limits does the inside-radius thickness formula apply?",
+    "category": "cross_reference",
+    "expected_refusal": false,
+    "expected_paragraph_refs": [
+      "A-27"
+    ],
+    "expected_values": {}
+  },
+  {
+    "id": "gold-xref-004",
+    "query": "What paragraph governs corrosion allowance and how does it relate to thickness?",
+    "category": "cross_reference",
+    "expected_refusal": false,
+    "expected_paragraph_refs": [
+      "A-25"
+    ],
+    "expected_values": {}
+  },
+  {
+    "id": "gold-xref-005",
+    "query": "Which table provides joint efficiency values for welded joints?",
+    "category": "cross_reference",
+    "expected_refusal": false,
+    "expected_paragraph_refs": [
+      "B-12"
+    ],
+    "expected_values": {}
+  },
+  {
+    "id": "gold-ood-001",
+    "query": "What is the weather in San Jose today?",
+    "category": "out_of_domain",
+    "expected_refusal": true,
+    "expected_paragraph_refs": [],
+    "expected_values": {}
+  },
+  {
+    "id": "gold-ood-002",
+    "query": "What is the allowable stress of Titanium Grade 5 at 800\u00b0C?",
+    "category": "out_of_domain",
+    "expected_refusal": true,
+    "expected_paragraph_refs": [],
+    "expected_values": {},
+    "notes": "Material not in SPES-1 pinned data."
+  },
+  {
+    "id": "gold-ood-003",
+    "query": "How much does a hot dog cost?",
+    "category": "out_of_domain",
+    "expected_refusal": true,
+    "expected_paragraph_refs": [],
+    "expected_values": {}
+  },
+  {
+    "id": "gold-ood-004",
+    "query": "Give me the thickness of a cylindrical shell made of SM-999 Gr XYZ at 200\u00b0C.",
+    "category": "out_of_domain",
+    "expected_refusal": true,
+    "expected_paragraph_refs": [],
+    "expected_values": {},
+    "notes": "Fictional material not in pinned data."
+  },
+  {
+    "id": "gold-ood-005",
+    "query": "Compute thickness for cylindrical shell, SM-516 Gr 70 at 700\u00b0C, P=1.0 MPa, ID=1000 mm, Type 1 Full RT, CA=2 mm.",
+    "category": "out_of_domain",
+    "expected_refusal": true,
+    "expected_paragraph_refs": [],
+    "expected_values": {},
+    "notes": "Temperature 700\u00b0C exceeds SM-516 Gr 70 max temp 500\u00b0C per M-23(a)."
+  },
+  {
+    "id": "gold-edge-001",
+    "query": "Compute cylindrical shell thickness at P=1.8 MPa, ID=1600 mm, T=275\u00b0C, SM-516 Gr 70, Type 1 Full RT, CA=2.5 mm.",
+    "category": "edge_case",
+    "expected_refusal": false,
+    "expected_paragraph_refs": [
+      "A-27",
+      "B-12",
+      "M-1",
+      "A-23"
+    ],
+    "expected_values": {
+      "S_mpa": 124.0,
+      "t_min_mm": 11.71
+    },
+    "numeric_tolerance": 0.001,
+    "notes": "Linear interpolation of S between 250\u00b0C and 300\u00b0C."
+  },
+  {
+    "id": "gold-edge-002",
+    "query": "For a cylindrical shell design at exactly P = 0.385 \u00d7 S \u00d7 E, does the simple formula still apply?",
+    "category": "edge_case",
+    "expected_refusal": false,
+    "expected_paragraph_refs": [
+      "A-27"
+    ],
+    "expected_values": {}
+  },
+  {
+    "id": "gold-edge-003",
+    "query": "What happens when a design temperature exactly matches a tabulated value like 300\u00b0C?",
+    "category": "edge_case",
+    "expected_refusal": false,
+    "expected_paragraph_refs": [
+      "A-23",
+      "M-1"
+    ],
+    "expected_values": {}
+  },
+  {
+    "id": "gold-edge-004",
+    "query": "Compute cylindrical shell thickness at P=2.5 MPa, ID=2000 mm, T=450\u00b0C, SM-516 Gr 70, Type 1 Full RT, CA=2 mm.",
+    "category": "edge_case",
+    "expected_refusal": false,
+    "expected_paragraph_refs": [
+      "A-27",
+      "B-12",
+      "M-1"
+    ],
+    "expected_values": {
+      "S_mpa": 73.0
+    },
+    "numeric_tolerance": 0.001,
+    "notes": "Low allowable stress at 450\u00b0C for SM-516 Gr 70 \u2014 drops to 73 MPa."
+  },
+  {
+    "id": "gold-edge-005",
+    "query": "What is the joint efficiency for a Type 6 joint with no radiography?",
+    "category": "edge_case",
+    "expected_refusal": false,
+    "expected_paragraph_refs": [
+      "B-12"
+    ],
+    "expected_values": {},
+    "notes": "Lowest efficiency entry: 0.45."
+  }
+]

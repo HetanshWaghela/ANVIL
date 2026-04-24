@@ -1,0 +1,42 @@
+# Python
+__pycache__/
+*.py[cod]
+*$py.class
+*.so
+.Python
+*.egg-info/
+.pytest_cache/
+.mypy_cache/
+.ruff_cache/
+.coverage
+htmlcov/
+build/
+dist/
+anvil-prompt.md
+anvil-reference.md
+# Virtualenvs
+papers.txt
+.venv/
+venv/
+env/
+
+# IDE
+.vscode/
+.idea/
+
+# OS
+.DS_Store
+Thumbs.db
+
+# Project
+*.db
+*.db-journal
+data/indexes/
+data/.cache/
+*.pkl
+.env
+.env.local
+
+# Internal design notes & scratch docs (not committed)
+docs/
+progress.txt

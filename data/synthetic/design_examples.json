@@ -1,0 +1,312 @@
+[
+  {
+    "id": "calc-001",
+    "description": "Cylindrical shell, SM-516 Gr 70, 350°C, full RT",
+    "query": "Calculate the minimum required wall thickness for a cylindrical shell with inside diameter 1800 mm, design pressure 1.5 MPa, design temperature 350°C, material SM-516 Gr 70, Type 1 joint with full radiography, corrosion allowance 3.0 mm.",
+    "inputs": {
+      "component": "cylindrical_shell",
+      "formula_ref": "A-27(c)(1)",
+      "P_mpa": 1.5,
+      "inside_diameter_mm": 1800,
+      "design_temp_c": 350,
+      "material": "SM-516 Gr 70",
+      "joint_type": 1,
+      "rt_level": "Full RT",
+      "corrosion_allowance_mm": 3.0
+    },
+    "expected_lookups": {
+      "S_mpa": 114.0,
+      "S_source": "Table M-1, SM-516 Gr 70 at 350°C",
+      "E": 1.0,
+      "E_source": "Table B-12, Type 1, Full RT",
+      "R_mm": 900.0
+    },
+    "expected_result": {
+      "applicability_lhs": 1.5,
+      "applicability_rhs": 43.89,
+      "t_min_mm": 11.94,
+      "t_design_mm": 14.94,
+      "t_nominal_mm": 16,
+      "mawp_mpa": 1.633
+    }
+  },
+  {
+    "id": "calc-002",
+    "description": "Cylindrical shell, SM-516 Gr 70, 200°C, full RT",
+    "query": "Compute minimum thickness for a cylindrical pressure vessel: ID=1500 mm, P=2.0 MPa, T=200°C, material SM-516 Gr 70, Type 1 joint, full RT, CA=2.0 mm.",
+    "inputs": {
+      "component": "cylindrical_shell",
+      "formula_ref": "A-27(c)(1)",
+      "P_mpa": 2.0,
+      "inside_diameter_mm": 1500,
+      "design_temp_c": 200,
+      "material": "SM-516 Gr 70",
+      "joint_type": 1,
+      "rt_level": "Full RT",
+      "corrosion_allowance_mm": 2.0
+    },
+    "expected_lookups": {
+      "S_mpa": 134.0,
+      "S_source": "Table M-1, SM-516 Gr 70 at 200°C",
+      "E": 1.0,
+      "E_source": "Table B-12, Type 1, Full RT",
+      "R_mm": 750.0
+    },
+    "expected_result": {
+      "applicability_lhs": 2.0,
+      "applicability_rhs": 51.59,
+      "t_min_mm": 11.30,
+      "t_design_mm": 13.30,
+      "t_nominal_mm": 14,
+      "mawp_mpa": 2.124
+    }
+  },
+  {
+    "id": "calc-003",
+    "description": "Cylindrical shell, SM-516 Gr 70, 300°C, Type 2 Full RT",
+    "query": "Find minimum required thickness for a cylindrical shell: ID=1200, P=1.0 MPa, T=300°C, SM-516 Gr 70, Type 2 with full radiography, corrosion allowance 1.5 mm.",
+    "inputs": {
+      "component": "cylindrical_shell",
+      "formula_ref": "A-27(c)(1)",
+      "P_mpa": 1.0,
+      "inside_diameter_mm": 1200,
+      "design_temp_c": 300,
+      "material": "SM-516 Gr 70",
+      "joint_type": 2,
+      "rt_level": "Full RT",
+      "corrosion_allowance_mm": 1.5
+    },
+    "expected_lookups": {
+      "S_mpa": 121.0,
+      "S_source": "Table M-1, SM-516 Gr 70 at 300°C",
+      "E": 0.9,
+      "E_source": "Table B-12, Type 2, Full RT",
+      "R_mm": 600.0
+    },
+    "expected_result": {
+      "applicability_lhs": 1.0,
+      "applicability_rhs": 41.91,
+      "t_min_mm": 5.54,
+      "t_design_mm": 7.04,
+      "t_nominal_mm": 8,
+      "mawp_mpa": 1.172
+    }
+  },
+  {
+    "id": "calc-004",
+    "description": "Spherical shell, SM-515 Gr 70, 250°C, full RT",
+    "query": "Compute thickness for a spherical vessel with ID=2000 mm, P=2.5 MPa, T=250°C, material SM-515 Gr 70, Type 1 with full RT, CA=3.0 mm.",
+    "inputs": {
+      "component": "spherical_shell",
+      "formula_ref": "A-27(d)",
+      "P_mpa": 2.5,
+      "inside_diameter_mm": 2000,
+      "design_temp_c": 250,
+      "material": "SM-515 Gr 70",
+      "joint_type": 1,
+      "rt_level": "Full RT",
+      "corrosion_allowance_mm": 3.0
+    },
+    "expected_lookups": {
+      "S_mpa": 124.0,
+      "S_source": "Table M-1, SM-515 Gr 70 at 250°C",
+      "E": 1.0,
+      "E_source": "Table B-12, Type 1, Full RT",
+      "R_mm": 1000.0
+    },
+    "expected_result": {
+      "applicability_lhs": 2.5,
+      "applicability_rhs": 82.46,
+      "t_min_mm": 10.10,
+      "t_design_mm": 13.10,
+      "t_nominal_mm": 14,
+      "mawp_mpa": 2.722
+    }
+  },
+  {
+    "id": "calc-005",
+    "description": "Small cylindrical shell, SM-106 Gr B, 150°C, Spot RT",
+    "query": "Compute minimum thickness for a small cylindrical pipe: ID=600 mm, P=3.0 MPa, T=150°C, SM-106 Gr B, Type 1 with spot radiography, CA=1.0 mm.",
+    "inputs": {
+      "component": "cylindrical_shell",
+      "formula_ref": "A-27(c)(1)",
+      "P_mpa": 3.0,
+      "inside_diameter_mm": 600,
+      "design_temp_c": 150,
+      "material": "SM-106 Gr B",
+      "joint_type": 1,
+      "rt_level": "Spot RT",
+      "corrosion_allowance_mm": 1.0
+    },
+    "expected_lookups": {
+      "S_mpa": 118.0,
+      "S_source": "Table M-1, SM-106 Gr B at 150°C",
+      "E": 0.85,
+      "E_source": "Table B-12, Type 1, Spot RT",
+      "R_mm": 300.0
+    },
+    "expected_result": {
+      "applicability_lhs": 3.0,
+      "applicability_rhs": 38.61,
+      "t_min_mm": 9.14,
+      "t_design_mm": 10.14,
+      "t_nominal_mm": 12,
+      "mawp_mpa": 3.598
+    }
+  },
+  {
+    "id": "calc-006",
+    "description": "Cylindrical shell, SM-240 Type 304 stainless at elevated temperature",
+    "query": "Compute thickness for a cylindrical shell ID=800 mm, P=1.2 MPa, T=450°C, material SM-240 Type 304, Type 1 Full RT, CA=1.5 mm.",
+    "inputs": {
+      "component": "cylindrical_shell",
+      "formula_ref": "A-27(c)(1)",
+      "P_mpa": 1.2,
+      "inside_diameter_mm": 800,
+      "design_temp_c": 450,
+      "material": "SM-240 Type 304",
+      "joint_type": 1,
+      "rt_level": "Full RT",
+      "corrosion_allowance_mm": 1.5
+    },
+    "expected_lookups": {
+      "S_mpa": 95.0,
+      "S_source": "Table M-1, SM-240 Type 304 at 450°C",
+      "E": 1.0,
+      "E_source": "Table B-12, Type 1, Full RT",
+      "R_mm": 400.0
+    },
+    "expected_result": {
+      "applicability_lhs": 1.2,
+      "applicability_rhs": 36.575,
+      "t_min_mm": 5.09,
+      "t_design_mm": 6.59,
+      "t_nominal_mm": 8,
+      "mawp_mpa": 1.529
+    }
+  },
+  {
+    "id": "calc-007",
+    "description": "Interpolated stress — SM-516 Gr 70 at 275°C",
+    "query": "Compute cylindrical shell thickness: ID=1600, P=1.8 MPa, T=275°C, SM-516 Gr 70, Type 1 Full RT, CA=2.5 mm. Note: 275°C falls between tabulated values.",
+    "inputs": {
+      "component": "cylindrical_shell",
+      "formula_ref": "A-27(c)(1)",
+      "P_mpa": 1.8,
+      "inside_diameter_mm": 1600,
+      "design_temp_c": 275,
+      "material": "SM-516 Gr 70",
+      "joint_type": 1,
+      "rt_level": "Full RT",
+      "corrosion_allowance_mm": 2.5
+    },
+    "expected_lookups": {
+      "S_mpa": 124.0,
+      "S_source": "Table M-1, SM-516 Gr 70 at 275°C (interpolated between 250°C=127 and 300°C=121)",
+      "E": 1.0,
+      "E_source": "Table B-12, Type 1, Full RT",
+      "R_mm": 800.0
+    },
+    "expected_result": {
+      "applicability_lhs": 1.8,
+      "applicability_rhs": 47.74,
+      "t_min_mm": 11.71,
+      "t_design_mm": 14.21,
+      "t_nominal_mm": 16,
+      "mawp_mpa": 2.072
+    }
+  },
+  {
+    "id": "calc-008",
+    "description": "Outside radius formulation, SM-516 Gr 70, 200°C",
+    "query": "Using the outside-radius formula A-27(c)(2), compute thickness for cylindrical shell OD=1000 mm, P=1.0 MPa, T=200°C, SM-516 Gr 70, Type 2 Full RT, CA=1.5 mm.",
+    "inputs": {
+      "component": "cylindrical_shell_outside_radius",
+      "formula_ref": "A-27(c)(2)",
+      "P_mpa": 1.0,
+      "outside_diameter_mm": 1000,
+      "design_temp_c": 200,
+      "material": "SM-516 Gr 70",
+      "joint_type": 2,
+      "rt_level": "Full RT",
+      "corrosion_allowance_mm": 1.5
+    },
+    "expected_lookups": {
+      "S_mpa": 134.0,
+      "S_source": "Table M-1, SM-516 Gr 70 at 200°C",
+      "E": 0.9,
+      "E_source": "Table B-12, Type 2, Full RT",
+      "Ro_mm": 500.0
+    },
+    "expected_result": {
+      "applicability_lhs": 1.0,
+      "applicability_rhs": 46.431,
+      "t_min_mm": 4.13,
+      "t_design_mm": 5.63,
+      "t_nominal_mm": 6,
+      "mawp_mpa": 1.089
+    }
+  },
+  {
+    "id": "calc-009",
+    "description": "Spherical shell in SM-240 Type 316, 400°C",
+    "query": "Compute thickness for spherical vessel ID=1400 mm, P=4.0 MPa, T=400°C, SM-240 Type 316, Type 1 Full RT, CA=2.0 mm.",
+    "inputs": {
+      "component": "spherical_shell",
+      "formula_ref": "A-27(d)",
+      "P_mpa": 4.0,
+      "inside_diameter_mm": 1400,
+      "design_temp_c": 400,
+      "material": "SM-240 Type 316",
+      "joint_type": 1,
+      "rt_level": "Full RT",
+      "corrosion_allowance_mm": 2.0
+    },
+    "expected_lookups": {
+      "S_mpa": 105.0,
+      "S_source": "Table M-1, SM-240 Type 316 at 400°C",
+      "E": 1.0,
+      "E_source": "Table B-12, Type 1, Full RT",
+      "R_mm": 700.0
+    },
+    "expected_result": {
+      "applicability_lhs": 4.0,
+      "applicability_rhs": 69.825,
+      "t_min_mm": 13.38,
+      "t_design_mm": 15.38,
+      "t_nominal_mm": 16,
+      "mawp_mpa": 4.183
+    }
+  },
+  {
+    "id": "calc-010",
+    "description": "Light-service cylindrical shell, Type 3 No RT, SM-106 Gr B, 100°C",
+    "query": "Compute thickness for ID=500 mm, P=0.5 MPa, T=100°C, SM-106 Gr B, Type 3 joint with no radiography, CA=1.0 mm.",
+    "inputs": {
+      "component": "cylindrical_shell",
+      "formula_ref": "A-27(c)(1)",
+      "P_mpa": 0.5,
+      "inside_diameter_mm": 500,
+      "design_temp_c": 100,
+      "material": "SM-106 Gr B",
+      "joint_type": 3,
+      "rt_level": "No RT",
+      "corrosion_allowance_mm": 1.0
+    },
+    "expected_lookups": {
+      "S_mpa": 118.0,
+      "S_source": "Table M-1, SM-106 Gr B at 100°C",
+      "E": 0.60,
+      "E_source": "Table B-12, Type 3, No RT",
+      "R_mm": 250.0
+    },
+    "expected_result": {
+      "applicability_lhs": 0.5,
+      "applicability_rhs": 27.258,
+      "t_min_mm": 1.77,
+      "t_design_mm": 2.77,
+      "t_nominal_mm": 6,
+      "mawp_mpa": 1.399
+    }
+  }
+]

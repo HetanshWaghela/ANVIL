@@ -1,0 +1,18 @@
+---
+description: Python code style and patterns for anvil
+globs: ["**/*.py"]
+alwaysApply: false
+---
+
+# Python Style
+
+- Python 3.12+. Use `type` statement for type aliases. Use `X | None` not `Optional[X]`.
+- All functions have return type annotations. All parameters have type annotations.
+- Use `from __future__ import annotations` in every file.
+- Pydantic BaseModel for data classes. `@dataclass` only for internal-only containers.
+- Use `structlog.get_logger()` not `logging.getLogger()`.
+- Prefer explicit imports. No `from module import *`.
+- Functions that call LLMs are always `async`. Functions that do CPU work are sync.
+- Error handling: custom exception hierarchy rooted at `AnvilError`. Never bare `except:`.
+- Docstrings: one-line summary for simple functions. Google style for complex ones.
+- f-strings for string formatting. Never `.format()` or `%`.

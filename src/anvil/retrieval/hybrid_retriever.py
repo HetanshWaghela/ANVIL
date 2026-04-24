@@ -1,0 +1,281 @@
+"""Hybrid retrieval: BM25 + vector + graph expansion + RRF fusion."""
+
+from __future__ import annotations
+
+import re
+from collections.abc import Sequence
+
+import numpy as np
+
+from anvil import RetrievalError
+from anvil.knowledge.graph_store import GraphStore
+from anvil.logging_config import get_logger
+from anvil.retrieval.embedder import _STOPWORDS, Embedder
+from anvil.retrieval.graph_retriever import GraphRetriever
+from anvil.retrieval.vector_store import VectorStore
+from anvil.schemas.document import DocumentElement
+from anvil.schemas.retrieval import HybridScores, RetrievalQuery, RetrievedChunk
+
+log = get_logger(__name__)
+
+
+def reciprocal_rank_fusion(
+    ranked_lists: Sequence[Sequence[str]], k: int = 60
+) -> dict[str, float]:
+    """RRF (Cormack et al., 2009): score = Σ 1 / (k + rank_i).
+
+    k=60 is the recommended constant. Higher k smooths scores across
+    lists; lower k emphasizes top-ranked items. Returns a dict of
+    element_id → fused RRF score, sorted descending by score.
+    """
+    scores: dict[str, float] = {}
+    for ranked in ranked_lists:
+        for rank, doc_id in enumerate(ranked, start=1):
+            scores[doc_id] = scores.get(doc_id, 0.0) + 1.0 / (k + rank)
+    return dict(sorted(scores.items(), key=lambda x: x[1], reverse=True))
+
+
+class HybridRetriever:
+    """End-to-end retrieval: BM25 + vector → RRF → graph expansion → (optional) rerank."""
+
+    def __init__(
+        self,
+        elements: list[DocumentElement],
+        embedder: Embedder,
+        vector_store: VectorStore,
+        graph_store: GraphStore,
+        rrf_k: int = 60,
+        graph_hops: int = 1,
+    ) -> None:
+        self.elements = elements
+        self.element_by_id: dict[str, DocumentElement] = {e.element_id: e for e in elements}
+        self.embedder = embedder
+        self.vector_store = vector_store
+        self.graph_store = graph_store
+        self.rrf_k = rrf_k
+        self.graph_hops = graph_hops
+
+        # Build BM25 index
+        self._corpus_texts = [self._element_text(e) for e in elements]
+        self._bm25 = self._init_bm25(self._corpus_texts)
+
+        # Build a vocabulary of "content" tokens from the corpus for the
+        # OOD lexical-overlap check.
+        self._corpus_vocab: set[str] = set()
+        for text in self._corpus_texts:
+            self._corpus_vocab |= _content_tokens(text)
+
+        # Index of all chunks for graph expansion (needs RetrievedChunk shape)
+        self._chunk_index: dict[str, RetrievedChunk] = {
+            e.element_id: self._element_to_chunk(e, score=0.0, source="graph")
+            for e in elements
+        }
+        self._graph_retriever = GraphRetriever(
+            graph_store=graph_store,
+            element_index=self._chunk_index,
+            max_hops=graph_hops,
+        )
+
+    # ---- core API ----------------------------------------------------------
+
+    def retrieve(self, query: RetrievalQuery) -> list[RetrievedChunk]:
+        """Run the full hybrid pipeline for a single query."""
+        # 1) Vector search
+        q_vec = self.embedder.encode([query.text])[0]
+        vec_k = max(query.top_k * 5, 20)
+        vec_hits = self.vector_store.knn(q_vec, k=vec_k)
+        vec_ranked = [h.element_id for h in vec_hits]
+        vec_scores = {h.element_id: h.score for h in vec_hits}
+
+        # 2) BM25 search
+        bm25_ranked, bm25_scores = self._bm25_search(query.text, top_k=vec_k)
+
+        # 3) RRF fusion (normalized so top chunk scores 1.0 for a meaningful
+        #    relevance threshold in the refusal gate).
+        fused = reciprocal_rank_fusion([vec_ranked, bm25_ranked], k=self.rrf_k)
+        max_fused = max(fused.values(), default=0.0) or 1.0
+        # We cap the final score by two signals to detect OOD queries:
+        #   (a) top vector cosine similarity (semantic signal)
+        #   (b) lexical overlap: fraction of non-stopword query tokens that
+        #       actually appear in the corpus vocabulary.
+        # Hash-based embedders produce false positives from hash collisions,
+        # so (b) is the hard guard: if zero query terms are in the corpus,
+        # we KNOW the query is out of domain regardless of vector similarity.
+        top_vec_sim = max(vec_scores.values(), default=0.0)
+        q_tokens = _content_tokens(query.text)
+        overlap_frac = (
+            len(q_tokens & self._corpus_vocab) / len(q_tokens) if q_tokens else 0.0
+        )
+        signal_cap = max(0.0, min(1.0, top_vec_sim * overlap_frac))
+        fused_ids = list(fused.keys())[: query.top_k]
+        seeds: list[RetrievedChunk] = []
+        for eid in fused_ids:
+            el = self.element_by_id.get(eid)
+            if el is None:
+                continue
+            norm_score = (fused[eid] / max_fused) * signal_cap
+            chunk = self._element_to_chunk(el, score=norm_score, source="hybrid")
+            chunk.scores = HybridScores(
+                bm25=bm25_scores.get(eid, 0.0),
+                vector=vec_scores.get(eid, 0.0),
+                graph_hops=0,
+                fused=norm_score,
+            )
+            seeds.append(chunk)
+
+        # 4) Graph expansion (optional)
+        if query.enable_graph_expansion and seeds:
+            expanded = self._graph_retriever.expand(seeds)
+            # Preserve rich scores from seeds; graph-only chunks keep their source
+            result = expanded[: max(query.top_k, 10)]
+        else:
+            result = seeds[: query.top_k]
+
+        # 5) Element type filter (post)
+        if query.element_type_filter:
+            etypes = set(query.element_type_filter)
+            result = [c for c in result if c.element_type in etypes]
+
+        return result
+
+    # ---- helpers -----------------------------------------------------------
+
+    @staticmethod
+    def _element_text(el: DocumentElement) -> str:
+        parts = [el.title or "", el.paragraph_ref or "", el.content]
+        return " ".join(p for p in parts if p)
+
+    @staticmethod
+    def _element_to_chunk(
+        el: DocumentElement, score: float, source: str
+    ) -> RetrievedChunk:
+        return RetrievedChunk(
+            element_id=el.element_id,
+            paragraph_ref=el.paragraph_ref,
+            element_type=el.element_type.value,
+            content=el.content,
+            page_number=el.page_number,
+            score=score,
+            retrieval_source=source,
+        )
+
+    def _init_bm25(self, corpus: list[str]) -> object:
+        """Initialize BM25 via bm25s, failing loudly on unexpected errors.
+
+        Silent fallback policy mirrors VectorStore: a missing `bm25s` package
+        is a soft failure (log + use in-repo fallback). An installed `bm25s`
+        that raises at index time is a real bug — propagate it. The fallback
+        BM25 implementation is noticeably slower and does not use the same
+        tokenization as `bm25s`, so silently swapping would give subtly
+        different retrieval results in production.
+        """
+        try:
+            import bm25s
+        except ImportError:  # pragma: no cover
+            log.warning(
+                "hybrid_retriever.bm25s_unavailable",
+                reason="bm25s package not installed",
+                using_backend="pure_python_fallback",
+                hint="install with `uv add bm25s` for production quality",
+            )
+            return ("fallback", _FallbackBM25(corpus))
+
+        try:
+            retriever = bm25s.BM25()
+            retriever.index(bm25s.tokenize(corpus, stopwords="en"))
+        except Exception as exc:
+            raise RetrievalError(
+                f"bm25s is installed but indexing failed: {exc!r}. "
+                f"This is a bug (or a malformed corpus) — fix the input or "
+                f"the environment, do not silently degrade the index."
+            ) from exc
+        return ("bm25s", retriever)
+
+    def _bm25_search(self, query: str, top_k: int) -> tuple[list[str], dict[str, float]]:
+        kind, retriever = self._bm25  # type: ignore[misc]
+        ids: list[str] = []
+        scores: dict[str, float] = {}
+        if kind == "bm25s":
+            import bm25s
+
+            tokens = bm25s.tokenize([query], stopwords="en")
+            results, sc = retriever.retrieve(
+                tokens, k=min(top_k, len(self._corpus_texts))
+            )
+            # results is (1, k) of corpus indices; sc (1, k) of scores
+            for idx, score in zip(
+                results[0].tolist(), sc[0].tolist(), strict=True
+            ):
+                eid = self.elements[int(idx)].element_id
+                ids.append(eid)
+                scores[eid] = float(score)
+        else:  # pragma: no cover - used only if bm25s missing
+            ranking = retriever.search(query, top_k=top_k)
+            for idx, s in ranking:
+                eid = self.elements[idx].element_id
+                ids.append(eid)
+                scores[eid] = s
+        return ids, scores
+
+
+_TOKEN_RE = re.compile(r"[A-Za-z0-9][A-Za-z0-9\-]+")
+
+
+def _content_tokens(text: str) -> set[str]:
+    """Return the set of non-stopword alphanumeric tokens (len≥2) from `text`."""
+    return {
+        t
+        for t in (m.group(0).lower() for m in _TOKEN_RE.finditer(text))
+        if len(t) >= 2 and t not in _STOPWORDS
+    }
+
+
+class _FallbackBM25:  # pragma: no cover - only used when bm25s is absent
+    """Tiny BM25 implementation as a dependency-free fallback."""
+
+    def __init__(self, corpus: list[str], k1: float = 1.5, b: float = 0.75) -> None:
+        import math
+
+        self.k1 = k1
+        self.b = b
+        self.tokens = [self._tokenize(c) for c in corpus]
+        self.doc_len = [len(t) for t in self.tokens]
+        self.avgdl = float(np.mean(self.doc_len)) if self.doc_len else 0.0
+        self.N = len(self.tokens)
+        self.df: dict[str, int] = {}
+        for toks in self.tokens:
+            for t in set(toks):
+                self.df[t] = self.df.get(t, 0) + 1
+        self.idf = {
+            t: math.log((self.N - d + 0.5) / (d + 0.5) + 1)
+            for t, d in self.df.items()
+        }
+
+    @staticmethod
+    def _tokenize(text: str) -> list[str]:
+        import re
+
+        return re.findall(r"[A-Za-z0-9\-]+", text.lower())
+
+    def search(self, query: str, top_k: int) -> list[tuple[int, float]]:
+        q_tokens = self._tokenize(query)
+        scores = np.zeros(self.N, dtype=np.float32)
+        for i, doc in enumerate(self.tokens):
+            if not doc:
+                continue
+            tf: dict[str, int] = {}
+            for t in doc:
+                tf[t] = tf.get(t, 0) + 1
+            score = 0.0
+            for qt in q_tokens:
+                if qt not in tf:
+                    continue
+                f = tf[qt]
+                idf = self.idf.get(qt, 0.0)
+                denom = f + self.k1 * (
+                    1 - self.b + self.b * (self.doc_len[i] / (self.avgdl or 1))
+                )
+                score += idf * ((f * (self.k1 + 1)) / denom)
+            scores[i] = score
+        idxs = np.argsort(-scores)[:top_k]
+        return [(int(i), float(scores[i])) for i in idxs if scores[i] > 0]

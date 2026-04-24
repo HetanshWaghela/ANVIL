@@ -1,0 +1,18 @@
+---
+description: ASME BPVC domain knowledge for engineering accuracy
+globs: ["src/anvil/**/*.py"]
+alwaysApply: false
+---
+
+# ASME Domain Rules
+
+- UG-27(c)(1) applies when: thickness ≤ R/2 AND P ≤ 0.385×S×E
+- UG-27(c)(2) uses outside radius. Sign changes: −0.6P becomes +0.4P
+- UG-27(d) for spheres has factor of 2 in denominator
+- Allowable stress S must be looked up at the DESIGN TEMPERATURE, not room temperature
+- If design temp falls between tabulated values, use LINEAR INTERPOLATION
+- Joint efficiency E from UW-12 depends on: joint type (1-6) × examination level (Full RT, Spot RT, None)
+- Corrosion allowance is added AFTER calculating minimum required thickness
+- MAWP back-calculation uses nominal thickness MINUS corrosion allowance
+- Standard plate thicknesses (mm): 6, 8, 10, 12, 14, 16, 18, 20, 22, 25, 28, 30, 32, 36, 40, 45, 50
+- Material specification format: SM-{number} [Grade/Type] [Class] (e.g., SM-516 Gr 70) — uses SM- prefix (Synthetic Material) to distinguish from real ASME SA- specs
