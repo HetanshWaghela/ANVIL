@@ -7,6 +7,17 @@ For every citation in an `AnvilResponse`, verify:
      cited source content.
   3. The `paragraph_ref` matches the source element's paragraph.
 
+Pinned-data citations (e.g. the calculation engine quoting Table M-1) often
+point at canonical SPES-1 elements that retrieval did not happen to surface
+in the top-K. Those are still legitimate, but the validator MUST NOT trust
+them blindly — that would let a hallucinated `quoted_text` slip through. To
+validate them, callers thread an `element_index` (parsed-element-id → element)
+into `validate_citations`. When the canonical branch is taken, we resolve the
+ref against the index and require `quoted_text` to be a substring of the
+real element's content. With no index available, the canonical branch fails
+closed — fabricating "Table M-1" citations is the highest-risk failure mode
+in this system, and a silent permissive fallback is exactly what we removed.
+
 If any citation fails validation, the response should be downgraded to
 `MEDIUM` confidence (or rejected) by the caller.
 """
@@ -16,8 +27,14 @@ from __future__ import annotations
 import re
 from dataclasses import dataclass
 
+from anvil.schemas.document import DocumentElement, ElementType
 from anvil.schemas.generation import AnvilResponse, Citation
 from anvil.schemas.retrieval import RetrievedChunk
+
+# Strips a trailing sub-paragraph marker like "(c)", "(1)", "(iv)" — same
+# rule as `CitationBuilder._SUBPARA_STRIP`. Kept as a local helper so the
+# enforcer has no dependency on generation-layer internals.
+_SUBPARA_STRIP = re.compile(r"\([A-Z0-9]+\)\s*$", re.IGNORECASE)
 
 
 @dataclass
@@ -67,8 +84,21 @@ def _substring_match(quote: str, content: str, min_overlap: float = 0.6) -> bool
 def validate_citations(
     response: AnvilResponse,
     retrieved_chunks: list[RetrievedChunk],
+    element_index: dict[str, DocumentElement] | None = None,
 ) -> CitationValidationResult:
-    """Check every citation against the retrieved context."""
+    """Check every citation against the retrieved context.
+
+    Args:
+        response: the AnvilResponse to validate.
+        retrieved_chunks: the RAG context the response was conditioned on.
+        element_index: optional id→DocumentElement map of the FULL parsed
+            standard. Used to validate `quoted_text` for canonical-ref
+            citations (e.g. pinned-data Table M-1 quotes) when the cited
+            element wasn't surfaced in retrieval. With no index available,
+            such citations fail closed — fabricating a "Table M-1" quote is
+            the worst failure mode in a compliance system, so silently
+            trusting `quoted_text` here is not acceptable.
+    """
     chunks_by_id: dict[str, RetrievedChunk] = {c.element_id: c for c in retrieved_chunks}
     issues: list[CitationIssue] = []
 
@@ -79,25 +109,75 @@ def validate_citations(
             if iv.citation is not None:
                 all_citations.append(iv.citation)
 
+    canonical_index = (
+        _build_paragraph_ref_index(element_index) if element_index else None
+    )
+
     valid = 0
     for i, cit in enumerate(all_citations):
         source = chunks_by_id.get(cit.source_element_id)
         if source is None:
-            # Accept pinned-data citations that reference canonical paragraphs/tables
-            # even when they aren't present in retrieval — but only for valid refs.
-            if cit.paragraph_ref and _looks_like_spes1_ref(cit.paragraph_ref):
-                valid += 1
-                continue
-            issues.append(
-                CitationIssue(
-                    citation_index=i,
-                    citation=cit,
-                    issue=(
-                        f"source_element_id '{cit.source_element_id}' not in "
-                        f"retrieved context and paragraph_ref is not canonical."
-                    ),
+            # Pinned-data citation: the cited element exists in the parsed
+            # standard but wasn't in the top-K retrieval. We accept it ONLY
+            # if (a) the paragraph_ref is canonical, AND (b) the
+            # quoted_text is substantively present in the resolved
+            # element's content. Without an `element_index` to check
+            # against, we have no way to verify (b) — fail closed.
+            if not (cit.paragraph_ref and _looks_like_spes1_ref(cit.paragraph_ref)):
+                issues.append(
+                    CitationIssue(
+                        citation_index=i,
+                        citation=cit,
+                        issue=(
+                            f"source_element_id '{cit.source_element_id}' not in "
+                            f"retrieved context and paragraph_ref is not canonical."
+                        ),
+                    )
                 )
+                continue
+            if canonical_index is None:
+                issues.append(
+                    CitationIssue(
+                        citation_index=i,
+                        citation=cit,
+                        issue=(
+                            f"source_element_id '{cit.source_element_id}' not in "
+                            f"retrieved context; cannot validate canonical-ref "
+                            f"citation against the standard because no "
+                            f"element_index was provided to validate_citations()."
+                        ),
+                    )
+                )
+                continue
+            canonical_el = _resolve_canonical_ref(
+                cit.paragraph_ref, canonical_index
             )
+            if canonical_el is None:
+                issues.append(
+                    CitationIssue(
+                        citation_index=i,
+                        citation=cit,
+                        issue=(
+                            f"paragraph_ref '{cit.paragraph_ref}' does not "
+                            f"resolve to any element in the parsed standard."
+                        ),
+                    )
+                )
+                continue
+            if not _substring_match(cit.quoted_text, canonical_el.content):
+                issues.append(
+                    CitationIssue(
+                        citation_index=i,
+                        citation=cit,
+                        issue=(
+                            f"quoted_text not present in canonical element "
+                            f"'{canonical_el.element_id}' for paragraph "
+                            f"'{cit.paragraph_ref}'."
+                        ),
+                    )
+                )
+                continue
+            valid += 1
             continue
         if source.paragraph_ref and not _paragraph_refs_compatible(
             cit.paragraph_ref, source.paragraph_ref
@@ -130,6 +210,54 @@ def validate_citations(
     return CitationValidationResult(
         total=len(all_citations), valid=valid, issues=issues
     )
+
+
+def _build_paragraph_ref_index(
+    element_index: dict[str, DocumentElement],
+) -> dict[str, DocumentElement]:
+    """Build a paragraph_ref → element map for canonical-ref lookups.
+
+    When multiple elements share a paragraph_ref (e.g. a SECTION and the
+    TABLE/FORMULA child it contains), prefer the SECTION because it carries
+    the narrative text used for prose quotes, while TABLE/FORMULA elements
+    are still reachable via their own dedicated content for row quotes.
+    Mirrors the preference used by `CitationBuilder.from_elements`.
+    """
+    by_ref: dict[str, DocumentElement] = {}
+    for el in element_index.values():
+        if not el.paragraph_ref:
+            continue
+        key = el.paragraph_ref.upper()
+        existing = by_ref.get(key)
+        if existing is None or (
+            existing.element_type != ElementType.SECTION
+            and el.element_type == ElementType.SECTION
+        ):
+            by_ref[key] = el
+    return by_ref
+
+
+def _resolve_canonical_ref(
+    paragraph_ref: str,
+    by_ref: dict[str, DocumentElement],
+) -> DocumentElement | None:
+    """Resolve a (possibly sub-paragraph) ref to an element, walking up.
+
+    `A-27(c)(1)` resolves to `A-27` if no sub-paragraph element exists.
+    `Table M-1` is normalized to `M-1`. Returns None if no element matches.
+    """
+    key = paragraph_ref.upper().strip()
+    if key.startswith("TABLE "):
+        key = key[len("TABLE ") :].strip()
+    if key in by_ref:
+        return by_ref[key]
+    stripped = _SUBPARA_STRIP.sub("", key).strip()
+    while stripped and stripped != key:
+        if stripped in by_ref:
+            return by_ref[stripped]
+        key = stripped
+        stripped = _SUBPARA_STRIP.sub("", key).strip()
+    return None
 
 
 _CANONICAL_REF = re.compile(

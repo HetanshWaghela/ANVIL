@@ -1,0 +1,2270 @@
+[
+  {
+    "threshold": 0.05,
+    "tp": 5,
+    "fp": 0,
+    "tn": 25,
+    "fn": 0,
+    "refusal_precision": 1.0,
+    "refusal_recall": 1.0,
+    "non_refusal_coverage": 1.0,
+    "per_example": [
+      {
+        "example_id": "gold-calc-001",
+        "category": "calculation",
+        "expected_refusal": false,
+        "refused": false,
+        "max_relevance": 0.6674624675357935,
+        "reason": null
+      },
+      {
+        "example_id": "gold-calc-002",
+        "category": "calculation",
+        "expected_refusal": false,
+        "refused": false,
+        "max_relevance": 0.37332053759609496,
+        "reason": null
+      },
+      {
+        "example_id": "gold-calc-003",
+        "category": "calculation",
+        "expected_refusal": false,
+        "refused": false,
+        "max_relevance": 0.47089300152069014,
+        "reason": null
+      },
+      {
+        "example_id": "gold-calc-004",
+        "category": "calculation",
+        "expected_refusal": false,
+        "refused": false,
+        "max_relevance": 0.30634755199600794,
+        "reason": null
+      },
+      {
+        "example_id": "gold-calc-005",
+        "category": "calculation",
+        "expected_refusal": false,
+        "refused": false,
+        "max_relevance": 0.28551178423744006,
+        "reason": null
+      },
+      {
+        "example_id": "gold-calc-006",
+        "category": "calculation",
+        "expected_refusal": false,
+        "refused": false,
+        "max_relevance": 0.35155691273232526,
+        "reason": null
+      },
+      {
+        "example_id": "gold-calc-007",
+        "category": "edge_case",
+        "expected_refusal": false,
+        "refused": false,
+        "max_relevance": 0.3636728049540707,
+        "reason": null
+      },
+      {
+        "example_id": "gold-calc-008",
+        "category": "calculation",
+        "expected_refusal": false,
+        "refused": false,
+        "max_relevance": 0.42719651881355025,
+        "reason": null
+      },
+      {
+        "example_id": "gold-calc-009",
+        "category": "calculation",
+        "expected_refusal": false,
+        "refused": false,
+        "max_relevance": 0.24350492818855635,
+        "reason": null
+      },
+      {
+        "example_id": "gold-calc-010",
+        "category": "calculation",
+        "expected_refusal": false,
+        "refused": false,
+        "max_relevance": 0.2666114150059859,
+        "reason": null
+      },
+      {
+        "example_id": "gold-lookup-001",
+        "category": "lookup",
+        "expected_refusal": false,
+        "refused": false,
+        "max_relevance": 0.38239792564382213,
+        "reason": null
+      },
+      {
+        "example_id": "gold-lookup-002",
+        "category": "lookup",
+        "expected_refusal": false,
+        "refused": false,
+        "max_relevance": 0.41425431881680197,
+        "reason": null
+      },
+      {
+        "example_id": "gold-lookup-003",
+        "category": "lookup",
+        "expected_refusal": false,
+        "refused": false,
+        "max_relevance": 0.39918010961082473,
+        "reason": null
+      },
+      {
+        "example_id": "gold-lookup-004",
+        "category": "lookup",
+        "expected_refusal": false,
+        "refused": false,
+        "max_relevance": 0.4712098948414152,
+        "reason": null
+      },
+      {
+        "example_id": "gold-lookup-005",
+        "category": "lookup",
+        "expected_refusal": false,
+        "refused": false,
+        "max_relevance": 0.2811947820948433,
+        "reason": null
+      },
+      {
+        "example_id": "gold-xref-001",
+        "category": "cross_reference",
+        "expected_refusal": false,
+        "refused": false,
+        "max_relevance": 0.2959207509939006,
+        "reason": null
+      },
+      {
+        "example_id": "gold-xref-002",
+        "category": "cross_reference",
+        "expected_refusal": false,
+        "refused": false,
+        "max_relevance": 0.13238166679724372,
+        "reason": null
+      },
+      {
+        "example_id": "gold-xref-003",
+        "category": "cross_reference",
+        "expected_refusal": false,
+        "refused": false,
+        "max_relevance": 0.0825328107684332,
+        "reason": null
+      },
+      {
+        "example_id": "gold-xref-004",
+        "category": "cross_reference",
+        "expected_refusal": false,
+        "refused": false,
+        "max_relevance": 0.2761434820462559,
+        "reason": null
+      },
+      {
+        "example_id": "gold-xref-005",
+        "category": "cross_reference",
+        "expected_refusal": false,
+        "refused": false,
+        "max_relevance": 0.17740273785186592,
+        "reason": null
+      },
+      {
+        "example_id": "gold-ood-001",
+        "category": "out_of_domain",
+        "expected_refusal": true,
+        "refused": true,
+        "max_relevance": 0.0,
+        "reason": "No sufficiently relevant content found in the standard (max relevance 0.000 < threshold 0.050)."
+      },
+      {
+        "example_id": "gold-ood-002",
+        "category": "out_of_domain",
+        "expected_refusal": true,
+        "refused": true,
+        "max_relevance": 0.1580127186629582,
+        "reason": "Material 'Titanium Grade 5' is not an SM- specification covered by SPES-1 Table M-1. Please verify the specification or consult the supplementary material tables."
+      },
+      {
+        "example_id": "gold-ood-003",
+        "category": "out_of_domain",
+        "expected_refusal": true,
+        "refused": true,
+        "max_relevance": 0.0,
+        "reason": "No sufficiently relevant content found in the standard (max relevance 0.000 < threshold 0.050)."
+      },
+      {
+        "example_id": "gold-ood-004",
+        "category": "out_of_domain",
+        "expected_refusal": true,
+        "refused": true,
+        "max_relevance": 0.16753840601548387,
+        "reason": "Material 'SM-999 Gr XYZ' is not in the SPES-1 pinned materials table. Please verify the specification or add the material to Table M-1."
+      },
+      {
+        "example_id": "gold-ood-005",
+        "category": "out_of_domain",
+        "expected_refusal": true,
+        "refused": true,
+        "max_relevance": 0.34004412711325394,
+        "reason": "Design temperature 700.0\u00b0C exceeds the maximum tabulated temperature for SM-516 Gr 70 (500\u00b0C per M-23)."
+      },
+      {
+        "example_id": "gold-edge-001",
+        "category": "edge_case",
+        "expected_refusal": false,
+        "refused": false,
+        "max_relevance": 0.3714910103036857,
+        "reason": null
+      },
+      {
+        "example_id": "gold-edge-002",
+        "category": "edge_case",
+        "expected_refusal": false,
+        "refused": false,
+        "max_relevance": 0.15162823681456594,
+        "reason": null
+      },
+      {
+        "example_id": "gold-edge-003",
+        "category": "edge_case",
+        "expected_refusal": false,
+        "refused": false,
+        "max_relevance": 0.11915278101976569,
+        "reason": null
+      },
+      {
+        "example_id": "gold-edge-004",
+        "category": "edge_case",
+        "expected_refusal": false,
+        "refused": false,
+        "max_relevance": 0.4276865356859204,
+        "reason": null
+      },
+      {
+        "example_id": "gold-edge-005",
+        "category": "edge_case",
+        "expected_refusal": false,
+        "refused": false,
+        "max_relevance": 0.34342611974044956,
+        "reason": null
+      }
+    ]
+  },
+  {
+    "threshold": 0.075,
+    "tp": 5,
+    "fp": 0,
+    "tn": 25,
+    "fn": 0,
+    "refusal_precision": 1.0,
+    "refusal_recall": 1.0,
+    "non_refusal_coverage": 1.0,
+    "per_example": [
+      {
+        "example_id": "gold-calc-001",
+        "category": "calculation",
+        "expected_refusal": false,
+        "refused": false,
+        "max_relevance": 0.6674624675357935,
+        "reason": null
+      },
+      {
+        "example_id": "gold-calc-002",
+        "category": "calculation",
+        "expected_refusal": false,
+        "refused": false,
+        "max_relevance": 0.37332053759609496,
+        "reason": null
+      },
+      {
+        "example_id": "gold-calc-003",
+        "category": "calculation",
+        "expected_refusal": false,
+        "refused": false,
+        "max_relevance": 0.47089300152069014,
+        "reason": null
+      },
+      {
+        "example_id": "gold-calc-004",
+        "category": "calculation",
+        "expected_refusal": false,
+        "refused": false,
+        "max_relevance": 0.30634755199600794,
+        "reason": null
+      },
+      {
+        "example_id": "gold-calc-005",
+        "category": "calculation",
+        "expected_refusal": false,
+        "refused": false,
+        "max_relevance": 0.28551178423744006,
+        "reason": null
+      },
+      {
+        "example_id": "gold-calc-006",
+        "category": "calculation",
+        "expected_refusal": false,
+        "refused": false,
+        "max_relevance": 0.35155691273232526,
+        "reason": null
+      },
+      {
+        "example_id": "gold-calc-007",
+        "category": "edge_case",
+        "expected_refusal": false,
+        "refused": false,
+        "max_relevance": 0.3636728049540707,
+        "reason": null
+      },
+      {
+        "example_id": "gold-calc-008",
+        "category": "calculation",
+        "expected_refusal": false,
+        "refused": false,
+        "max_relevance": 0.42719651881355025,
+        "reason": null
+      },
+      {
+        "example_id": "gold-calc-009",
+        "category": "calculation",
+        "expected_refusal": false,
+        "refused": false,
+        "max_relevance": 0.24350492818855635,
+        "reason": null
+      },
+      {
+        "example_id": "gold-calc-010",
+        "category": "calculation",
+        "expected_refusal": false,
+        "refused": false,
+        "max_relevance": 0.2666114150059859,
+        "reason": null
+      },
+      {
+        "example_id": "gold-lookup-001",
+        "category": "lookup",
+        "expected_refusal": false,
+        "refused": false,
+        "max_relevance": 0.38239792564382213,
+        "reason": null
+      },
+      {
+        "example_id": "gold-lookup-002",
+        "category": "lookup",
+        "expected_refusal": false,
+        "refused": false,
+        "max_relevance": 0.41425431881680197,
+        "reason": null
+      },
+      {
+        "example_id": "gold-lookup-003",
+        "category": "lookup",
+        "expected_refusal": false,
+        "refused": false,
+        "max_relevance": 0.39918010961082473,
+        "reason": null
+      },
+      {
+        "example_id": "gold-lookup-004",
+        "category": "lookup",
+        "expected_refusal": false,
+        "refused": false,
+        "max_relevance": 0.4712098948414152,
+        "reason": null
+      },
+      {
+        "example_id": "gold-lookup-005",
+        "category": "lookup",
+        "expected_refusal": false,
+        "refused": false,
+        "max_relevance": 0.2811947820948433,
+        "reason": null
+      },
+      {
+        "example_id": "gold-xref-001",
+        "category": "cross_reference",
+        "expected_refusal": false,
+        "refused": false,
+        "max_relevance": 0.2959207509939006,
+        "reason": null
+      },
+      {
+        "example_id": "gold-xref-002",
+        "category": "cross_reference",
+        "expected_refusal": false,
+        "refused": false,
+        "max_relevance": 0.13238166679724372,
+        "reason": null
+      },
+      {
+        "example_id": "gold-xref-003",
+        "category": "cross_reference",
+        "expected_refusal": false,
+        "refused": false,
+        "max_relevance": 0.0825328107684332,
+        "reason": null
+      },
+      {
+        "example_id": "gold-xref-004",
+        "category": "cross_reference",
+        "expected_refusal": false,
+        "refused": false,
+        "max_relevance": 0.2761434820462559,
+        "reason": null
+      },
+      {
+        "example_id": "gold-xref-005",
+        "category": "cross_reference",
+        "expected_refusal": false,
+        "refused": false,
+        "max_relevance": 0.17740273785186592,
+        "reason": null
+      },
+      {
+        "example_id": "gold-ood-001",
+        "category": "out_of_domain",
+        "expected_refusal": true,
+        "refused": true,
+        "max_relevance": 0.0,
+        "reason": "No sufficiently relevant content found in the standard (max relevance 0.000 < threshold 0.075)."
+      },
+      {
+        "example_id": "gold-ood-002",
+        "category": "out_of_domain",
+        "expected_refusal": true,
+        "refused": true,
+        "max_relevance": 0.1580127186629582,
+        "reason": "Material 'Titanium Grade 5' is not an SM- specification covered by SPES-1 Table M-1. Please verify the specification or consult the supplementary material tables."
+      },
+      {
+        "example_id": "gold-ood-003",
+        "category": "out_of_domain",
+        "expected_refusal": true,
+        "refused": true,
+        "max_relevance": 0.0,
+        "reason": "No sufficiently relevant content found in the standard (max relevance 0.000 < threshold 0.075)."
+      },
+      {
+        "example_id": "gold-ood-004",
+        "category": "out_of_domain",
+        "expected_refusal": true,
+        "refused": true,
+        "max_relevance": 0.16753840601548387,
+        "reason": "Material 'SM-999 Gr XYZ' is not in the SPES-1 pinned materials table. Please verify the specification or add the material to Table M-1."
+      },
+      {
+        "example_id": "gold-ood-005",
+        "category": "out_of_domain",
+        "expected_refusal": true,
+        "refused": true,
+        "max_relevance": 0.34004412711325394,
+        "reason": "Design temperature 700.0\u00b0C exceeds the maximum tabulated temperature for SM-516 Gr 70 (500\u00b0C per M-23)."
+      },
+      {
+        "example_id": "gold-edge-001",
+        "category": "edge_case",
+        "expected_refusal": false,
+        "refused": false,
+        "max_relevance": 0.3714910103036857,
+        "reason": null
+      },
+      {
+        "example_id": "gold-edge-002",
+        "category": "edge_case",
+        "expected_refusal": false,
+        "refused": false,
+        "max_relevance": 0.15162823681456594,
+        "reason": null
+      },
+      {
+        "example_id": "gold-edge-003",
+        "category": "edge_case",
+        "expected_refusal": false,
+        "refused": false,
+        "max_relevance": 0.11915278101976569,
+        "reason": null
+      },
+      {
+        "example_id": "gold-edge-004",
+        "category": "edge_case",
+        "expected_refusal": false,
+        "refused": false,
+        "max_relevance": 0.4276865356859204,
+        "reason": null
+      },
+      {
+        "example_id": "gold-edge-005",
+        "category": "edge_case",
+        "expected_refusal": false,
+        "refused": false,
+        "max_relevance": 0.34342611974044956,
+        "reason": null
+      }
+    ]
+  },
+  {
+    "threshold": 0.1,
+    "tp": 5,
+    "fp": 1,
+    "tn": 24,
+    "fn": 0,
+    "refusal_precision": 0.8333333333333334,
+    "refusal_recall": 1.0,
+    "non_refusal_coverage": 0.96,
+    "per_example": [
+      {
+        "example_id": "gold-calc-001",
+        "category": "calculation",
+        "expected_refusal": false,
+        "refused": false,
+        "max_relevance": 0.6674624675357935,
+        "reason": null
+      },
+      {
+        "example_id": "gold-calc-002",
+        "category": "calculation",
+        "expected_refusal": false,
+        "refused": false,
+        "max_relevance": 0.37332053759609496,
+        "reason": null
+      },
+      {
+        "example_id": "gold-calc-003",
+        "category": "calculation",
+        "expected_refusal": false,
+        "refused": false,
+        "max_relevance": 0.47089300152069014,
+        "reason": null
+      },
+      {
+        "example_id": "gold-calc-004",
+        "category": "calculation",
+        "expected_refusal": false,
+        "refused": false,
+        "max_relevance": 0.30634755199600794,
+        "reason": null
+      },
+      {
+        "example_id": "gold-calc-005",
+        "category": "calculation",
+        "expected_refusal": false,
+        "refused": false,
+        "max_relevance": 0.28551178423744006,
+        "reason": null
+      },
+      {
+        "example_id": "gold-calc-006",
+        "category": "calculation",
+        "expected_refusal": false,
+        "refused": false,
+        "max_relevance": 0.35155691273232526,
+        "reason": null
+      },
+      {
+        "example_id": "gold-calc-007",
+        "category": "edge_case",
+        "expected_refusal": false,
+        "refused": false,
+        "max_relevance": 0.3636728049540707,
+        "reason": null
+      },
+      {
+        "example_id": "gold-calc-008",
+        "category": "calculation",
+        "expected_refusal": false,
+        "refused": false,
+        "max_relevance": 0.42719651881355025,
+        "reason": null
+      },
+      {
+        "example_id": "gold-calc-009",
+        "category": "calculation",
+        "expected_refusal": false,
+        "refused": false,
+        "max_relevance": 0.24350492818855635,
+        "reason": null
+      },
+      {
+        "example_id": "gold-calc-010",
+        "category": "calculation",
+        "expected_refusal": false,
+        "refused": false,
+        "max_relevance": 0.2666114150059859,
+        "reason": null
+      },
+      {
+        "example_id": "gold-lookup-001",
+        "category": "lookup",
+        "expected_refusal": false,
+        "refused": false,
+        "max_relevance": 0.38239792564382213,
+        "reason": null
+      },
+      {
+        "example_id": "gold-lookup-002",
+        "category": "lookup",
+        "expected_refusal": false,
+        "refused": false,
+        "max_relevance": 0.41425431881680197,
+        "reason": null
+      },
+      {
+        "example_id": "gold-lookup-003",
+        "category": "lookup",
+        "expected_refusal": false,
+        "refused": false,
+        "max_relevance": 0.39918010961082473,
+        "reason": null
+      },
+      {
+        "example_id": "gold-lookup-004",
+        "category": "lookup",
+        "expected_refusal": false,
+        "refused": false,
+        "max_relevance": 0.4712098948414152,
+        "reason": null
+      },
+      {
+        "example_id": "gold-lookup-005",
+        "category": "lookup",
+        "expected_refusal": false,
+        "refused": false,
+        "max_relevance": 0.2811947820948433,
+        "reason": null
+      },
+      {
+        "example_id": "gold-xref-001",
+        "category": "cross_reference",
+        "expected_refusal": false,
+        "refused": false,
+        "max_relevance": 0.2959207509939006,
+        "reason": null
+      },
+      {
+        "example_id": "gold-xref-002",
+        "category": "cross_reference",
+        "expected_refusal": false,
+        "refused": false,
+        "max_relevance": 0.13238166679724372,
+        "reason": null
+      },
+      {
+        "example_id": "gold-xref-003",
+        "category": "cross_reference",
+        "expected_refusal": false,
+        "refused": true,
+        "max_relevance": 0.0825328107684332,
+        "reason": "No sufficiently relevant content found in the standard (max relevance 0.083 < threshold 0.100)."
+      },
+      {
+        "example_id": "gold-xref-004",
+        "category": "cross_reference",
+        "expected_refusal": false,
+        "refused": false,
+        "max_relevance": 0.2761434820462559,
+        "reason": null
+      },
+      {
+        "example_id": "gold-xref-005",
+        "category": "cross_reference",
+        "expected_refusal": false,
+        "refused": false,
+        "max_relevance": 0.17740273785186592,
+        "reason": null
+      },
+      {
+        "example_id": "gold-ood-001",
+        "category": "out_of_domain",
+        "expected_refusal": true,
+        "refused": true,
+        "max_relevance": 0.0,
+        "reason": "No sufficiently relevant content found in the standard (max relevance 0.000 < threshold 0.100)."
+      },
+      {
+        "example_id": "gold-ood-002",
+        "category": "out_of_domain",
+        "expected_refusal": true,
+        "refused": true,
+        "max_relevance": 0.1580127186629582,
+        "reason": "Material 'Titanium Grade 5' is not an SM- specification covered by SPES-1 Table M-1. Please verify the specification or consult the supplementary material tables."
+      },
+      {
+        "example_id": "gold-ood-003",
+        "category": "out_of_domain",
+        "expected_refusal": true,
+        "refused": true,
+        "max_relevance": 0.0,
+        "reason": "No sufficiently relevant content found in the standard (max relevance 0.000 < threshold 0.100)."
+      },
+      {
+        "example_id": "gold-ood-004",
+        "category": "out_of_domain",
+        "expected_refusal": true,
+        "refused": true,
+        "max_relevance": 0.16753840601548387,
+        "reason": "Material 'SM-999 Gr XYZ' is not in the SPES-1 pinned materials table. Please verify the specification or add the material to Table M-1."
+      },
+      {
+        "example_id": "gold-ood-005",
+        "category": "out_of_domain",
+        "expected_refusal": true,
+        "refused": true,
+        "max_relevance": 0.34004412711325394,
+        "reason": "Design temperature 700.0\u00b0C exceeds the maximum tabulated temperature for SM-516 Gr 70 (500\u00b0C per M-23)."
+      },
+      {
+        "example_id": "gold-edge-001",
+        "category": "edge_case",
+        "expected_refusal": false,
+        "refused": false,
+        "max_relevance": 0.3714910103036857,
+        "reason": null
+      },
+      {
+        "example_id": "gold-edge-002",
+        "category": "edge_case",
+        "expected_refusal": false,
+        "refused": false,
+        "max_relevance": 0.15162823681456594,
+        "reason": null
+      },
+      {
+        "example_id": "gold-edge-003",
+        "category": "edge_case",
+        "expected_refusal": false,
+        "refused": false,
+        "max_relevance": 0.11915278101976569,
+        "reason": null
+      },
+      {
+        "example_id": "gold-edge-004",
+        "category": "edge_case",
+        "expected_refusal": false,
+        "refused": false,
+        "max_relevance": 0.4276865356859204,
+        "reason": null
+      },
+      {
+        "example_id": "gold-edge-005",
+        "category": "edge_case",
+        "expected_refusal": false,
+        "refused": false,
+        "max_relevance": 0.34342611974044956,
+        "reason": null
+      }
+    ]
+  },
+  {
+    "threshold": 0.125,
+    "tp": 5,
+    "fp": 2,
+    "tn": 23,
+    "fn": 0,
+    "refusal_precision": 0.7142857142857143,
+    "refusal_recall": 1.0,
+    "non_refusal_coverage": 0.92,
+    "per_example": [
+      {
+        "example_id": "gold-calc-001",
+        "category": "calculation",
+        "expected_refusal": false,
+        "refused": false,
+        "max_relevance": 0.6674624675357935,
+        "reason": null
+      },
+      {
+        "example_id": "gold-calc-002",
+        "category": "calculation",
+        "expected_refusal": false,
+        "refused": false,
+        "max_relevance": 0.37332053759609496,
+        "reason": null
+      },
+      {
+        "example_id": "gold-calc-003",
+        "category": "calculation",
+        "expected_refusal": false,
+        "refused": false,
+        "max_relevance": 0.47089300152069014,
+        "reason": null
+      },
+      {
+        "example_id": "gold-calc-004",
+        "category": "calculation",
+        "expected_refusal": false,
+        "refused": false,
+        "max_relevance": 0.30634755199600794,
+        "reason": null
+      },
+      {
+        "example_id": "gold-calc-005",
+        "category": "calculation",
+        "expected_refusal": false,
+        "refused": false,
+        "max_relevance": 0.28551178423744006,
+        "reason": null
+      },
+      {
+        "example_id": "gold-calc-006",
+        "category": "calculation",
+        "expected_refusal": false,
+        "refused": false,
+        "max_relevance": 0.35155691273232526,
+        "reason": null
+      },
+      {
+        "example_id": "gold-calc-007",
+        "category": "edge_case",
+        "expected_refusal": false,
+        "refused": false,
+        "max_relevance": 0.3636728049540707,
+        "reason": null
+      },
+      {
+        "example_id": "gold-calc-008",
+        "category": "calculation",
+        "expected_refusal": false,
+        "refused": false,
+        "max_relevance": 0.42719651881355025,
+        "reason": null
+      },
+      {
+        "example_id": "gold-calc-009",
+        "category": "calculation",
+        "expected_refusal": false,
+        "refused": false,
+        "max_relevance": 0.24350492818855635,
+        "reason": null
+      },
+      {
+        "example_id": "gold-calc-010",
+        "category": "calculation",
+        "expected_refusal": false,
+        "refused": false,
+        "max_relevance": 0.2666114150059859,
+        "reason": null
+      },
+      {
+        "example_id": "gold-lookup-001",
+        "category": "lookup",
+        "expected_refusal": false,
+        "refused": false,
+        "max_relevance": 0.38239792564382213,
+        "reason": null
+      },
+      {
+        "example_id": "gold-lookup-002",
+        "category": "lookup",
+        "expected_refusal": false,
+        "refused": false,
+        "max_relevance": 0.41425431881680197,
+        "reason": null
+      },
+      {
+        "example_id": "gold-lookup-003",
+        "category": "lookup",
+        "expected_refusal": false,
+        "refused": false,
+        "max_relevance": 0.39918010961082473,
+        "reason": null
+      },
+      {
+        "example_id": "gold-lookup-004",
+        "category": "lookup",
+        "expected_refusal": false,
+        "refused": false,
+        "max_relevance": 0.4712098948414152,
+        "reason": null
+      },
+      {
+        "example_id": "gold-lookup-005",
+        "category": "lookup",
+        "expected_refusal": false,
+        "refused": false,
+        "max_relevance": 0.2811947820948433,
+        "reason": null
+      },
+      {
+        "example_id": "gold-xref-001",
+        "category": "cross_reference",
+        "expected_refusal": false,
+        "refused": false,
+        "max_relevance": 0.2959207509939006,
+        "reason": null
+      },
+      {
+        "example_id": "gold-xref-002",
+        "category": "cross_reference",
+        "expected_refusal": false,
+        "refused": false,
+        "max_relevance": 0.13238166679724372,
+        "reason": null
+      },
+      {
+        "example_id": "gold-xref-003",
+        "category": "cross_reference",
+        "expected_refusal": false,
+        "refused": true,
+        "max_relevance": 0.0825328107684332,
+        "reason": "No sufficiently relevant content found in the standard (max relevance 0.083 < threshold 0.125)."
+      },
+      {
+        "example_id": "gold-xref-004",
+        "category": "cross_reference",
+        "expected_refusal": false,
+        "refused": false,
+        "max_relevance": 0.2761434820462559,
+        "reason": null
+      },
+      {
+        "example_id": "gold-xref-005",
+        "category": "cross_reference",
+        "expected_refusal": false,
+        "refused": false,
+        "max_relevance": 0.17740273785186592,
+        "reason": null
+      },
+      {
+        "example_id": "gold-ood-001",
+        "category": "out_of_domain",
+        "expected_refusal": true,
+        "refused": true,
+        "max_relevance": 0.0,
+        "reason": "No sufficiently relevant content found in the standard (max relevance 0.000 < threshold 0.125)."
+      },
+      {
+        "example_id": "gold-ood-002",
+        "category": "out_of_domain",
+        "expected_refusal": true,
+        "refused": true,
+        "max_relevance": 0.1580127186629582,
+        "reason": "Material 'Titanium Grade 5' is not an SM- specification covered by SPES-1 Table M-1. Please verify the specification or consult the supplementary material tables."
+      },
+      {
+        "example_id": "gold-ood-003",
+        "category": "out_of_domain",
+        "expected_refusal": true,
+        "refused": true,
+        "max_relevance": 0.0,
+        "reason": "No sufficiently relevant content found in the standard (max relevance 0.000 < threshold 0.125)."
+      },
+      {
+        "example_id": "gold-ood-004",
+        "category": "out_of_domain",
+        "expected_refusal": true,
+        "refused": true,
+        "max_relevance": 0.16753840601548387,
+        "reason": "Material 'SM-999 Gr XYZ' is not in the SPES-1 pinned materials table. Please verify the specification or add the material to Table M-1."
+      },
+      {
+        "example_id": "gold-ood-005",
+        "category": "out_of_domain",
+        "expected_refusal": true,
+        "refused": true,
+        "max_relevance": 0.34004412711325394,
+        "reason": "Design temperature 700.0\u00b0C exceeds the maximum tabulated temperature for SM-516 Gr 70 (500\u00b0C per M-23)."
+      },
+      {
+        "example_id": "gold-edge-001",
+        "category": "edge_case",
+        "expected_refusal": false,
+        "refused": false,
+        "max_relevance": 0.3714910103036857,
+        "reason": null
+      },
+      {
+        "example_id": "gold-edge-002",
+        "category": "edge_case",
+        "expected_refusal": false,
+        "refused": false,
+        "max_relevance": 0.15162823681456594,
+        "reason": null
+      },
+      {
+        "example_id": "gold-edge-003",
+        "category": "edge_case",
+        "expected_refusal": false,
+        "refused": true,
+        "max_relevance": 0.11915278101976569,
+        "reason": "No sufficiently relevant content found in the standard (max relevance 0.119 < threshold 0.125)."
+      },
+      {
+        "example_id": "gold-edge-004",
+        "category": "edge_case",
+        "expected_refusal": false,
+        "refused": false,
+        "max_relevance": 0.4276865356859204,
+        "reason": null
+      },
+      {
+        "example_id": "gold-edge-005",
+        "category": "edge_case",
+        "expected_refusal": false,
+        "refused": false,
+        "max_relevance": 0.34342611974044956,
+        "reason": null
+      }
+    ]
+  },
+  {
+    "threshold": 0.15,
+    "tp": 5,
+    "fp": 3,
+    "tn": 22,
+    "fn": 0,
+    "refusal_precision": 0.625,
+    "refusal_recall": 1.0,
+    "non_refusal_coverage": 0.88,
+    "per_example": [
+      {
+        "example_id": "gold-calc-001",
+        "category": "calculation",
+        "expected_refusal": false,
+        "refused": false,
+        "max_relevance": 0.6674624675357935,
+        "reason": null
+      },
+      {
+        "example_id": "gold-calc-002",
+        "category": "calculation",
+        "expected_refusal": false,
+        "refused": false,
+        "max_relevance": 0.37332053759609496,
+        "reason": null
+      },
+      {
+        "example_id": "gold-calc-003",
+        "category": "calculation",
+        "expected_refusal": false,
+        "refused": false,
+        "max_relevance": 0.47089300152069014,
+        "reason": null
+      },
+      {
+        "example_id": "gold-calc-004",
+        "category": "calculation",
+        "expected_refusal": false,
+        "refused": false,
+        "max_relevance": 0.30634755199600794,
+        "reason": null
+      },
+      {
+        "example_id": "gold-calc-005",
+        "category": "calculation",
+        "expected_refusal": false,
+        "refused": false,
+        "max_relevance": 0.28551178423744006,
+        "reason": null
+      },
+      {
+        "example_id": "gold-calc-006",
+        "category": "calculation",
+        "expected_refusal": false,
+        "refused": false,
+        "max_relevance": 0.35155691273232526,
+        "reason": null
+      },
+      {
+        "example_id": "gold-calc-007",
+        "category": "edge_case",
+        "expected_refusal": false,
+        "refused": false,
+        "max_relevance": 0.3636728049540707,
+        "reason": null
+      },
+      {
+        "example_id": "gold-calc-008",
+        "category": "calculation",
+        "expected_refusal": false,
+        "refused": false,
+        "max_relevance": 0.42719651881355025,
+        "reason": null
+      },
+      {
+        "example_id": "gold-calc-009",
+        "category": "calculation",
+        "expected_refusal": false,
+        "refused": false,
+        "max_relevance": 0.24350492818855635,
+        "reason": null
+      },
+      {
+        "example_id": "gold-calc-010",
+        "category": "calculation",
+        "expected_refusal": false,
+        "refused": false,
+        "max_relevance": 0.2666114150059859,
+        "reason": null
+      },
+      {
+        "example_id": "gold-lookup-001",
+        "category": "lookup",
+        "expected_refusal": false,
+        "refused": false,
+        "max_relevance": 0.38239792564382213,
+        "reason": null
+      },
+      {
+        "example_id": "gold-lookup-002",
+        "category": "lookup",
+        "expected_refusal": false,
+        "refused": false,
+        "max_relevance": 0.41425431881680197,
+        "reason": null
+      },
+      {
+        "example_id": "gold-lookup-003",
+        "category": "lookup",
+        "expected_refusal": false,
+        "refused": false,
+        "max_relevance": 0.39918010961082473,
+        "reason": null
+      },
+      {
+        "example_id": "gold-lookup-004",
+        "category": "lookup",
+        "expected_refusal": false,
+        "refused": false,
+        "max_relevance": 0.4712098948414152,
+        "reason": null
+      },
+      {
+        "example_id": "gold-lookup-005",
+        "category": "lookup",
+        "expected_refusal": false,
+        "refused": false,
+        "max_relevance": 0.2811947820948433,
+        "reason": null
+      },
+      {
+        "example_id": "gold-xref-001",
+        "category": "cross_reference",
+        "expected_refusal": false,
+        "refused": false,
+        "max_relevance": 0.2959207509939006,
+        "reason": null
+      },
+      {
+        "example_id": "gold-xref-002",
+        "category": "cross_reference",
+        "expected_refusal": false,
+        "refused": true,
+        "max_relevance": 0.13238166679724372,
+        "reason": "No sufficiently relevant content found in the standard (max relevance 0.132 < threshold 0.150)."
+      },
+      {
+        "example_id": "gold-xref-003",
+        "category": "cross_reference",
+        "expected_refusal": false,
+        "refused": true,
+        "max_relevance": 0.0825328107684332,
+        "reason": "No sufficiently relevant content found in the standard (max relevance 0.083 < threshold 0.150)."
+      },
+      {
+        "example_id": "gold-xref-004",
+        "category": "cross_reference",
+        "expected_refusal": false,
+        "refused": false,
+        "max_relevance": 0.2761434820462559,
+        "reason": null
+      },
+      {
+        "example_id": "gold-xref-005",
+        "category": "cross_reference",
+        "expected_refusal": false,
+        "refused": false,
+        "max_relevance": 0.17740273785186592,
+        "reason": null
+      },
+      {
+        "example_id": "gold-ood-001",
+        "category": "out_of_domain",
+        "expected_refusal": true,
+        "refused": true,
+        "max_relevance": 0.0,
+        "reason": "No sufficiently relevant content found in the standard (max relevance 0.000 < threshold 0.150)."
+      },
+      {
+        "example_id": "gold-ood-002",
+        "category": "out_of_domain",
+        "expected_refusal": true,
+        "refused": true,
+        "max_relevance": 0.1580127186629582,
+        "reason": "Material 'Titanium Grade 5' is not an SM- specification covered by SPES-1 Table M-1. Please verify the specification or consult the supplementary material tables."
+      },
+      {
+        "example_id": "gold-ood-003",
+        "category": "out_of_domain",
+        "expected_refusal": true,
+        "refused": true,
+        "max_relevance": 0.0,
+        "reason": "No sufficiently relevant content found in the standard (max relevance 0.000 < threshold 0.150)."
+      },
+      {
+        "example_id": "gold-ood-004",
+        "category": "out_of_domain",
+        "expected_refusal": true,
+        "refused": true,
+        "max_relevance": 0.16753840601548387,
+        "reason": "Material 'SM-999 Gr XYZ' is not in the SPES-1 pinned materials table. Please verify the specification or add the material to Table M-1."
+      },
+      {
+        "example_id": "gold-ood-005",
+        "category": "out_of_domain",
+        "expected_refusal": true,
+        "refused": true,
+        "max_relevance": 0.34004412711325394,
+        "reason": "Design temperature 700.0\u00b0C exceeds the maximum tabulated temperature for SM-516 Gr 70 (500\u00b0C per M-23)."
+      },
+      {
+        "example_id": "gold-edge-001",
+        "category": "edge_case",
+        "expected_refusal": false,
+        "refused": false,
+        "max_relevance": 0.3714910103036857,
+        "reason": null
+      },
+      {
+        "example_id": "gold-edge-002",
+        "category": "edge_case",
+        "expected_refusal": false,
+        "refused": false,
+        "max_relevance": 0.15162823681456594,
+        "reason": null
+      },
+      {
+        "example_id": "gold-edge-003",
+        "category": "edge_case",
+        "expected_refusal": false,
+        "refused": true,
+        "max_relevance": 0.11915278101976569,
+        "reason": "No sufficiently relevant content found in the standard (max relevance 0.119 < threshold 0.150)."
+      },
+      {
+        "example_id": "gold-edge-004",
+        "category": "edge_case",
+        "expected_refusal": false,
+        "refused": false,
+        "max_relevance": 0.4276865356859204,
+        "reason": null
+      },
+      {
+        "example_id": "gold-edge-005",
+        "category": "edge_case",
+        "expected_refusal": false,
+        "refused": false,
+        "max_relevance": 0.34342611974044956,
+        "reason": null
+      }
+    ]
+  },
+  {
+    "threshold": 0.175,
+    "tp": 5,
+    "fp": 4,
+    "tn": 21,
+    "fn": 0,
+    "refusal_precision": 0.5555555555555556,
+    "refusal_recall": 1.0,
+    "non_refusal_coverage": 0.84,
+    "per_example": [
+      {
+        "example_id": "gold-calc-001",
+        "category": "calculation",
+        "expected_refusal": false,
+        "refused": false,
+        "max_relevance": 0.6674624675357935,
+        "reason": null
+      },
+      {
+        "example_id": "gold-calc-002",
+        "category": "calculation",
+        "expected_refusal": false,
+        "refused": false,
+        "max_relevance": 0.37332053759609496,
+        "reason": null
+      },
+      {
+        "example_id": "gold-calc-003",
+        "category": "calculation",
+        "expected_refusal": false,
+        "refused": false,
+        "max_relevance": 0.47089300152069014,
+        "reason": null
+      },
+      {
+        "example_id": "gold-calc-004",
+        "category": "calculation",
+        "expected_refusal": false,
+        "refused": false,
+        "max_relevance": 0.30634755199600794,
+        "reason": null
+      },
+      {
+        "example_id": "gold-calc-005",
+        "category": "calculation",
+        "expected_refusal": false,
+        "refused": false,
+        "max_relevance": 0.28551178423744006,
+        "reason": null
+      },
+      {
+        "example_id": "gold-calc-006",
+        "category": "calculation",
+        "expected_refusal": false,
+        "refused": false,
+        "max_relevance": 0.35155691273232526,
+        "reason": null
+      },
+      {
+        "example_id": "gold-calc-007",
+        "category": "edge_case",
+        "expected_refusal": false,
+        "refused": false,
+        "max_relevance": 0.3636728049540707,
+        "reason": null
+      },
+      {
+        "example_id": "gold-calc-008",
+        "category": "calculation",
+        "expected_refusal": false,
+        "refused": false,
+        "max_relevance": 0.42719651881355025,
+        "reason": null
+      },
+      {
+        "example_id": "gold-calc-009",
+        "category": "calculation",
+        "expected_refusal": false,
+        "refused": false,
+        "max_relevance": 0.24350492818855635,
+        "reason": null
+      },
+      {
+        "example_id": "gold-calc-010",
+        "category": "calculation",
+        "expected_refusal": false,
+        "refused": false,
+        "max_relevance": 0.2666114150059859,
+        "reason": null
+      },
+      {
+        "example_id": "gold-lookup-001",
+        "category": "lookup",
+        "expected_refusal": false,
+        "refused": false,
+        "max_relevance": 0.38239792564382213,
+        "reason": null
+      },
+      {
+        "example_id": "gold-lookup-002",
+        "category": "lookup",
+        "expected_refusal": false,
+        "refused": false,
+        "max_relevance": 0.41425431881680197,
+        "reason": null
+      },
+      {
+        "example_id": "gold-lookup-003",
+        "category": "lookup",
+        "expected_refusal": false,
+        "refused": false,
+        "max_relevance": 0.39918010961082473,
+        "reason": null
+      },
+      {
+        "example_id": "gold-lookup-004",
+        "category": "lookup",
+        "expected_refusal": false,
+        "refused": false,
+        "max_relevance": 0.4712098948414152,
+        "reason": null
+      },
+      {
+        "example_id": "gold-lookup-005",
+        "category": "lookup",
+        "expected_refusal": false,
+        "refused": false,
+        "max_relevance": 0.2811947820948433,
+        "reason": null
+      },
+      {
+        "example_id": "gold-xref-001",
+        "category": "cross_reference",
+        "expected_refusal": false,
+        "refused": false,
+        "max_relevance": 0.2959207509939006,
+        "reason": null
+      },
+      {
+        "example_id": "gold-xref-002",
+        "category": "cross_reference",
+        "expected_refusal": false,
+        "refused": true,
+        "max_relevance": 0.13238166679724372,
+        "reason": "No sufficiently relevant content found in the standard (max relevance 0.132 < threshold 0.175)."
+      },
+      {
+        "example_id": "gold-xref-003",
+        "category": "cross_reference",
+        "expected_refusal": false,
+        "refused": true,
+        "max_relevance": 0.0825328107684332,
+        "reason": "No sufficiently relevant content found in the standard (max relevance 0.083 < threshold 0.175)."
+      },
+      {
+        "example_id": "gold-xref-004",
+        "category": "cross_reference",
+        "expected_refusal": false,
+        "refused": false,
+        "max_relevance": 0.2761434820462559,
+        "reason": null
+      },
+      {
+        "example_id": "gold-xref-005",
+        "category": "cross_reference",
+        "expected_refusal": false,
+        "refused": false,
+        "max_relevance": 0.17740273785186592,
+        "reason": null
+      },
+      {
+        "example_id": "gold-ood-001",
+        "category": "out_of_domain",
+        "expected_refusal": true,
+        "refused": true,
+        "max_relevance": 0.0,
+        "reason": "No sufficiently relevant content found in the standard (max relevance 0.000 < threshold 0.175)."
+      },
+      {
+        "example_id": "gold-ood-002",
+        "category": "out_of_domain",
+        "expected_refusal": true,
+        "refused": true,
+        "max_relevance": 0.1580127186629582,
+        "reason": "No sufficiently relevant content found in the standard (max relevance 0.158 < threshold 0.175)."
+      },
+      {
+        "example_id": "gold-ood-003",
+        "category": "out_of_domain",
+        "expected_refusal": true,
+        "refused": true,
+        "max_relevance": 0.0,
+        "reason": "No sufficiently relevant content found in the standard (max relevance 0.000 < threshold 0.175)."
+      },
+      {
+        "example_id": "gold-ood-004",
+        "category": "out_of_domain",
+        "expected_refusal": true,
+        "refused": true,
+        "max_relevance": 0.16753840601548387,
+        "reason": "No sufficiently relevant content found in the standard (max relevance 0.168 < threshold 0.175)."
+      },
+      {
+        "example_id": "gold-ood-005",
+        "category": "out_of_domain",
+        "expected_refusal": true,
+        "refused": true,
+        "max_relevance": 0.34004412711325394,
+        "reason": "Design temperature 700.0\u00b0C exceeds the maximum tabulated temperature for SM-516 Gr 70 (500\u00b0C per M-23)."
+      },
+      {
+        "example_id": "gold-edge-001",
+        "category": "edge_case",
+        "expected_refusal": false,
+        "refused": false,
+        "max_relevance": 0.3714910103036857,
+        "reason": null
+      },
+      {
+        "example_id": "gold-edge-002",
+        "category": "edge_case",
+        "expected_refusal": false,
+        "refused": true,
+        "max_relevance": 0.15162823681456594,
+        "reason": "No sufficiently relevant content found in the standard (max relevance 0.152 < threshold 0.175)."
+      },
+      {
+        "example_id": "gold-edge-003",
+        "category": "edge_case",
+        "expected_refusal": false,
+        "refused": true,
+        "max_relevance": 0.11915278101976569,
+        "reason": "No sufficiently relevant content found in the standard (max relevance 0.119 < threshold 0.175)."
+      },
+      {
+        "example_id": "gold-edge-004",
+        "category": "edge_case",
+        "expected_refusal": false,
+        "refused": false,
+        "max_relevance": 0.4276865356859204,
+        "reason": null
+      },
+      {
+        "example_id": "gold-edge-005",
+        "category": "edge_case",
+        "expected_refusal": false,
+        "refused": false,
+        "max_relevance": 0.34342611974044956,
+        "reason": null
+      }
+    ]
+  },
+  {
+    "threshold": 0.2,
+    "tp": 5,
+    "fp": 5,
+    "tn": 20,
+    "fn": 0,
+    "refusal_precision": 0.5,
+    "refusal_recall": 1.0,
+    "non_refusal_coverage": 0.8,
+    "per_example": [
+      {
+        "example_id": "gold-calc-001",
+        "category": "calculation",
+        "expected_refusal": false,
+        "refused": false,
+        "max_relevance": 0.6674624675357935,
+        "reason": null
+      },
+      {
+        "example_id": "gold-calc-002",
+        "category": "calculation",
+        "expected_refusal": false,
+        "refused": false,
+        "max_relevance": 0.37332053759609496,
+        "reason": null
+      },
+      {
+        "example_id": "gold-calc-003",
+        "category": "calculation",
+        "expected_refusal": false,
+        "refused": false,
+        "max_relevance": 0.47089300152069014,
+        "reason": null
+      },
+      {
+        "example_id": "gold-calc-004",
+        "category": "calculation",
+        "expected_refusal": false,
+        "refused": false,
+        "max_relevance": 0.30634755199600794,
+        "reason": null
+      },
+      {
+        "example_id": "gold-calc-005",
+        "category": "calculation",
+        "expected_refusal": false,
+        "refused": false,
+        "max_relevance": 0.28551178423744006,
+        "reason": null
+      },
+      {
+        "example_id": "gold-calc-006",
+        "category": "calculation",
+        "expected_refusal": false,
+        "refused": false,
+        "max_relevance": 0.35155691273232526,
+        "reason": null
+      },
+      {
+        "example_id": "gold-calc-007",
+        "category": "edge_case",
+        "expected_refusal": false,
+        "refused": false,
+        "max_relevance": 0.3636728049540707,
+        "reason": null
+      },
+      {
+        "example_id": "gold-calc-008",
+        "category": "calculation",
+        "expected_refusal": false,
+        "refused": false,
+        "max_relevance": 0.42719651881355025,
+        "reason": null
+      },
+      {
+        "example_id": "gold-calc-009",
+        "category": "calculation",
+        "expected_refusal": false,
+        "refused": false,
+        "max_relevance": 0.24350492818855635,
+        "reason": null
+      },
+      {
+        "example_id": "gold-calc-010",
+        "category": "calculation",
+        "expected_refusal": false,
+        "refused": false,
+        "max_relevance": 0.2666114150059859,
+        "reason": null
+      },
+      {
+        "example_id": "gold-lookup-001",
+        "category": "lookup",
+        "expected_refusal": false,
+        "refused": false,
+        "max_relevance": 0.38239792564382213,
+        "reason": null
+      },
+      {
+        "example_id": "gold-lookup-002",
+        "category": "lookup",
+        "expected_refusal": false,
+        "refused": false,
+        "max_relevance": 0.41425431881680197,
+        "reason": null
+      },
+      {
+        "example_id": "gold-lookup-003",
+        "category": "lookup",
+        "expected_refusal": false,
+        "refused": false,
+        "max_relevance": 0.39918010961082473,
+        "reason": null
+      },
+      {
+        "example_id": "gold-lookup-004",
+        "category": "lookup",
+        "expected_refusal": false,
+        "refused": false,
+        "max_relevance": 0.4712098948414152,
+        "reason": null
+      },
+      {
+        "example_id": "gold-lookup-005",
+        "category": "lookup",
+        "expected_refusal": false,
+        "refused": false,
+        "max_relevance": 0.2811947820948433,
+        "reason": null
+      },
+      {
+        "example_id": "gold-xref-001",
+        "category": "cross_reference",
+        "expected_refusal": false,
+        "refused": false,
+        "max_relevance": 0.2959207509939006,
+        "reason": null
+      },
+      {
+        "example_id": "gold-xref-002",
+        "category": "cross_reference",
+        "expected_refusal": false,
+        "refused": true,
+        "max_relevance": 0.13238166679724372,
+        "reason": "No sufficiently relevant content found in the standard (max relevance 0.132 < threshold 0.200)."
+      },
+      {
+        "example_id": "gold-xref-003",
+        "category": "cross_reference",
+        "expected_refusal": false,
+        "refused": true,
+        "max_relevance": 0.0825328107684332,
+        "reason": "No sufficiently relevant content found in the standard (max relevance 0.083 < threshold 0.200)."
+      },
+      {
+        "example_id": "gold-xref-004",
+        "category": "cross_reference",
+        "expected_refusal": false,
+        "refused": false,
+        "max_relevance": 0.2761434820462559,
+        "reason": null
+      },
+      {
+        "example_id": "gold-xref-005",
+        "category": "cross_reference",
+        "expected_refusal": false,
+        "refused": true,
+        "max_relevance": 0.17740273785186592,
+        "reason": "No sufficiently relevant content found in the standard (max relevance 0.177 < threshold 0.200)."
+      },
+      {
+        "example_id": "gold-ood-001",
+        "category": "out_of_domain",
+        "expected_refusal": true,
+        "refused": true,
+        "max_relevance": 0.0,
+        "reason": "No sufficiently relevant content found in the standard (max relevance 0.000 < threshold 0.200)."
+      },
+      {
+        "example_id": "gold-ood-002",
+        "category": "out_of_domain",
+        "expected_refusal": true,
+        "refused": true,
+        "max_relevance": 0.1580127186629582,
+        "reason": "No sufficiently relevant content found in the standard (max relevance 0.158 < threshold 0.200)."
+      },
+      {
+        "example_id": "gold-ood-003",
+        "category": "out_of_domain",
+        "expected_refusal": true,
+        "refused": true,
+        "max_relevance": 0.0,
+        "reason": "No sufficiently relevant content found in the standard (max relevance 0.000 < threshold 0.200)."
+      },
+      {
+        "example_id": "gold-ood-004",
+        "category": "out_of_domain",
+        "expected_refusal": true,
+        "refused": true,
+        "max_relevance": 0.16753840601548387,
+        "reason": "No sufficiently relevant content found in the standard (max relevance 0.168 < threshold 0.200)."
+      },
+      {
+        "example_id": "gold-ood-005",
+        "category": "out_of_domain",
+        "expected_refusal": true,
+        "refused": true,
+        "max_relevance": 0.34004412711325394,
+        "reason": "Design temperature 700.0\u00b0C exceeds the maximum tabulated temperature for SM-516 Gr 70 (500\u00b0C per M-23)."
+      },
+      {
+        "example_id": "gold-edge-001",
+        "category": "edge_case",
+        "expected_refusal": false,
+        "refused": false,
+        "max_relevance": 0.3714910103036857,
+        "reason": null
+      },
+      {
+        "example_id": "gold-edge-002",
+        "category": "edge_case",
+        "expected_refusal": false,
+        "refused": true,
+        "max_relevance": 0.15162823681456594,
+        "reason": "No sufficiently relevant content found in the standard (max relevance 0.152 < threshold 0.200)."
+      },
+      {
+        "example_id": "gold-edge-003",
+        "category": "edge_case",
+        "expected_refusal": false,
+        "refused": true,
+        "max_relevance": 0.11915278101976569,
+        "reason": "No sufficiently relevant content found in the standard (max relevance 0.119 < threshold 0.200)."
+      },
+      {
+        "example_id": "gold-edge-004",
+        "category": "edge_case",
+        "expected_refusal": false,
+        "refused": false,
+        "max_relevance": 0.4276865356859204,
+        "reason": null
+      },
+      {
+        "example_id": "gold-edge-005",
+        "category": "edge_case",
+        "expected_refusal": false,
+        "refused": false,
+        "max_relevance": 0.34342611974044956,
+        "reason": null
+      }
+    ]
+  },
+  {
+    "threshold": 0.25,
+    "tp": 5,
+    "fp": 6,
+    "tn": 19,
+    "fn": 0,
+    "refusal_precision": 0.45454545454545453,
+    "refusal_recall": 1.0,
+    "non_refusal_coverage": 0.76,
+    "per_example": [
+      {
+        "example_id": "gold-calc-001",
+        "category": "calculation",
+        "expected_refusal": false,
+        "refused": false,
+        "max_relevance": 0.6674624675357935,
+        "reason": null
+      },
+      {
+        "example_id": "gold-calc-002",
+        "category": "calculation",
+        "expected_refusal": false,
+        "refused": false,
+        "max_relevance": 0.37332053759609496,
+        "reason": null
+      },
+      {
+        "example_id": "gold-calc-003",
+        "category": "calculation",
+        "expected_refusal": false,
+        "refused": false,
+        "max_relevance": 0.47089300152069014,
+        "reason": null
+      },
+      {
+        "example_id": "gold-calc-004",
+        "category": "calculation",
+        "expected_refusal": false,
+        "refused": false,
+        "max_relevance": 0.30634755199600794,
+        "reason": null
+      },
+      {
+        "example_id": "gold-calc-005",
+        "category": "calculation",
+        "expected_refusal": false,
+        "refused": false,
+        "max_relevance": 0.28551178423744006,
+        "reason": null
+      },
+      {
+        "example_id": "gold-calc-006",
+        "category": "calculation",
+        "expected_refusal": false,
+        "refused": false,
+        "max_relevance": 0.35155691273232526,
+        "reason": null
+      },
+      {
+        "example_id": "gold-calc-007",
+        "category": "edge_case",
+        "expected_refusal": false,
+        "refused": false,
+        "max_relevance": 0.3636728049540707,
+        "reason": null
+      },
+      {
+        "example_id": "gold-calc-008",
+        "category": "calculation",
+        "expected_refusal": false,
+        "refused": false,
+        "max_relevance": 0.42719651881355025,
+        "reason": null
+      },
+      {
+        "example_id": "gold-calc-009",
+        "category": "calculation",
+        "expected_refusal": false,
+        "refused": true,
+        "max_relevance": 0.24350492818855635,
+        "reason": "No sufficiently relevant content found in the standard (max relevance 0.244 < threshold 0.250)."
+      },
+      {
+        "example_id": "gold-calc-010",
+        "category": "calculation",
+        "expected_refusal": false,
+        "refused": false,
+        "max_relevance": 0.2666114150059859,
+        "reason": null
+      },
+      {
+        "example_id": "gold-lookup-001",
+        "category": "lookup",
+        "expected_refusal": false,
+        "refused": false,
+        "max_relevance": 0.38239792564382213,
+        "reason": null
+      },
+      {
+        "example_id": "gold-lookup-002",
+        "category": "lookup",
+        "expected_refusal": false,
+        "refused": false,
+        "max_relevance": 0.41425431881680197,
+        "reason": null
+      },
+      {
+        "example_id": "gold-lookup-003",
+        "category": "lookup",
+        "expected_refusal": false,
+        "refused": false,
+        "max_relevance": 0.39918010961082473,
+        "reason": null
+      },
+      {
+        "example_id": "gold-lookup-004",
+        "category": "lookup",
+        "expected_refusal": false,
+        "refused": false,
+        "max_relevance": 0.4712098948414152,
+        "reason": null
+      },
+      {
+        "example_id": "gold-lookup-005",
+        "category": "lookup",
+        "expected_refusal": false,
+        "refused": false,
+        "max_relevance": 0.2811947820948433,
+        "reason": null
+      },
+      {
+        "example_id": "gold-xref-001",
+        "category": "cross_reference",
+        "expected_refusal": false,
+        "refused": false,
+        "max_relevance": 0.2959207509939006,
+        "reason": null
+      },
+      {
+        "example_id": "gold-xref-002",
+        "category": "cross_reference",
+        "expected_refusal": false,
+        "refused": true,
+        "max_relevance": 0.13238166679724372,
+        "reason": "No sufficiently relevant content found in the standard (max relevance 0.132 < threshold 0.250)."
+      },
+      {
+        "example_id": "gold-xref-003",
+        "category": "cross_reference",
+        "expected_refusal": false,
+        "refused": true,
+        "max_relevance": 0.0825328107684332,
+        "reason": "No sufficiently relevant content found in the standard (max relevance 0.083 < threshold 0.250)."
+      },
+      {
+        "example_id": "gold-xref-004",
+        "category": "cross_reference",
+        "expected_refusal": false,
+        "refused": false,
+        "max_relevance": 0.2761434820462559,
+        "reason": null
+      },
+      {
+        "example_id": "gold-xref-005",
+        "category": "cross_reference",
+        "expected_refusal": false,
+        "refused": true,
+        "max_relevance": 0.17740273785186592,
+        "reason": "No sufficiently relevant content found in the standard (max relevance 0.177 < threshold 0.250)."
+      },
+      {
+        "example_id": "gold-ood-001",
+        "category": "out_of_domain",
+        "expected_refusal": true,
+        "refused": true,
+        "max_relevance": 0.0,
+        "reason": "No sufficiently relevant content found in the standard (max relevance 0.000 < threshold 0.250)."
+      },
+      {
+        "example_id": "gold-ood-002",
+        "category": "out_of_domain",
+        "expected_refusal": true,
+        "refused": true,
+        "max_relevance": 0.1580127186629582,
+        "reason": "No sufficiently relevant content found in the standard (max relevance 0.158 < threshold 0.250)."
+      },
+      {
+        "example_id": "gold-ood-003",
+        "category": "out_of_domain",
+        "expected_refusal": true,
+        "refused": true,
+        "max_relevance": 0.0,
+        "reason": "No sufficiently relevant content found in the standard (max relevance 0.000 < threshold 0.250)."
+      },
+      {
+        "example_id": "gold-ood-004",
+        "category": "out_of_domain",
+        "expected_refusal": true,
+        "refused": true,
+        "max_relevance": 0.16753840601548387,
+        "reason": "No sufficiently relevant content found in the standard (max relevance 0.168 < threshold 0.250)."
+      },
+      {
+        "example_id": "gold-ood-005",
+        "category": "out_of_domain",
+        "expected_refusal": true,
+        "refused": true,
+        "max_relevance": 0.34004412711325394,
+        "reason": "Design temperature 700.0\u00b0C exceeds the maximum tabulated temperature for SM-516 Gr 70 (500\u00b0C per M-23)."
+      },
+      {
+        "example_id": "gold-edge-001",
+        "category": "edge_case",
+        "expected_refusal": false,
+        "refused": false,
+        "max_relevance": 0.3714910103036857,
+        "reason": null
+      },
+      {
+        "example_id": "gold-edge-002",
+        "category": "edge_case",
+        "expected_refusal": false,
+        "refused": true,
+        "max_relevance": 0.15162823681456594,
+        "reason": "No sufficiently relevant content found in the standard (max relevance 0.152 < threshold 0.250)."
+      },
+      {
+        "example_id": "gold-edge-003",
+        "category": "edge_case",
+        "expected_refusal": false,
+        "refused": true,
+        "max_relevance": 0.11915278101976569,
+        "reason": "No sufficiently relevant content found in the standard (max relevance 0.119 < threshold 0.250)."
+      },
+      {
+        "example_id": "gold-edge-004",
+        "category": "edge_case",
+        "expected_refusal": false,
+        "refused": false,
+        "max_relevance": 0.4276865356859204,
+        "reason": null
+      },
+      {
+        "example_id": "gold-edge-005",
+        "category": "edge_case",
+        "expected_refusal": false,
+        "refused": false,
+        "max_relevance": 0.34342611974044956,
+        "reason": null
+      }
+    ]
+  },
+  {
+    "threshold": 0.3,
+    "tp": 5,
+    "fp": 11,
+    "tn": 14,
+    "fn": 0,
+    "refusal_precision": 0.3125,
+    "refusal_recall": 1.0,
+    "non_refusal_coverage": 0.56,
+    "per_example": [
+      {
+        "example_id": "gold-calc-001",
+        "category": "calculation",
+        "expected_refusal": false,
+        "refused": false,
+        "max_relevance": 0.6674624675357935,
+        "reason": null
+      },
+      {
+        "example_id": "gold-calc-002",
+        "category": "calculation",
+        "expected_refusal": false,
+        "refused": false,
+        "max_relevance": 0.37332053759609496,
+        "reason": null
+      },
+      {
+        "example_id": "gold-calc-003",
+        "category": "calculation",
+        "expected_refusal": false,
+        "refused": false,
+        "max_relevance": 0.47089300152069014,
+        "reason": null
+      },
+      {
+        "example_id": "gold-calc-004",
+        "category": "calculation",
+        "expected_refusal": false,
+        "refused": false,
+        "max_relevance": 0.30634755199600794,
+        "reason": null
+      },
+      {
+        "example_id": "gold-calc-005",
+        "category": "calculation",
+        "expected_refusal": false,
+        "refused": true,
+        "max_relevance": 0.28551178423744006,
+        "reason": "No sufficiently relevant content found in the standard (max relevance 0.286 < threshold 0.300)."
+      },
+      {
+        "example_id": "gold-calc-006",
+        "category": "calculation",
+        "expected_refusal": false,
+        "refused": false,
+        "max_relevance": 0.35155691273232526,
+        "reason": null
+      },
+      {
+        "example_id": "gold-calc-007",
+        "category": "edge_case",
+        "expected_refusal": false,
+        "refused": false,
+        "max_relevance": 0.3636728049540707,
+        "reason": null
+      },
+      {
+        "example_id": "gold-calc-008",
+        "category": "calculation",
+        "expected_refusal": false,
+        "refused": false,
+        "max_relevance": 0.42719651881355025,
+        "reason": null
+      },
+      {
+        "example_id": "gold-calc-009",
+        "category": "calculation",
+        "expected_refusal": false,
+        "refused": true,
+        "max_relevance": 0.24350492818855635,
+        "reason": "No sufficiently relevant content found in the standard (max relevance 0.244 < threshold 0.300)."
+      },
+      {
+        "example_id": "gold-calc-010",
+        "category": "calculation",
+        "expected_refusal": false,
+        "refused": true,
+        "max_relevance": 0.2666114150059859,
+        "reason": "No sufficiently relevant content found in the standard (max relevance 0.267 < threshold 0.300)."
+      },
+      {
+        "example_id": "gold-lookup-001",
+        "category": "lookup",
+        "expected_refusal": false,
+        "refused": false,
+        "max_relevance": 0.38239792564382213,
+        "reason": null
+      },
+      {
+        "example_id": "gold-lookup-002",
+        "category": "lookup",
+        "expected_refusal": false,
+        "refused": false,
+        "max_relevance": 0.41425431881680197,
+        "reason": null
+      },
+      {
+        "example_id": "gold-lookup-003",
+        "category": "lookup",
+        "expected_refusal": false,
+        "refused": false,
+        "max_relevance": 0.39918010961082473,
+        "reason": null
+      },
+      {
+        "example_id": "gold-lookup-004",
+        "category": "lookup",
+        "expected_refusal": false,
+        "refused": false,
+        "max_relevance": 0.4712098948414152,
+        "reason": null
+      },
+      {
+        "example_id": "gold-lookup-005",
+        "category": "lookup",
+        "expected_refusal": false,
+        "refused": true,
+        "max_relevance": 0.2811947820948433,
+        "reason": "No sufficiently relevant content found in the standard (max relevance 0.281 < threshold 0.300)."
+      },
+      {
+        "example_id": "gold-xref-001",
+        "category": "cross_reference",
+        "expected_refusal": false,
+        "refused": true,
+        "max_relevance": 0.2959207509939006,
+        "reason": "No sufficiently relevant content found in the standard (max relevance 0.296 < threshold 0.300)."
+      },
+      {
+        "example_id": "gold-xref-002",
+        "category": "cross_reference",
+        "expected_refusal": false,
+        "refused": true,
+        "max_relevance": 0.13238166679724372,
+        "reason": "No sufficiently relevant content found in the standard (max relevance 0.132 < threshold 0.300)."
+      },
+      {
+        "example_id": "gold-xref-003",
+        "category": "cross_reference",
+        "expected_refusal": false,
+        "refused": true,
+        "max_relevance": 0.0825328107684332,
+        "reason": "No sufficiently relevant content found in the standard (max relevance 0.083 < threshold 0.300)."
+      },
+      {
+        "example_id": "gold-xref-004",
+        "category": "cross_reference",
+        "expected_refusal": false,
+        "refused": true,
+        "max_relevance": 0.2761434820462559,
+        "reason": "No sufficiently relevant content found in the standard (max relevance 0.276 < threshold 0.300)."
+      },
+      {
+        "example_id": "gold-xref-005",
+        "category": "cross_reference",
+        "expected_refusal": false,
+        "refused": true,
+        "max_relevance": 0.17740273785186592,
+        "reason": "No sufficiently relevant content found in the standard (max relevance 0.177 < threshold 0.300)."
+      },
+      {
+        "example_id": "gold-ood-001",
+        "category": "out_of_domain",
+        "expected_refusal": true,
+        "refused": true,
+        "max_relevance": 0.0,
+        "reason": "No sufficiently relevant content found in the standard (max relevance 0.000 < threshold 0.300)."
+      },
+      {
+        "example_id": "gold-ood-002",
+        "category": "out_of_domain",
+        "expected_refusal": true,
+        "refused": true,
+        "max_relevance": 0.1580127186629582,
+        "reason": "No sufficiently relevant content found in the standard (max relevance 0.158 < threshold 0.300)."
+      },
+      {
+        "example_id": "gold-ood-003",
+        "category": "out_of_domain",
+        "expected_refusal": true,
+        "refused": true,
+        "max_relevance": 0.0,
+        "reason": "No sufficiently relevant content found in the standard (max relevance 0.000 < threshold 0.300)."
+      },
+      {
+        "example_id": "gold-ood-004",
+        "category": "out_of_domain",
+        "expected_refusal": true,
+        "refused": true,
+        "max_relevance": 0.16753840601548387,
+        "reason": "No sufficiently relevant content found in the standard (max relevance 0.168 < threshold 0.300)."
+      },
+      {
+        "example_id": "gold-ood-005",
+        "category": "out_of_domain",
+        "expected_refusal": true,
+        "refused": true,
+        "max_relevance": 0.34004412711325394,
+        "reason": "Design temperature 700.0\u00b0C exceeds the maximum tabulated temperature for SM-516 Gr 70 (500\u00b0C per M-23)."
+      },
+      {
+        "example_id": "gold-edge-001",
+        "category": "edge_case",
+        "expected_refusal": false,
+        "refused": false,
+        "max_relevance": 0.3714910103036857,
+        "reason": null
+      },
+      {
+        "example_id": "gold-edge-002",
+        "category": "edge_case",
+        "expected_refusal": false,
+        "refused": true,
+        "max_relevance": 0.15162823681456594,
+        "reason": "No sufficiently relevant content found in the standard (max relevance 0.152 < threshold 0.300)."
+      },
+      {
+        "example_id": "gold-edge-003",
+        "category": "edge_case",
+        "expected_refusal": false,
+        "refused": true,
+        "max_relevance": 0.11915278101976569,
+        "reason": "No sufficiently relevant content found in the standard (max relevance 0.119 < threshold 0.300)."
+      },
+      {
+        "example_id": "gold-edge-004",
+        "category": "edge_case",
+        "expected_refusal": false,
+        "refused": false,
+        "max_relevance": 0.4276865356859204,
+        "reason": null
+      },
+      {
+        "example_id": "gold-edge-005",
+        "category": "edge_case",
+        "expected_refusal": false,
+        "refused": false,
+        "max_relevance": 0.34342611974044956,
+        "reason": null
+      }
+    ]
+  }
+]

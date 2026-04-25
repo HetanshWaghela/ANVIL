@@ -68,8 +68,8 @@ def is_calculation_query(query: str) -> bool:
 # Gate — if any of these are missing from retrieval, refuse: we cannot
 # responsibly compute thickness without the formula paragraph, the stress
 # lookup, and the joint-efficiency lookup all surfaced in the context.
-_REQUIRED_REFS_FOR_CALC: tuple[tuple[str, ...], ...] = (
-    # (human-readable label, list of acceptable paragraph_refs)
+# Each entry is (human-readable label, tuple of acceptable paragraph_refs).
+_REQUIRED_REFS_FOR_CALC: tuple[tuple[str, tuple[str, ...]], ...] = (
     ("thickness formula (A-27)", ("A-27",)),
     ("allowable-stress table (M-1)", ("M-1", "Table M-1")),
     ("joint-efficiency table (B-12)", ("B-12", "Table B-12")),

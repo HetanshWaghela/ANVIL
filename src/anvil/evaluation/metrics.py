@@ -5,6 +5,7 @@ from __future__ import annotations
 import re
 
 from anvil.generation.citation_enforcer import validate_citations
+from anvil.schemas.document import DocumentElement
 from anvil.schemas.evaluation import GoldenExample, MetricScore
 from anvil.schemas.generation import AnvilResponse, ResponseConfidence, StepKey
 from anvil.schemas.retrieval import RetrievedChunk
@@ -123,9 +124,17 @@ def faithfulness(
 def citation_accuracy(
     response: AnvilResponse,
     retrieved: list[RetrievedChunk],
+    element_index: dict[str, DocumentElement] | None = None,
 ) -> MetricScore:
-    """Citation Accuracy = valid_citations / total_citations."""
-    result = validate_citations(response, retrieved)
+    """Citation Accuracy = valid_citations / total_citations.
+
+    `element_index` is forwarded to `validate_citations` so canonical-ref
+    citations (e.g. pinned-data Table M-1 quotes that retrieval did not
+    surface) can have their `quoted_text` validated against the parsed
+    standard. Without it, those citations fail closed — which is the
+    intended safety behavior, not a measurement artifact.
+    """
+    result = validate_citations(response, retrieved, element_index=element_index)
     return MetricScore(
         name="citation_accuracy",
         value=result.accuracy,

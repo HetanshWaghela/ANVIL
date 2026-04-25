@@ -16,7 +16,10 @@ from anvil.evaluation.metrics import (
     structural_completeness,
 )
 from anvil.generation.generator import AnvilGenerator
+from anvil.schemas.document import DocumentElement
 from anvil.schemas.evaluation import EvaluationResult, GoldenExample, MetricScore
+from anvil.schemas.generation import AnvilResponse
+from anvil.schemas.retrieval import RetrievedChunk
 
 
 @dataclass
@@ -43,9 +46,17 @@ class EvaluationRunner:
 
     async def run(self, examples: list[GoldenExample]) -> RunSummary:
         per_example: list[EvaluationResult] = []
+        # Reuse the generator's element_index so citation_accuracy can
+        # validate canonical-ref quotes against the parsed standard.
+        element_index = getattr(self.generator, "element_index", None)
         for ex in examples:
             outcome = await self.generator.generate(ex.query, top_k=10)
-            metrics = self._score(ex, outcome.response, outcome.retrieved_chunks)
+            metrics = self._score(
+                ex,
+                outcome.response,
+                outcome.retrieved_chunks,
+                element_index=element_index,
+            )
             passed = all(m.passed for m in metrics)
             per_example.append(
                 EvaluationResult(
@@ -80,8 +91,9 @@ class EvaluationRunner:
     def _score(
         self,
         example: GoldenExample,
-        response,
-        retrieved,
+        response: AnvilResponse,
+        retrieved: list[RetrievedChunk],
+        element_index: dict[str, DocumentElement] | None = None,
     ) -> list[MetricScore]:
         metrics: list[MetricScore] = []
         # Refusal-aware: OOD/refusal examples get refusal calibration only
@@ -96,7 +108,9 @@ class EvaluationRunner:
             retrieval_recall_at_k(retrieved, example.expected_paragraph_refs, k=10)
         )
         metrics.append(faithfulness(response, retrieved))
-        metrics.append(citation_accuracy(response, retrieved))
+        metrics.append(
+            citation_accuracy(response, retrieved, element_index=element_index)
+        )
         metrics.append(entity_grounding(response, retrieved))
         metrics.append(
             structural_completeness(

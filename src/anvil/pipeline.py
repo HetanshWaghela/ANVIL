@@ -5,6 +5,7 @@ from __future__ import annotations
 from dataclasses import dataclass
 from pathlib import Path
 
+from anvil.evaluation.ablation import ABLATIONS, PipelineAblation
 from anvil.generation.calculation_engine import CalculationEngine, CitationBuilder
 from anvil.generation.generator import AnvilGenerator
 from anvil.generation.llm_backend import FakeLLMBackend, LLMBackend
@@ -33,6 +34,7 @@ def build_pipeline(
     standard_path: str | Path | None = None,
     backend: LLMBackend | None = None,
     embedder: Embedder | None = None,
+    ablation: PipelineAblation | str | None = None,
 ) -> Pipeline:
     """Build the full pipeline from the synthetic standard.
 
@@ -40,7 +42,23 @@ def build_pipeline(
         - `standard_path` → data/synthetic/standard.md
         - `backend`       → FakeLLMBackend (deterministic, no network)
         - `embedder`      → selected by ANVIL_EMBEDDER env var (default: hash)
+        - `ablation`      → "baseline" (full hybrid + pinned + gates ON)
+
+    `ablation` may be a `PipelineAblation` instance, the name of a
+    catalog entry (`"baseline"`, `"bm25-only"`, `"no-pinned"`, …), or
+    None — None resolves to `"baseline"`.
     """
+    if ablation is None:
+        config = ABLATIONS["baseline"]
+    elif isinstance(ablation, str):
+        if ablation not in ABLATIONS:
+            raise ValueError(
+                f"Unknown ablation {ablation!r}. Known: {sorted(ABLATIONS)}."
+            )
+        config = ABLATIONS[ablation]
+    else:
+        config = ablation
+
     path = Path(standard_path) if standard_path else (
         Path(__file__).resolve().parents[2] / "data" / "synthetic" / "standard.md"
     )
@@ -58,6 +76,7 @@ def build_pipeline(
         embedder=embedder,
         vector_store=vector_store,
         graph_store=graph_store,
+        mode=config.retrieval_mode,
     )
     # Share the parsed elements with the citation builder so it quotes from
     # the live document — no duplicated parsing and no drift if the markdown
@@ -69,6 +88,13 @@ def build_pipeline(
         retriever=retriever,
         backend=backend or FakeLLMBackend(),
         calc_engine=calc_engine,
+        # Same parsed elements as the citation builder — gives the
+        # citation enforcer the ability to validate canonical-ref
+        # quotes against the real document.
+        element_index={e.element_id: e for e in elements},
+        use_pinned_data=config.use_pinned_data,
+        use_refusal_gate=config.use_refusal_gate,
+        use_citation_enforcer=config.use_citation_enforcer,
     )
     return Pipeline(
         elements=elements,

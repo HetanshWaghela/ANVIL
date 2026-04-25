@@ -18,16 +18,22 @@ from anvil.generation.citation_enforcer import (
 from anvil.generation.llm_backend import FakeLLMBackend, LLMBackend
 from anvil.generation.prompt_builder import build_context_prompt
 from anvil.generation.refusal_gate import (
+    RefusalDecision,
     check_calculation_evidence,
     is_calculation_query,
     should_refuse,
 )
 from anvil.logging_config import get_logger
 from anvil.retrieval.hybrid_retriever import HybridRetriever
+from anvil.schemas.document import DocumentElement
 from anvil.schemas.generation import AnvilResponse, ResponseConfidence
 from anvil.schemas.retrieval import RetrievalQuery, RetrievedChunk
 
 log = get_logger(__name__)
+
+# Sentinel for the no-refusal ablation. Constructed once at module
+# load so the runtime path stays allocation-free.
+_NO_REFUSAL_DECISION = RefusalDecision(should_refuse=False, reason=None)
 
 
 @dataclass
@@ -48,10 +54,28 @@ class AnvilGenerator:
         retriever: HybridRetriever,
         backend: LLMBackend | None = None,
         calc_engine: CalculationEngine | None = None,
+        element_index: dict[str, DocumentElement] | None = None,
+        *,
+        use_pinned_data: bool = True,
+        use_refusal_gate: bool = True,
+        use_citation_enforcer: bool = True,
     ) -> None:
         self.retriever = retriever
         self.backend = backend or FakeLLMBackend()
         self.calc_engine = calc_engine or CalculationEngine()
+        # Used by `validate_citations` to resolve canonical-ref citations
+        # (e.g. pinned-data Table M-1 quotes) against the parsed standard
+        # when retrieval did not surface the cited element. Without this,
+        # those citations would fail closed — see citation_enforcer module
+        # docstring for the rationale.
+        self.element_index = element_index
+        # Ablation flags — defaults match the production baseline. Each
+        # flipped flag is a measurable degradation we report on in
+        # `docs/ablations.md`. NEVER flip these in production code; they
+        # exist only to be measured against.
+        self.use_pinned_data = use_pinned_data
+        self.use_refusal_gate = use_refusal_gate
+        self.use_citation_enforcer = use_citation_enforcer
 
     async def generate(
         self,
@@ -71,8 +95,13 @@ class AnvilGenerator:
         rq = RetrievalQuery(text=query, top_k=top_k, enable_graph_expansion=True)
         chunks = self.retriever.retrieve(rq)
 
-        # 2) Refusal gate
-        decision = should_refuse(query, chunks)
+        # 2) Refusal gate (skipped under the no-refusal ablation —
+        #    measures the false-confident rate on OOD queries).
+        decision = (
+            should_refuse(query, chunks)
+            if self.use_refusal_gate
+            else _NO_REFUSAL_DECISION
+        )
         if decision.should_refuse:
             log.info("generate.refusal", reason=decision.reason)
             system, user = build_context_prompt(query, chunks)
@@ -102,12 +131,21 @@ class AnvilGenerator:
         # explanation instead of a plausible-but-wrong free-form answer.
         calc_result: CalculationResult | None = None
         calc_steps = []
-        inputs = calculation_inputs
-        calc_was_requested = inputs is not None
-        inputs_came_from_caller = inputs is not None
-        if inputs is None and is_calculation_query(query):
-            inputs = _try_parse_calculation_inputs(query)
+        # `use_pinned_data=False` disables the deterministic engine
+        # entirely, leaving the LLM to extract values from chunks
+        # itself. The ablation deliberately produces wrong numerics
+        # — that is the measurement.
+        if not self.use_pinned_data:
+            inputs = None
+            calc_was_requested = False
+            inputs_came_from_caller = False
+        else:
+            inputs = calculation_inputs
             calc_was_requested = inputs is not None
+            inputs_came_from_caller = inputs is not None
+            if inputs is None and is_calculation_query(query):
+                inputs = _try_parse_calculation_inputs(query)
+                calc_was_requested = inputs is not None
 
         # Required-elements evidence check. Only apply when inputs came
         # from the (LLM-driven) NL parser — if the caller supplied explicit
@@ -178,12 +216,25 @@ class AnvilGenerator:
             calculation_steps=calc_steps,
         )
 
-        # 6) Citation validation
-        validation = validate_citations(response, chunks)
-        if not validation.passed and response.confidence == ResponseConfidence.HIGH:
-            # Downgrade confidence if citations failed to validate
-            response = response.model_copy(
-                update={"confidence": ResponseConfidence.MEDIUM}
+        # 6) Citation validation. Pass the parsed-element index so
+        #    canonical-ref citations (pinned-data Table M-1, B-12, A-27)
+        #    have their `quoted_text` validated against the real document
+        #    content even when retrieval did not surface those elements.
+        #    Skipped under the no-citation-enforcer ablation: the
+        #    response is returned with whatever quotes the LLM
+        #    produced, which is precisely what we measure.
+        if self.use_citation_enforcer:
+            validation = validate_citations(
+                response, chunks, element_index=self.element_index
+            )
+            if not validation.passed and response.confidence == ResponseConfidence.HIGH:
+                # Downgrade confidence if citations failed to validate
+                response = response.model_copy(
+                    update={"confidence": ResponseConfidence.MEDIUM}
+                )
+        else:
+            validation = CitationValidationResult(
+                total=len(response.citations), valid=len(response.citations), issues=[]
             )
 
         log.info(

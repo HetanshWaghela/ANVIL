@@ -31,7 +31,12 @@ dev = [
     "mypy>=1.13",
     "rich>=13.0",
     "httpx>=0.28",
+    "respx>=0.21",
 ]
+
+[project.scripts]
+# Single CLI entry. Subcommands are registered in `src/anvil/cli.py`.
+anvil = "anvil.cli:main"
 
 [build-system]
 requires = ["hatchling"]

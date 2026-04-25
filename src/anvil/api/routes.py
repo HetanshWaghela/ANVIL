@@ -200,7 +200,7 @@ def build_router(
         if graph_store is None or node_id not in graph_store.graph:
             raise HTTPException(404, detail=f"Node '{node_id}' not found")
         attrs = dict(graph_store.graph.nodes[node_id])
-        outgoing = [
+        outgoing: list[dict[str, object]] = [
             {"target": t, "edge_type": et, "reference_text": rt}
             for t, et, rt in graph_store.neighbors(node_id)
         ]

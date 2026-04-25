@@ -12,10 +12,8 @@ __pycache__/
 htmlcov/
 build/
 dist/
-anvil-prompt.md
-anvil-reference.md
+
 # Virtualenvs
-papers.txt
 .venv/
 venv/
 env/
@@ -37,6 +35,23 @@ data/.cache/
 .env
 .env.local
 
-# Internal design notes & scratch docs (not committed)
-docs/
+# Internal scratch — NOT committed.
+# Note: `docs/` is intentionally NOT excluded — it is the load-bearing
+# artifact directory (architecture.md, design_decisions.md,
+# evaluation_methodology.md, ablations.md, trust_calibration.md,
+# parser_benchmark.md, report.md, test_inventory.md). The plan's value
+# proposition depends on these being reviewable on the public repo.
 progress.txt
+.scratch/
+
+# Run-logger artifacts (M2). Per the plan §3.1:
+#   - manifest.json, summary.json, report.md, per_example.json — COMMITTED
+#   - raw per-request logs — gitignored (can be megabytes per run)
+data/runs/*/raw_responses.jsonl
+data/runs/*/prompts.jsonl
+data/runs/*/request_log.jsonl
+
+# Internal-only files (kept locally for the audit, not for distribution).
+anvil-prompt.md
+anvil-reference.md
+papers.txt

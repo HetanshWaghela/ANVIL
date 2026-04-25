@@ -201,7 +201,83 @@ def test_nl_parser_accepts_explicit_inputs() -> None:
 
 
 # ---------------------------------------------------------------------------
-# 5) Table M-1 in the markdown matches the pinned JSON ground truth.
+# 5) Formula applicability conditions are populated from the standard text.
+# ---------------------------------------------------------------------------
+
+
+def test_formula_extractor_populates_applicability_conditions() -> None:
+    """REGRESSION (audit A2): the parser must extract "applies when ..."
+    sentences into ParsedFormula.applicability_conditions. The previous
+    implementation always set this field to []; downstream compliance
+    reasoning had no structural access to per-formula limits.
+    """
+    from anvil.parsing.formula_extractor import extract_formulas
+
+    body = (
+        "Some preamble.\n\n"
+        "```\n"
+        "t = (P × R) / (S × E − 0.6 × P)\n"
+        "```\n\n"
+        "This formula applies when: t ≤ R/2 AND P ≤ 0.385 × S × E. "
+        "When these conditions are not satisfied, A-27(c)(3) shall be "
+        "applied (not covered here).\n"
+    )
+    formulas = extract_formulas("A-27(c)(1)", body)
+    assert len(formulas) == 1
+    conds = formulas[0].applicability_conditions
+    assert any("R/2" in c for c in conds), conds
+    assert any("0.385" in c for c in conds), conds
+
+
+def test_formula_extractor_attaches_conditions_per_formula() -> None:
+    """When a paragraph carries multiple formulas, each formula's
+    `applicability_conditions` must come from the text region between
+    its fence and the next fence — NOT a global merge."""
+    from anvil.parsing.formula_extractor import extract_formulas
+
+    body = (
+        "```\nt = (P × R) / (S × E − 0.6 × P)\n```\n\n"
+        "Applicable when P ≤ 0.385 × S × E.\n\n"
+        "```\nt = (P × R) / (2 × S × E − 0.2 × P)\n```\n\n"
+        "Applicable when t ≤ 0.356 × R AND P ≤ 0.665 × S × E.\n"
+    )
+    formulas = extract_formulas("A-27", body)
+    assert len(formulas) == 2
+    # Cylindrical formula gets the 0.385 condition only
+    assert any("0.385" in c for c in formulas[0].applicability_conditions)
+    assert all("0.665" not in c for c in formulas[0].applicability_conditions)
+    # Spherical formula gets BOTH the 0.356 R and 0.665 S·E conditions
+    sph = formulas[1].applicability_conditions
+    assert any("0.356" in c for c in sph), sph
+    assert any("0.665" in c for c in sph), sph
+
+
+def test_synthetic_standard_a27_formulas_have_conditions(parsed_elements) -> None:
+    """Integration: SPES-1's A-27 formulas (parsed from standard.md) must
+    end up with non-empty applicability_conditions on every formula
+    element — proves the regex matches the actual standard text, not
+    just contrived test inputs."""
+    from anvil.schemas.document import ElementType
+
+    formula_els = [
+        e
+        for e in parsed_elements
+        if e.element_type == ElementType.FORMULA
+        and e.paragraph_ref
+        and e.paragraph_ref.startswith("A-27")
+        and e.formula is not None
+    ]
+    assert formula_els, "no A-27 formulas were parsed — parser may have regressed"
+    for el in formula_els:
+        assert el.formula is not None
+        assert el.formula.applicability_conditions, (
+            f"{el.element_id} has empty applicability_conditions; the "
+            f"parser must extract them from the surrounding text."
+        )
+
+
+# ---------------------------------------------------------------------------
+# 6) Table M-1 in the markdown matches the pinned JSON ground truth.
 # ---------------------------------------------------------------------------
 
 

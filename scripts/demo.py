@@ -38,7 +38,7 @@ async def _run_demo(queries: list[str]) -> None:
 
     for q in queries:
         if _RICH:
-            console.rule(f"[bold cyan]Query")
+            console.rule("[bold cyan]Query")
             console.print(q)
         else:
             print(f"\n=== Query ===\n{q}")

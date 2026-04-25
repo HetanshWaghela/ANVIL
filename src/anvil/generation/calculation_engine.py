@@ -15,6 +15,7 @@ Every numerical result in an `AnvilResponse` must come from this engine.
 from __future__ import annotations
 
 import re
+from collections.abc import Callable
 from dataclasses import dataclass
 from pathlib import Path
 from typing import Literal
@@ -204,7 +205,15 @@ class CalculationEngine:
 
     # ---- internal ---------------------------------------------------------
 
-    def _formula_for(self, component: ComponentType):
+    def _formula_for(
+        self, component: ComponentType
+    ) -> tuple[
+        str,
+        Callable[[float, float, float], tuple[float, float, bool]],
+        Callable[[float, float, float, float], float],
+        Callable[[float, float, float, float], float],
+        str,
+    ]:
         """Return (paragraph_ref, applicability_fn, thickness_fn, mawp_fn, plain_text)."""
         if component == "cylindrical_shell":
             return (

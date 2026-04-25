@@ -11,10 +11,11 @@ from anvil.generation.citation_enforcer import (
     CitationValidationResult,
     validate_citations,
 )
-from anvil.generation.generator import AnvilGenerator, LLMBackend
+from anvil.generation.generator import AnvilGenerator
 from anvil.generation.llm_backend import (
     FakeLLMBackend,
     InstructorBackend,
+    LLMBackend,
     OpenAICompatibleBackend,
     get_default_backend,
 )

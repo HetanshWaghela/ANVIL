@@ -1,0 +1,123 @@
+name: CI
+
+# CI runs on every push to main and every PR. The four jobs (lint,
+# type-check, test, eval-fake) match the local quality gates exactly so
+# "green CI" means the same thing locally and remotely. The eval-fake
+# job exercises the full RAG pipeline against the bundled FakeLLMBackend
+# so a regression in retrieval / refusal-gate / citation-enforcer fails
+# CI even without a NIM key.
+#
+# A separate `nim-check` job runs only when NVIDIA_API_KEY is configured
+# as a repo secret. It uploads the JSON report as an artifact for any
+# reviewer to inspect.
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+    branches: [main]
+  workflow_dispatch: {}
+
+env:
+  # Lock log noise out of CI's stdout — the eval-fake job pipes JSON.
+  ANVIL_ENV: production
+  PYTHONDONTWRITEBYTECODE: "1"
+  PYTHONUNBUFFERED: "1"
+
+jobs:
+  lint:
+    name: ruff
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: astral-sh/setup-uv@v3
+        with:
+          enable-cache: true
+      - run: uv sync --extra dev
+      - run: uv run ruff check src/ tests/
+
+  type-check:
+    name: mypy --strict
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: astral-sh/setup-uv@v3
+        with:
+          enable-cache: true
+      - run: uv sync --extra dev
+      - run: uv run mypy src/
+
+  test:
+    name: pytest
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: astral-sh/setup-uv@v3
+        with:
+          enable-cache: true
+      - run: uv sync --extra dev
+      - run: uv run pytest tests/ -q --cov=src/anvil --cov-report=term-missing
+      - name: Upload coverage report
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: coverage-${{ github.run_id }}
+          path: .coverage
+          if-no-files-found: ignore
+
+  eval-fake:
+    # Fake-backend evaluation. Runs the complete pipeline on the golden
+    # dataset. No network, no NIM key, fully deterministic — guards
+    # against retrieval / refusal-gate / citation-enforcer regressions.
+    name: eval (FakeLLMBackend)
+    runs-on: ubuntu-latest
+    needs: [lint, type-check, test]
+    steps:
+      - uses: actions/checkout@v4
+      - uses: astral-sh/setup-uv@v3
+        with:
+          enable-cache: true
+      - run: uv sync --extra dev
+      - name: Run evaluation against the golden dataset
+        run: uv run python scripts/evaluate.py
+      - name: Upload evaluation summary
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: eval-fake-summary-${{ github.run_id }}
+          path: data/indexes/evaluation.json
+          if-no-files-found: warn
+
+  nim-check:
+    # Optional job: only runs when NVIDIA_API_KEY is configured as a
+    # repository secret. Probes each model in the locked NIM catalog and
+    # uploads the JSON report so reviewers can confirm catalog health
+    # without re-running the workflow locally.
+    name: nim-check (optional)
+    runs-on: ubuntu-latest
+    needs: [test]
+    if: ${{ github.event_name == 'workflow_dispatch' || github.event_name == 'push' }}
+    continue-on-error: true
+    steps:
+      - uses: actions/checkout@v4
+      - uses: astral-sh/setup-uv@v3
+        with:
+          enable-cache: true
+      - run: uv sync --extra dev
+      - name: Probe NIM catalog
+        env:
+          NVIDIA_API_KEY: ${{ secrets.NVIDIA_API_KEY }}
+        run: |
+          if [ -z "${NVIDIA_API_KEY:-}" ]; then
+            echo "::warning::NVIDIA_API_KEY secret not set — skipping live NIM probe"
+            exit 0
+          fi
+          uv run anvil nim-check --json > nim-report.json
+          cat nim-report.json
+      - name: Upload NIM connection report
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: nim-report-${{ github.run_id }}
+          path: nim-report.json
+          if-no-files-found: ignore

@@ -4,6 +4,7 @@ from __future__ import annotations
 
 import re
 from collections.abc import Sequence
+from typing import Any
 
 import numpy as np
 
@@ -46,7 +47,26 @@ class HybridRetriever:
         graph_store: GraphStore,
         rrf_k: int = 60,
         graph_hops: int = 1,
+        mode: str = "hybrid",
     ) -> None:
+        """`mode` selects which retrieval signals participate in fusion.
+
+        Recognized values (see `evaluation/ablation.py`):
+
+        - ``"hybrid"`` — baseline: BM25 + vector + graph expansion + RRF.
+        - ``"bm25_only"`` — drop the vector list before RRF.
+        - ``"vector_only"`` — drop the BM25 list before RRF.
+        - ``"hybrid_no_graph"`` — keep BM25+vector but disable graph expansion.
+
+        Any other value raises at construction so a typo is caught at
+        the configuration site (a silent fallback would let an ablation
+        run as the baseline and silently misreport its result).
+        """
+        valid_modes = {"hybrid", "bm25_only", "vector_only", "hybrid_no_graph"}
+        if mode not in valid_modes:
+            raise RetrievalError(
+                f"Unknown HybridRetriever mode {mode!r}. Valid: {sorted(valid_modes)}."
+            )
         self.elements = elements
         self.element_by_id: dict[str, DocumentElement] = {e.element_id: e for e in elements}
         self.embedder = embedder
@@ -54,6 +74,7 @@ class HybridRetriever:
         self.graph_store = graph_store
         self.rrf_k = rrf_k
         self.graph_hops = graph_hops
+        self.mode = mode
 
         # Build BM25 index
         self._corpus_texts = [self._element_text(e) for e in elements]
@@ -80,19 +101,34 @@ class HybridRetriever:
 
     def retrieve(self, query: RetrievalQuery) -> list[RetrievedChunk]:
         """Run the full hybrid pipeline for a single query."""
-        # 1) Vector search
-        q_vec = self.embedder.encode([query.text])[0]
-        vec_k = max(query.top_k * 5, 20)
-        vec_hits = self.vector_store.knn(q_vec, k=vec_k)
-        vec_ranked = [h.element_id for h in vec_hits]
-        vec_scores = {h.element_id: h.score for h in vec_hits}
+        # 1) Vector search (skipped for bm25_only mode — keeps the
+        #    vector-similarity signal at zero so the OOD lexical guard
+        #    below does not also disable the ablation accidentally).
+        if self.mode == "bm25_only":
+            vec_ranked: list[str] = []
+            vec_scores: dict[str, float] = {}
+        else:
+            q_vec = self.embedder.encode([query.text])[0]
+            vec_k = max(query.top_k * 5, 20)
+            vec_hits = self.vector_store.knn(q_vec, k=vec_k)
+            vec_ranked = [h.element_id for h in vec_hits]
+            vec_scores = {h.element_id: h.score for h in vec_hits}
 
-        # 2) BM25 search
-        bm25_ranked, bm25_scores = self._bm25_search(query.text, top_k=vec_k)
+        # 2) BM25 search (skipped for vector_only mode).
+        if self.mode == "vector_only":
+            bm25_ranked: list[str] = []
+            bm25_scores: dict[str, float] = {}
+        else:
+            bm25_ranked, bm25_scores = self._bm25_search(
+                query.text, top_k=max(query.top_k * 5, 20)
+            )
 
         # 3) RRF fusion (normalized so top chunk scores 1.0 for a meaningful
-        #    relevance threshold in the refusal gate).
-        fused = reciprocal_rank_fusion([vec_ranked, bm25_ranked], k=self.rrf_k)
+        #    relevance threshold in the refusal gate). Single-list ablations
+        #    (bm25_only / vector_only) RRF-fuse over a single ranked list,
+        #    which produces ranks identical to that list — what we want.
+        ranked_lists = [r for r in (vec_ranked, bm25_ranked) if r]
+        fused = reciprocal_rank_fusion(ranked_lists, k=self.rrf_k)
         max_fused = max(fused.values(), default=0.0) or 1.0
         # We cap the final score by two signals to detect OOD queries:
         #   (a) top vector cosine similarity (semantic signal)
@@ -106,7 +142,14 @@ class HybridRetriever:
         overlap_frac = (
             len(q_tokens & self._corpus_vocab) / len(q_tokens) if q_tokens else 0.0
         )
-        signal_cap = max(0.0, min(1.0, top_vec_sim * overlap_frac))
+        # In bm25_only mode there's no vector signal — fall back to
+        # lexical overlap as the sole OOD guard. Otherwise the cap
+        # would always be 0 and ablation runs would falsely "refuse"
+        # every query.
+        if self.mode == "bm25_only":
+            signal_cap = max(0.0, min(1.0, overlap_frac))
+        else:
+            signal_cap = max(0.0, min(1.0, top_vec_sim * overlap_frac))
         fused_ids = list(fused.keys())[: query.top_k]
         seeds: list[RetrievedChunk] = []
         for eid in fused_ids:
@@ -123,8 +166,11 @@ class HybridRetriever:
             )
             seeds.append(chunk)
 
-        # 4) Graph expansion (optional)
-        if query.enable_graph_expansion and seeds:
+        # 4) Graph expansion (gated by query flag AND retriever mode).
+        graph_enabled = (
+            query.enable_graph_expansion and self.mode != "hybrid_no_graph"
+        )
+        if graph_enabled and seeds:
             expanded = self._graph_retriever.expand(seeds)
             # Preserve rich scores from seeds; graph-only chunks keep their source
             result = expanded[: max(query.top_k, 10)]
@@ -159,7 +205,7 @@ class HybridRetriever:
             retrieval_source=source,
         )
 
-    def _init_bm25(self, corpus: list[str]) -> object:
+    def _init_bm25(self, corpus: list[str]) -> tuple[str, Any]:
         """Initialize BM25 via bm25s, failing loudly on unexpected errors.
 
         Silent fallback policy mirrors VectorStore: a missing `bm25s` package
@@ -192,7 +238,7 @@ class HybridRetriever:
         return ("bm25s", retriever)
 
     def _bm25_search(self, query: str, top_k: int) -> tuple[list[str], dict[str, float]]:
-        kind, retriever = self._bm25  # type: ignore[misc]
+        kind, retriever = self._bm25
         ids: list[str] = []
         scores: dict[str, float] = {}
         if kind == "bm25s":

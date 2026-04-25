@@ -81,7 +81,10 @@ class GraphStore:
     def is_weakly_connected(self) -> bool:
         if len(self.graph) == 0:
             return True
-        return nx.is_weakly_connected(self.graph)
+        # `networkx` is intentionally untyped in the project's mypy config,
+        # so its return value is `Any` — coerce to bool to keep the public
+        # signature honest.
+        return bool(nx.is_weakly_connected(self.graph))
 
     def orphan_nodes(self) -> list[str]:
         """Nodes with no incoming or outgoing edges."""

@@ -111,7 +111,7 @@ class FakeLLMBackend:
                 )
             answer = "; ".join(parts) + "."
 
-            citations = list({
+            calc_citations: list[Citation] = list({
                 (s.citation.source_element_id, s.citation.paragraph_ref): s.citation
                 for s in calculation_steps
             }.values())
@@ -119,7 +119,7 @@ class FakeLLMBackend:
             return AnvilResponse(
                 query=query,
                 answer=answer,
-                citations=citations,
+                citations=calc_citations,
                 calculation_steps=calculation_steps,
                 confidence=ResponseConfidence.HIGH,
                 retrieved_context_ids=[c.element_id for c in retrieved_chunks],
@@ -362,14 +362,24 @@ class OpenAICompatibleBackend:
 
 
 def _nvidia_nim_backend() -> OpenAICompatibleBackend:
-    """Construct an NVIDIA NIM backend from `NVIDIA_API_KEY` + `ANVIL_LLM_MODEL`."""
+    """Construct an NVIDIA NIM backend from `NVIDIA_API_KEY` + `ANVIL_LLM_MODEL`.
+
+    The default model tracks `nim_health.NIM_MODELS` (the locked catalog)
+    so we never hardcode a model id that drifts away from the test
+    catalog and out of sync with `anvil nim-check` output.
+    """
+    # Imported lazily to avoid a circular import: nim_health imports
+    # logging from this layer.
+    from anvil.generation.nim_health import NIM_MODELS
+
+    default_model = next(iter(NIM_MODELS))
     api_key = os.environ.get("NVIDIA_API_KEY")
     if not api_key:
         raise GenerationError(
             "ANVIL_LLM_BACKEND=nvidia_nim requires NVIDIA_API_KEY to be set. "
             "Get one at https://build.nvidia.com. Refusing to proceed."
         )
-    model = os.environ.get("ANVIL_LLM_MODEL", "deepseek-ai/deepseek-v3.1")
+    model = os.environ.get("ANVIL_LLM_MODEL", default_model)
     # NIM's reasoning-capable models accept `chat_template_kwargs.thinking`
     # and `reasoning_effort` via extra_body. Harmless for models that ignore it.
     extra_body: dict[str, Any] = {}

@@ -109,9 +109,12 @@ class SentenceTransformerEmbedder:
         self.dim = int(self.model.get_sentence_embedding_dimension())
 
     def encode(self, texts: list[str]) -> np.ndarray:
-        return self.model.encode(
+        # sentence-transformers is intentionally untyped in mypy config →
+        # explicit annotation keeps the public signature honest.
+        result: np.ndarray = self.model.encode(
             texts, normalize_embeddings=True, show_progress_bar=False
         ).astype(np.float32)
+        return result
 
 
 def get_default_embedder() -> Embedder:

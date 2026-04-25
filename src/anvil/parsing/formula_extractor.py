@@ -12,6 +12,21 @@ _CODE_FENCE = re.compile(r"```(?:.*?)?\n(.*?)\n```", re.DOTALL)
 # A simple right-hand-side detector: `<var> = <expr>`
 _EQUATION = re.compile(r"^\s*([A-Za-z][A-Za-z0-9_]*)\s*=\s*(.+)$")
 
+# Detect the "applicability sentence" that typically follows each formula
+# in SPES-1, e.g.:
+#   "This formula applies when: t ≤ R/2 AND P ≤ 0.385 × S × E."
+#   "Applicable when P ≤ 0.385 × S × E."
+#   "Applicable when t ≤ 0.356 × R AND P ≤ 0.665 × S × E."
+# We capture the clause text up to the first sentence terminator. Multiple
+# AND-joined conditions are split into separate entries so downstream
+# consumers (refusal gate, evaluation) can reason about each one.
+_APPLIES_RE = re.compile(
+    r"(?:this\s+formula\s+applies\s+when|applies\s+when|applicable\s+when)"
+    r"\s*[:\-]?\s*(.+?)(?=\.\s|\.$|\n\n|\Z)",
+    re.IGNORECASE | re.DOTALL,
+)
+_AND_SPLIT = re.compile(r"\s+(?:AND|and)\s+")
+
 
 # Canonical SPES-1 variable metadata — used when a formula obviously
 # matches one of the core thickness formulas.
@@ -51,6 +66,26 @@ def _to_latex(plain: str) -> str:
     return s
 
 
+def _extract_applicability_conditions(region: str) -> list[str]:
+    """Pull "applies when ..." / "applicable when ..." clauses from a region.
+
+    AND-joined sub-conditions are emitted as separate list entries so the
+    refusal gate, evaluation layer, and any downstream UI can reason
+    about each individual constraint (e.g. ``"t ≤ R/2"`` vs.
+    ``"P ≤ 0.385 × S × E"``).
+    """
+    out: list[str] = []
+    for m in _APPLIES_RE.finditer(region):
+        clause = m.group(1).strip().rstrip(".:")
+        if not clause:
+            continue
+        for part in _AND_SPLIT.split(clause):
+            cleaned = part.strip().rstrip(".:")
+            if cleaned and cleaned not in out:
+                out.append(cleaned)
+    return out
+
+
 def extract_formulas(
     source_paragraph: str,
     text: str,
@@ -60,11 +95,29 @@ def extract_formulas(
     Looks for fenced code blocks that contain `<var> = <expr>`. Returns one
     ParsedFormula per equation found. The formula_id is derived from the
     paragraph and an index (e.g. `A-27(c)(1)-f0`).
+
+    Applicability conditions are populated by scanning the region of
+    `text` between this fence and the next one for sentences like
+    "This formula applies when: t ≤ R/2 AND P ≤ 0.385 × S × E." The
+    schema field is critical for compliance reasoning, so a missing
+    sentence simply yields an empty list (it is never silently
+    fabricated from defaults).
     """
     results: list[ParsedFormula] = []
+    fences = list(_CODE_FENCE.finditer(text))
     idx = 0
-    for fence in _CODE_FENCE.finditer(text):
+    for fence_idx, fence in enumerate(fences):
         block = fence.group(1).strip()
+        # The text region "owned" by this formula extends from the end of
+        # this fence to the start of the next fence (or end of body).
+        region_start = fence.end()
+        region_end = (
+            fences[fence_idx + 1].start()
+            if fence_idx + 1 < len(fences)
+            else len(text)
+        )
+        region = text[region_start:region_end]
+        conditions = _extract_applicability_conditions(region)
         # A block may contain multiple lines; take the first equation-like line
         for line in block.splitlines():
             line = line.strip()
@@ -80,7 +133,7 @@ def extract_formulas(
                     latex=_to_latex(plain),
                     plain_text=plain,
                     variables=_identify_variables(plain),
-                    applicability_conditions=[],
+                    applicability_conditions=conditions,
                     source_paragraph=source_paragraph,
                 )
             )

@@ -47,7 +47,13 @@ def create_app(standard_path: str | Path | None = None) -> FastAPI:
         citation_builder=CitationBuilder.from_elements(elements)
     )
     generator = AnvilGenerator(
-        retriever=retriever, backend=backend, calc_engine=calc_engine
+        retriever=retriever,
+        backend=backend,
+        calc_engine=calc_engine,
+        # Lets the citation enforcer validate canonical-ref quotes
+        # against the parsed standard even when retrieval misses the
+        # cited element (e.g. pinned Table M-1 lookups).
+        element_index={e.element_id: e for e in elements},
     )
 
     app = FastAPI(
