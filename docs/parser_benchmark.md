@@ -12,10 +12,14 @@
 |-----|--------|---------|-------|--------|----------|---------------|
 | `spes1_synthetic.pdf` | Rendered from `data/synthetic/standard.md` via `pandoc --pdf-engine=xelatex` | MIT (project-internal) | 3 | 2 (B-12, M-1) | 4 (A-27(c)(1), A-27(c)(2), A-27(d), A-32) | 17 section headings |
 | `nasa_sp8007.pdf` | [NASA SP-8007: Buckling of Thin-Walled Circular Cylinders](https://ntrs.nasa.gov/citations/19690013955) (1968, rev. 2020) | US Government public domain | 50 | Multiple figures/tables | Engineering formulas | Section-based references |
+| `nasa_std_8719_17d.pdf` | [NASA-STD-8719.17D: Ground-Based Pressure Vessels and Pressurized Systems](https://standards.nasa.gov/standard/NASA/NASA-STD-871917) | Publicly accessible NASA standard | optional download | Real pressure-system requirements | Applicability/certification references | NASA section numbering |
+| `nasa_std_8719_26.pdf` | [NASA-STD-8719.26: Ground Based Non-Code Metallic Pressure Vessels](https://standards.nasa.gov/standard/NASA/NASA-STD-871926) | Publicly accessible NASA standard | optional download | Pressure-vessel qualification requirements | ASME-adjacent references | NASA section numbering |
 
 **SPES-1 (Controlled Baseline):** The SPES-1 markdown is the authoritative source for ground truth. We parse the source markdown via `parse_markdown_standard()` to produce exact `GroundTruthAnnotation` objects (tables, formulas, paragraph refs, section headings). The PDF is a pandoc-rendered copy — any loss between markdown→PDF→parser→markdown is a genuine measure of parser fidelity.
 
 **NASA SP-8007 (Real-World PDF):** A public-domain US government technical report on thin-walled cylinder buckling. Contains engineering formulas, data tables, and multi-column figures. Ground truth for this PDF is approximate — derived from the best available parser (pymupdf4llm) since manual annotation was not feasible.
+
+**NASA pressure-system supplements:** NASA-STD-8719.17D and NASA-STD-8719.26 are tracked in `data/parser_benchmark/public_pressure_sources.json` and can be downloaded with `scripts/download_public_pressure_docs.py`. They are not part of SPES-1 calculation correctness; they are public real-world stress tests for parser structure, retrieval/citation behavior, and refusal boundaries.
 
 ### Evaluation Metrics
 
@@ -179,6 +183,10 @@ pandoc data/synthetic/standard.md -o data/parser_benchmark/pdfs/spes1_synthetic.
 
 # Run the default benchmark (local parsers + Reducto when REDUCTO_API_KEY is set)
 uv run python scripts/run_parser_benchmark.py
+
+# Optional public NASA pressure-system PDFs
+uv run python scripts/download_public_pressure_docs.py
+uv run python scripts/run_parser_benchmark.py --systems pymupdf4llm,naive_pdfminer
 
 # Explicit provider sweep, if you decide to compare Azure later
 uv run python scripts/run_parser_benchmark.py --systems pymupdf4llm,naive_pdfminer,reducto,azure_di

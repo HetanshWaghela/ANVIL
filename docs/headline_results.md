@@ -26,6 +26,14 @@ NIM health checks after sourcing `.env`:
 
 The same pass also showed that hosted model behavior is time-dependent. The strongest clean headline rows below remain the best application evidence, while the fresh rows are retained as live-provider robustness evidence rather than overwritten or hidden.
 
+## Public 100-example SPES-1 benchmark
+
+The public reproducible benchmark has been expanded from 30 to 100 examples. Numeric calculation expectations were generated from `CalculationEngine` and then stored in the golden JSON, preserving the no-hardcoding story: the system is evaluated against deterministic engineering logic, not query-specific branches.
+
+| run | n_examples | pass_rate | calculation_correctness | citation_accuracy | faithfulness | entity_grounding | structural_completeness | retrieval_recall_at_k | retrieval_precision_at_k | refusal_calibration | run_id |
+| :--- | ---: | ---: | ---: | ---: | ---: | ---: | ---: | ---: | ---: | ---: | :--- |
+| fake / public100 / abl-baseline | 100 | **1.000** | **1.000** | **1.000** | **1.000** | **1.000** | **1.000** | **1.000** | 0.385 | **1.000** | `2026-04-25T18-24-28Z_fake_goldenv2-public100_abl-baseline` |
+
 ## Live NIM baseline comparison
 
 | run | pass_rate | calculation_correctness | citation_accuracy | faithfulness | entity_grounding | structural_completeness | retrieval_recall_at_k | retrieval_precision_at_k | refusal_calibration | run_id |
@@ -86,7 +94,7 @@ The full 30-example agent comparison was attempted twice. Both attempts produced
 
 ## Parser benchmark with Reducto
 
-Reducto is now connected and measured using the current API schema (`upload.file_id` and parse `input`, table format `md`). The result strengthens the parser story because the hosted parser is actually tested, not assumed.
+Reducto is now connected and measured using the current API schema (`upload.file_id` and parse `input`, table format `md`). The result strengthens the parser story because the hosted parser is actually tested, not assumed. Public pressure-system supplements are tracked in `data/parser_benchmark/public_pressure_sources.json`; run `uv run python scripts/download_public_pressure_docs.py` to add NASA-STD-8719.17D and NASA-STD-8719.26 PDFs to the parser stress corpus.
 
 | system | pdf | table_f1 | formula_fidelity | paragraph_ref_recall | section_recall | latency_ms_per_page | cost |
 | :--- | :--- | ---: | ---: | ---: | ---: | ---: | :--- |

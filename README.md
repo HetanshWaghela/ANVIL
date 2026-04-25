@@ -39,9 +39,9 @@ non-negotiable:
 
 ```bash
 uv sync --extra dev                              # install
-uv run pytest tests/ -q                          # 263 tests in the latest audit pass
+uv run pytest tests/ -q                          # offline quality gate
 uv run anvil ingest                              # parse SPES-1 → KG + element artifacts
-uv run anvil eval --backend fake                 # run 30-example golden dataset
+uv run anvil eval --backend fake                 # run 100-example public benchmark
 uv run anvil query "What does A-27(c)(1) require?"
 uv run anvil calculate --component cylindrical_shell --P 1.5 --temp 350 \
   --material "SM-516 Gr 70" --joint-type 1 --rt-level "Full RT" \
@@ -112,6 +112,12 @@ hosted-provider noise and NIM 429 behavior rather than hiding it. Reducto is now
 connected and benchmarked; it recovers paragraph refs but does not beat the
 local `pymupdf4llm` default on SPES-1.
 
+The public offline benchmark has now been expanded to **100 SPES-1 examples**
+(`goldenv2-public100`) with deterministic fake-backend reproducibility:
+`pass_rate = 1.000`, `calculation_correctness = 1.000`,
+`citation_accuracy = 1.000`, and `refusal_calibration = 1.000` under run
+`2026-04-25T18-24-28Z_fake_goldenv2-public100_abl-baseline`.
+
 ```bash
 cp .env.example .env                                    # then edit
 export NVIDIA_API_KEY=nvapi-...                          # or `source .env`
@@ -130,6 +136,7 @@ Additional reviewer artifacts:
 | [`docs/parser_benchmark.md`](docs/parser_benchmark.md) | PDF parser benchmark and defended default parser choice, now including real Reducto rows |
 | [`docs/trust_calibration.md`](docs/trust_calibration.md) | Refusal-threshold sweep and operating-point rationale |
 | [`docs/ablations.md`](docs/ablations.md) | Component ablations with interpretation and limitations |
+| [`docs/private_asme.md`](docs/private_asme.md) | Licensed-ASME validation guardrails: private inputs/runs only, sanitized aggregate metrics only |
 
 ### Production backends
 
@@ -186,6 +193,12 @@ anvil/
 ├── tests/                # unit / integration / evaluation / fail-loud regressions
 └── scripts/              # ingest.py, evaluate.py, demo.py
 ```
+
+Licensed ASME PDFs, extracted text, private indexes, prompts, raw responses,
+and private run artifacts are intentionally excluded from git. Public
+real-world parser stress uses NASA pressure-system standards via
+`data/parser_benchmark/public_pressure_sources.json` and
+`scripts/download_public_pressure_docs.py`.
 
 ## Example: a calculation query
 

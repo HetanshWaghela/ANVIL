@@ -74,10 +74,21 @@ def test_refuses_on_over_max_temp() -> None:
     assert "700" in (d.reason or "")
 
 
-def test_accepts_in_domain_query() -> None:
-    """In-domain calc query with full context (A-27 + M-1 + B-12) → no refusal."""
+def test_refuses_incomplete_calculation_query() -> None:
+    """Free-text calculations must include every required design input."""
     d = should_refuse(
         "compute thickness for SM-516 Gr 70 at 350°C",
+        _calc_context(),
+    )
+    assert d.should_refuse
+    assert "missing required input" in (d.reason or "")
+
+
+def test_accepts_complete_in_domain_query() -> None:
+    """In-domain calc query with full context (A-27 + M-1 + B-12) → no refusal."""
+    d = should_refuse(
+        "compute thickness for ID=1800 mm, P=1.5 MPa, SM-516 Gr 70 at 350°C, "
+        "Type 1 Full RT",
         _calc_context(),
     )
     assert not d.should_refuse

@@ -502,7 +502,7 @@ async def _cmd_eval_async(args: argparse.Namespace) -> int:
     if args.backend == "fake" and not args.model:
         os.environ.pop("ANVIL_LLM_MODEL", None)
 
-    pipeline = build_pipeline(ablation=args.ablation)
+    pipeline = build_pipeline(standard_path=args.standard, ablation=args.ablation)
     effective_model = getattr(pipeline.generator.backend, "model", args.model)
     runner = EvaluationRunner(pipeline.generator)
     dataset_path = args.dataset
@@ -512,6 +512,7 @@ async def _cmd_eval_async(args: argparse.Namespace) -> int:
         backend=args.backend,
         model=effective_model,
         ablation=args.ablation,
+        dataset_version=args.dataset_version,
     )
     cfg = RunLoggerConfig(
         run_id=run_id,
@@ -538,6 +539,7 @@ async def _cmd_eval_async(args: argparse.Namespace) -> int:
         "backend": args.backend,
         "model": effective_model,
         "ablation": args.ablation,
+        "dataset_version": args.dataset_version,
         "pass_rate": summary.pass_rate,
         "aggregate": summary.aggregate,
         "run_dir": str(args.output_root / run_id),
@@ -576,6 +578,17 @@ def _add_eval_parser(sub: argparse._SubParsersAction[Any]) -> None:
         type=Path,
         default=Path("tests/evaluation/golden_dataset.json"),
         help="Golden dataset JSON.",
+    )
+    p.add_argument(
+        "--standard",
+        type=Path,
+        default=Path("data/synthetic/standard.md"),
+        help="Markdown standard to parse for retrieval and citations.",
+    )
+    p.add_argument(
+        "--dataset-version",
+        default="goldenv1",
+        help="Run-id dataset slug, e.g. goldenv1 or asme-private-v1.",
     )
     p.add_argument(
         "--output-root",

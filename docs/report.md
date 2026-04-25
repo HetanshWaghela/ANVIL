@@ -4,7 +4,7 @@
 
 ## Abstract
 
-ANVIL is a compliance-grade retrieval-augmented reasoning system for engineering standards, built around the failure modes that matter in regulated static-equipment workflows: hallucinated material properties, fabricated paragraph references, ungrounded calculations, and overconfident answers outside the applicable standard. The system uses a legally clean synthetic pressure-equipment standard, SPES-1, whose paragraph structure mirrors ASME BPVC-style references while avoiding copyrighted text. ANVIL parses standards into typed document elements, constructs a knowledge graph, retrieves evidence with BM25 + vector + graph expansion, enforces citations after generation, and performs all engineering arithmetic through deterministic Decimal-backed calculation code using pinned material and weld-efficiency data. Evaluation on a 30-example golden set shows a strongest NVIDIA NIM row of 0.967 pass rate with `meta/llama-3.3-70b-instruct`, 1.000 calculation correctness, 0.998 citation accuracy, and 1.000 refusal calibration. Ablations show that disabling pinned data collapses calculation correctness from 1.000 to 0.000, while disabling the refusal gate reduces refusal calibration in deterministic ablation from 1.000 to 0.867. A later verification pass also records real hosted-provider instability, including NIM 429s during agent runs. These results support ANVIL’s core claim: regulated-domain RAG should treat retrieval, calculation, citation, refusal, and provider reliability as auditable engineering components rather than prompt-only behavior.
+ANVIL is a compliance-grade retrieval-augmented reasoning system for engineering standards, built around the failure modes that matter in regulated static-equipment workflows: hallucinated material properties, fabricated paragraph references, ungrounded calculations, and overconfident answers outside the applicable standard. The system uses a legally clean synthetic pressure-equipment standard, SPES-1, whose paragraph structure mirrors ASME BPVC-style references while avoiding copyrighted text. ANVIL parses standards into typed document elements, constructs a knowledge graph, retrieves evidence with BM25 + vector + graph expansion, enforces citations after generation, and performs all engineering arithmetic through deterministic Decimal-backed calculation code using pinned material and weld-efficiency data. Evaluation on the expanded 100-example public SPES-1 set reaches 1.000 pass rate with deterministic offline generation, while the strongest NVIDIA NIM row on the earlier 30-example live set remains 0.967 pass rate with `meta/llama-3.3-70b-instruct`, 1.000 calculation correctness, 0.998 citation accuracy, and 1.000 refusal calibration. Ablations show that disabling pinned data collapses calculation correctness from 1.000 to 0.000, while disabling the refusal gate reduces refusal calibration in deterministic ablation from 1.000 to 0.867. A later verification pass also records real hosted-provider instability, including NIM 429s during agent runs. These results support ANVIL’s core claim: regulated-domain RAG should treat retrieval, calculation, citation, refusal, provider reliability, and licensing boundaries as auditable engineering components rather than prompt-only behavior.
 
 ---
 
@@ -55,7 +55,7 @@ ANVIL contributes the following engineering artifacts:
 
 8. **NVIDIA NIM integration.** ANVIL can run against NIM-hosted OpenAI-compatible models through a health-checking CLI and recorded run artifacts.
 
-9. **Parser benchmark.** The project evaluates local PDF parsing on a controlled SPES-1 PDF and a public-domain NASA engineering report.
+9. **Parser benchmark.** The project evaluates local PDF parsing on a controlled SPES-1 PDF, a public-domain NASA engineering report, and optional public NASA pressure-system standards.
 
 10. **Agentic-loop prototype.** The codebase includes a bounded tool-calling agent surface for retrieval, graph lookup, pinned lookup, and calculation, with deterministic scripted tests and a live-run script gated on real LLM credentials.
 
@@ -73,7 +73,7 @@ ANVIL is not intended to introduce a new neural architecture. Its contribution i
 
 **MVES** motivates tiered evaluation for agentic workflows. ANVIL applies the same principle by evaluating the deterministic pipeline, then separately exercising the agentic tool-calling loop with scripted and live backends.
 
-**Evalugator** motivates future scaling of calibration beyond manually labeled golden examples. ANVIL currently uses a small hand-authored dataset; a natural future step is LLM-judge-assisted expansion with human review.
+**Evalugator** motivates future scaling of calibration beyond manually labeled golden examples. ANVIL now ships a 100-example public SPES-1 dataset; a natural future step is LLM-judge-assisted expansion with human review for larger private/license-holder validation sets.
 
 **Tripartite-KG** motivates combining knowledge-graph structure with vector retrieval. ANVIL’s graph stores paragraph hierarchy, table/formula relationships, and cross-references, then uses graph expansion to surface neighboring evidence.
 
@@ -182,15 +182,15 @@ Raw prompts and request logs are produced locally but gitignored to avoid commit
 
 ### 5.1 Golden dataset
 
-The golden dataset contains 30 examples across five categories:
+The public golden dataset contains 100 SPES-1 examples across five categories:
 
-- calculation;
-- lookup;
-- cross-reference;
-- out-of-domain;
-- edge case.
+- 34 calculation;
+- 20 lookup;
+- 20 cross-reference;
+- 12 out-of-domain;
+- 14 edge case.
 
-Each example records expected references, expected refusal behavior, expected calculation values when applicable, and metric thresholds.
+Each example records expected references, expected refusal behavior, expected calculation values when applicable, and metric thresholds. The expanded calculation expected values were generated from `CalculationEngine`, then serialized into JSON as reviewed expected outputs; the evaluated runtime does not branch on golden queries or import expected values.
 
 ### 5.2 Metrics
 
@@ -225,7 +225,11 @@ Each run manifest captures:
 
 The headline NIM rows and ablation rows in this report are linked to committed run IDs in `data/runs/`.
 
-### 5.4 Integrity / hardcoding audit
+### 5.4 Private ASME validation boundary
+
+Real ASME standards are copyright-controlled, so the public repo must not commit ASME PDFs, extracted text, parser outputs, indexes, prompts, raw responses, retrieved chunks, or agent transcripts. The private validation path keeps licensed inputs under `data/private/`, private run outputs under `data/private_runs/`, and publishes only sanitized aggregate metrics. The runnable entry point is `scripts/run_private_asme_eval.py`; safety checks are in `scripts/audit_private_artifacts.py` and documented in `docs/private_asme.md`.
+
+### 5.5 Integrity / hardcoding audit
 
 The 2026-04-25 verification pass audited `src/` for golden-answer leakage and query-specific branching. Searches covered exact golden query prefixes, expected-value imports, `golden_dataset` references, `expected_values` references, suspicious `if query ...` patterns, and terms such as `cheat`, `hardcod`, and static `return` patterns involving domain values. Findings:
 
@@ -253,6 +257,14 @@ The current live NIM results use sentence-transformer retrieval and the active N
 | nvidia_nim / deepseek-v4-flash | 0.867 | 1.000 | 1.000 | 0.930 | 0.960 | 0.987 | 0.987 | 0.388 | 0.967 | `2026-04-25T16-03-59Z_nvidia_nim-deepseek-v4-flash_goldenv1_abl-baseline` |
 
 The strongest clean live model is `meta/llama-3.3-70b-instruct`, matching the fake backend pass rate while retaining near-perfect citation accuracy. A later verification sweep also produced new run artifacts under `2026-04-25T16-21-16Z_*` through `2026-04-25T16-29-52Z_*`; those rows are intentionally treated as hosted-provider robustness evidence because the later window produced many refusal-shaped or rate-limited responses.
+
+### 6.1a Public 100-example baseline
+
+The expanded public benchmark run is:
+
+| Backend / dataset | n_examples | pass_rate | calculation_correctness | citation_accuracy | faithfulness | retrieval_recall_at_k | refusal_calibration | run_id |
+| :--- | ---: | ---: | ---: | ---: | ---: | ---: | ---: | :--- |
+| fake / `goldenv2-public100` | 100 | 1.000 | 1.000 | 1.000 | 1.000 | 1.000 | 1.000 | `2026-04-25T18-24-28Z_fake_goldenv2-public100_abl-baseline` |
 
 ### 6.2 NIM catalog refresh
 
@@ -396,7 +408,7 @@ The audit fix that removed the canonical-reference escape hatch is a central tru
 
 The graph-expansion ablation shows no measurable aggregate loss on the current corpus. This should not be oversold. SPES-1 is small, controlled, and designed for reproducibility. It does not fully stress cross-document or long-distance reference retrieval.
 
-The graph’s value is architectural and future-facing: when the corpus grows, formulas and required tables may not share terms with the user query. A graph makes those dependencies explicit. The current result says only that the 30-example SPES-1 benchmark is not large enough to quantify that benefit.
+The graph’s value is architectural and future-facing: when the corpus grows, formulas and required tables may not share terms with the user query. A graph makes those dependencies explicit. The current result says only that the current SPES-1 benchmark is not large enough to quantify that benefit cleanly.
 
 ### 7.5 Model selection under live-provider drift
 
@@ -419,9 +431,9 @@ ANVIL has several important limitations.
 
 SPES-1 is synthetic. This is legally and reproducibly useful, but it means the corpus is cleaner than real ASME text. Real standards contain layout artifacts, exceptions, errata, multi-document references, and dense tables that may challenge both parsing and retrieval.
 
-### 8.2 Small golden set
+### 8.2 Public benchmark scale
 
-The golden dataset has 30 examples. That is enough to catch major architectural failures, such as disabling pinned data or refusal, but not enough to precisely estimate rare failure modes. Some components, such as graph expansion and citation enforcement under fake generation, sit below the current benchmark’s noise floor.
+The public golden dataset now has 100 examples. That is enough to catch major architectural failures, such as disabling pinned data or refusal, but still not enough to precisely estimate rare failure modes in real ASME deployments. Some components, such as graph expansion on long-distance references, remain below the current benchmark’s noise floor.
 
 ### 8.3 Single-document setting
 
@@ -443,7 +455,7 @@ The metrics are deterministic and domain-informed, but there is no licensed pres
 
 ## 9. Future Work
 
-1. **Expand the golden set.** Add more cross-reference, adversarial out-of-domain, and edge-case calculation examples.
+1. **Add private license-holder ASME validation.** Run `scripts/run_private_asme_eval.py` against licensed local inputs and publish sanitized aggregate metrics only.
 
 2. **Add manually annotated real PDFs.** Replace pseudo-ground-truth parser rows with hand-labeled sections, tables, formulas, and cross-references.
 
@@ -453,7 +465,7 @@ The metrics are deterministic and domain-informed, but there is no licensed pres
 
 5. **Scale to multi-document retrieval.** Add edition-aware and source-priority logic for cases where multiple standards or addenda apply.
 
-6. **Add LLM-judge-assisted calibration.** Use Evalugator-style approaches to expand refusal and faithfulness calibration beyond the hand-authored 30-example set, with human spot checks.
+6. **Add LLM-judge-assisted calibration.** Use Evalugator-style approaches to expand refusal and faithfulness calibration beyond the public 100-example set, with human spot checks.
 
 7. **Improve graph-specific benchmark coverage.** Create examples where graph expansion is required to retrieve table/formula dependencies not lexically visible in the query.
 

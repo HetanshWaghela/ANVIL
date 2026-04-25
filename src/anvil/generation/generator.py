@@ -99,7 +99,7 @@ class AnvilGenerator:
         #    measures the false-confident rate on OOD queries).
         decision = (
             should_refuse(query, chunks)
-            if self.use_refusal_gate
+            if self.use_refusal_gate and calculation_inputs is None
             else _NO_REFUSAL_DECISION
         )
         if decision.should_refuse:

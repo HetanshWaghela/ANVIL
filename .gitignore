@@ -35,6 +35,16 @@ data/.cache/
 .env
 .env.local
 
+# Licensed/private standards data — never commit copyrighted PDFs,
+# derived text, private indexes, or private run artifacts.
+data/private/
+data/private_runs/
+data/asme_private_outputs/
+data/parser_benchmark/private/
+data/parser_benchmark/asme_private/
+data/runs/*asme-private*/
+data/runs/*/agent_transcripts.json
+
 # Internal scratch — NOT committed.
 # Note: `docs/` is intentionally NOT excluded — it is the load-bearing
 # artifact directory (architecture.md, design_decisions.md,

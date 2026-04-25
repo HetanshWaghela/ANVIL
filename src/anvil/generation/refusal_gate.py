@@ -20,6 +20,10 @@ from anvil.schemas.retrieval import RetrievedChunk
 _GENERIC_MATERIAL_PATTERN = re.compile(
     r"\b([A-Z][a-z]{2,})\s+(?:Grade|Gr|Type)\s+\w+\b"
 )
+_UNSUPPORTED_MATERIAL_PATTERN = re.compile(
+    r"\b(SA-\d+(?:\s+(?:Gr(?:ade)?|Type)\s+\w+)?|Inconel\s+\d+)\b",
+    re.IGNORECASE,
+)
 
 RELEVANCE_THRESHOLD: float = 0.05
 
@@ -50,6 +54,19 @@ _NUMERIC_PARAM = re.compile(
     re.IGNORECASE,
 )
 _TEMPERATURE_PATTERN = re.compile(r"(\d+(?:\.\d+)?)\s*°?\s*C", re.IGNORECASE)
+_PRESSURE_PARAM = re.compile(
+    r"(?:\bP\s*=?\s*|design\s+pressure(?:\s*=)?\s*)[\d.]+\s*MPa",
+    re.IGNORECASE,
+)
+_DIAMETER_PARAM = re.compile(
+    r"(?:inside\s+diameter|outside\s+diameter|ID|OD)\s*=?\s*[\d.]+",
+    re.IGNORECASE,
+)
+_JOINT_TYPE_PARAM = re.compile(r"\bType\s+\d\b", re.IGNORECASE)
+_RT_PARAM = re.compile(
+    r"\b(full\s+(?:RT|radiography)|spot\s+(?:RT|radiography)|no\s+(?:RT|radiography))\b",
+    re.IGNORECASE,
+)
 
 
 def is_calculation_query(query: str) -> bool:
@@ -120,8 +137,8 @@ def should_refuse(
 
     Refuses when:
       1. No chunks retrieved, or max relevance score is below the threshold.
-      2. The query mentions a generic material spec (`Titanium Grade 5`)
-         that is not an SM- SPES-1 spec.
+      2. The query mentions an unsupported material spec (`Titanium Grade 5`,
+         `SA-516 Gr 70`, `Inconel 625`) that is not an SM- SPES-1 spec.
       3. The query mentions an SM- spec not present in pinned data.
       4. The query mentions a design temperature outside the tabulated
          range for the mentioned material (per M-23).
@@ -146,15 +163,27 @@ def should_refuse(
             ),
         )
 
-    # 2a) Generic material mention that is NOT a SM- spec (e.g., "Titanium
-    # Grade 5", "Inconel 625") — SPES-1 only covers SM- specs in Table M-1.
+    # 2a) Material mention that is NOT a SM- spec (e.g., "Titanium Grade 5",
+    # "SA-516 Gr 70", "Inconel 625") — SPES-1 only covers SM- specs in M-1.
     sm_mat = _mentions_material(query)
+    unsupported_match = _UNSUPPORTED_MATERIAL_PATTERN.search(query)
     generic_match = _GENERIC_MATERIAL_PATTERN.search(query)
-    if generic_match and sm_mat is None:
+    if sm_mat is None and unsupported_match is not None:
+        material_text = unsupported_match.group(0)
         return RefusalDecision(
             should_refuse=True,
             reason=(
-                f"Material '{generic_match.group(0)}' is not an SM- "
+                f"Material '{material_text}' is not an SM- "
+                "specification covered by SPES-1 Table M-1. Please verify "
+                "the specification or consult the supplementary material tables."
+            ),
+        )
+    if sm_mat is None and generic_match is not None:
+        material_text = generic_match.group(0)
+        return RefusalDecision(
+            should_refuse=True,
+            reason=(
+                f"Material '{material_text}' is not an SM- "
                 "specification covered by SPES-1 Table M-1. Please verify "
                 "the specification or consult the supplementary material tables."
             ),
@@ -185,6 +214,27 @@ def should_refuse(
                     f"Design temperature {temp}°C exceeds the maximum "
                     f"tabulated temperature for {norm} "
                     f"({mat.max_temp_c}°C per M-23)."
+                ),
+            )
+
+    if is_calculation_query(query):
+        missing_inputs: list[str] = []
+        if not _PRESSURE_PARAM.search(query):
+            missing_inputs.append("design pressure")
+        if not _DIAMETER_PARAM.search(query):
+            missing_inputs.append("inside or outside diameter")
+        if sm_mat is None:
+            missing_inputs.append("supported SM material")
+        if not _JOINT_TYPE_PARAM.search(query):
+            missing_inputs.append("joint type")
+        if not _RT_PARAM.search(query):
+            missing_inputs.append("radiography extent")
+        if missing_inputs:
+            return RefusalDecision(
+                should_refuse=True,
+                reason=(
+                    "Cannot complete calculation: missing required input(s): "
+                    f"{', '.join(missing_inputs)}."
                 ),
             )
 

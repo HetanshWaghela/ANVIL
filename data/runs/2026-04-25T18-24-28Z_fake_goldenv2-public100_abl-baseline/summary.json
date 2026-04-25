@@ -1,0 +1,52 @@
+{
+  "run_id": "2026-04-25T18-24-28Z_fake_goldenv2-public100_abl-baseline",
+  "manifest": {
+    "run_id": "2026-04-25T18-24-28Z_fake_goldenv2-public100_abl-baseline",
+    "started_at_utc": "2026-04-25T18:24:29Z",
+    "finished_at_utc": "2026-04-25T18:24:29Z",
+    "backend": "fake",
+    "model": null,
+    "base_url": null,
+    "ablation": "baseline",
+    "ablation_config": {
+      "name": "baseline",
+      "retrieval_mode": "hybrid",
+      "use_pinned_data": true,
+      "use_refusal_gate": true,
+      "use_citation_enforcer": true
+    },
+    "dataset_path": "tests/evaluation/golden_dataset.json",
+    "dataset_hash": "ccc6a1930f6f7ab3627b8c428ea7682449d9c6f843363bc4a3cf17f5c58e472c",
+    "n_examples": 100,
+    "git_sha": "4e0ed57b9dce9066bfd5b8b74166bc1ef7bd8f27",
+    "git_branch": "main",
+    "git_dirty": true,
+    "python_version": "3.14.4",
+    "platform": "macOS-26.4.1-arm64-arm-64bit-Mach-O",
+    "env": {
+      "ANVIL_EMBEDDER": "hash",
+      "ANVIL_LLM_BACKEND": "fake",
+      "ANVIL_LLM_MAX_TOKENS": "8192",
+      "ANVIL_LLM_TIMEOUT_S": "240",
+      "ANVIL_NIM_MODELS": "meta/llama-3.3-70b-instruct,qwen/qwen3-next-80b-a3b-instruct,moonshotai/kimi-k2-instruct-0905",
+      "ANVIL_ST_CACHE_DIR": "/Users/hetanshwaghela/.cache/anvil/sentence-transformers",
+      "ANVIL_ST_MODEL": "BAAI/bge-small-en-v1.5",
+      "NVIDIA_API_KEY": "<redacted:b30b600e>",
+      "REDUCTO_API_KEY": "<redacted:10919bde>"
+    },
+    "notes": null
+  },
+  "aggregate": {
+    "calculation_correctness": 1.0,
+    "entity_grounding": 1.0,
+    "refusal_calibration": 1.0,
+    "retrieval_precision_at_k": 0.3852272727272727,
+    "citation_accuracy": 1.0,
+    "retrieval_recall_at_k": 1.0,
+    "structural_completeness": 1.0,
+    "faithfulness": 1.0
+  },
+  "pass_rate": 1.0,
+  "n_examples": 100,
+  "n_passed": 100
+}

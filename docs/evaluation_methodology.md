@@ -25,16 +25,16 @@ the failure modes that actually matter:
 
 ## Golden dataset
 
-`tests/evaluation/golden_dataset.json` contains 30+ examples across five
-categories (per `anvil-prompt.md` Phase 5):
+`tests/evaluation/golden_dataset.json` contains 100 public SPES-1 examples
+across five categories:
 
 | Category | Count | Purpose |
 | :--- | :--- | :--- |
-| `calculation` | ≥ 10 | Worked answers with `expected_values` for every step. Anchors `calculation_correctness`. |
-| `lookup` | ≥ 5 | "What is the allowable stress of SM-516 Gr 70 at 300°C?" — single-value retrieval. |
-| `cross_reference` | ≥ 5 | "What inputs are needed for A-27(c)(1)?" — exercises graph expansion. |
-| `out_of_domain` | ≥ 5 | "What's the weather in San Jose?" — must trigger refusal. |
-| `edge_case` | ≥ 5 | Temperature interpolation, near-applicability boundaries, missing parameters. |
+| `calculation` | 34 | Worked answers with `expected_values` for every step. Anchors `calculation_correctness`. |
+| `lookup` | 20 | "What is the allowable stress of SM-516 Gr 70 at 300°C?" — single-value retrieval. |
+| `cross_reference` | 20 | "What inputs are needed for A-27(c)(1)?" — exercises graph expansion. |
+| `out_of_domain` | 12 | Unsupported materials, real-ASME requests, unrelated prompts, and missing inputs — must trigger refusal. |
+| `edge_case` | 14 | Temperature interpolation, exact tabulated temperatures, outside-radius formulas, low joint efficiency, and high pressure. |
 
 Each `GoldenExample` carries:
 
@@ -46,6 +46,15 @@ Each `GoldenExample` carries:
 * `expected_refusal` — boolean for `refusal_calibration`.
 * `numeric_tolerance` — per-example bound (default 0.02, tightened to
   0.001 for the worked calculation examples).
+
+Calculation expected values in the expanded public set were generated from
+`CalculationEngine`, not by hand, then written into JSON as reviewed expected
+outputs. This keeps the benchmark deterministic while avoiding query-specific
+answer branches in `src/`.
+
+Licensed ASME validation uses a separate local-only path: datasets and parsed
+standards stay under `data/private/`, outputs stay under `data/private_runs/`,
+and only sanitized aggregate metrics may be shared. See `docs/private_asme.md`.
 
 ## Metric definitions
 

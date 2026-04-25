@@ -155,8 +155,10 @@ class FakeLLMBackend:
         for c in picks:
             first_line = next(
                 (line.strip() for line in c.content.splitlines() if line.strip()),
-                c.element_id,
+                "",
             )
+            if not first_line:
+                continue
             citations.append(
                 Citation(
                     source_element_id=c.element_id,
@@ -166,7 +168,10 @@ class FakeLLMBackend:
                 )
             )
 
-        top = picks[0]
+        top = next(
+            (pick for pick in picks if pick.content.strip()),
+            picks[0],
+        )
         top_line = next(
             (line.strip() for line in top.content.splitlines() if line.strip()),
             top.element_id,

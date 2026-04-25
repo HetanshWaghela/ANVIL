@@ -61,6 +61,23 @@ def _parse_args() -> argparse.Namespace:
         help="Where to drop the run directory (default: data/runs).",
     )
     p.add_argument(
+        "--dataset",
+        type=Path,
+        default=ROOT / "tests" / "evaluation" / "golden_dataset.json",
+        help="Golden dataset JSON.",
+    )
+    p.add_argument(
+        "--standard",
+        type=Path,
+        default=ROOT / "data" / "synthetic" / "standard.md",
+        help="Markdown standard to parse for retrieval and citations.",
+    )
+    p.add_argument(
+        "--dataset-version",
+        default="goldenv1",
+        help="Run-id dataset slug, e.g. goldenv1 or asme-private-v1.",
+    )
+    p.add_argument(
         "--legacy-summary",
         type=Path,
         default=Path("data/indexes/evaluation.json"),
@@ -85,16 +102,17 @@ async def _run() -> int:
     else:
         os.environ.pop("ANVIL_LLM_MODEL", None)
 
-    pipeline = build_pipeline(ablation=args.ablation)
+    pipeline = build_pipeline(standard_path=args.standard, ablation=args.ablation)
     effective_model = getattr(pipeline.generator.backend, "model", args.model)
     runner = EvaluationRunner(pipeline.generator)
-    dataset_path = ROOT / "tests" / "evaluation" / "golden_dataset.json"
+    dataset_path = args.dataset
     examples = load_golden_dataset(dataset_path)
 
     run_id = make_run_id(
         backend=args.backend,
         model=effective_model,
         ablation=args.ablation,
+        dataset_version=args.dataset_version,
     )
     from anvil.evaluation.ablation import ABLATIONS as _ABL
 
@@ -139,6 +157,7 @@ async def _run() -> int:
                 "backend": args.backend,
                 "model": effective_model,
                 "ablation": args.ablation,
+                "dataset_version": args.dataset_version,
                 "pass_rate": summary.pass_rate,
                 "aggregate": summary.aggregate,
                 "run_dir": str(args.output_root / run_id),
