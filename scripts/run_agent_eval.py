@@ -78,6 +78,12 @@ def _parse_args() -> argparse.Namespace:
         action="store_true",
         help="Don't re-run the fixed pipeline as a comparison baseline.",
     )
+    p.add_argument(
+        "--sleep-between-examples",
+        type=float,
+        default=0.0,
+        help="Cooldown between agent examples, useful for hosted provider rate limits.",
+    )
     return p.parse_args()
 
 
@@ -90,6 +96,7 @@ async def _run_agent(
     *,
     model: str,
     max_steps: int,
+    sleep_between_examples: float,
     examples: list[Any],
     output_root: Path,
     when: datetime,
@@ -112,7 +119,9 @@ async def _run_agent(
         budget=AgentBudget(max_steps=max_steps),
     )
     runner = AgentEvaluationRunner(
-        agent=agent, element_index=pipeline.generator.element_index
+        agent=agent,
+        element_index=pipeline.generator.element_index,
+        inter_example_delay_s=sleep_between_examples,
     )
 
     run_id = (
@@ -258,6 +267,7 @@ async def _run() -> int:
         model=args.model,
         n_examples=len(examples),
         max_steps=args.max_steps,
+        sleep_between_examples=args.sleep_between_examples,
     )
     when = datetime.now(UTC)
 
@@ -274,6 +284,7 @@ async def _run() -> int:
     _, agent_summary = await _run_agent(
         model=args.model,
         max_steps=args.max_steps,
+        sleep_between_examples=args.sleep_between_examples,
         examples=examples,
         output_root=args.output_root,
         when=when,

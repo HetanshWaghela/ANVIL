@@ -1,0 +1,52 @@
+{
+  "run_id": "2026-04-25T16-25-26Z_nvidia_nim-llama-3.3-70b-instruct_goldenv1_abl-no-refusal",
+  "manifest": {
+    "run_id": "2026-04-25T16-25-26Z_nvidia_nim-llama-3.3-70b-instruct_goldenv1_abl-no-refusal",
+    "started_at_utc": "2026-04-25T16:27:32Z",
+    "finished_at_utc": "2026-04-25T16:27:32Z",
+    "backend": "nvidia_nim",
+    "model": "meta/llama-3.3-70b-instruct",
+    "base_url": null,
+    "ablation": "no-refusal",
+    "ablation_config": {
+      "name": "no-refusal",
+      "retrieval_mode": "hybrid",
+      "use_pinned_data": true,
+      "use_refusal_gate": false,
+      "use_citation_enforcer": true
+    },
+    "dataset_path": "tests/evaluation/golden_dataset.json",
+    "dataset_hash": "0b6db32f3d8cb3e7087cc278bdd807303350e51712d9453f021f8454b34befb7",
+    "n_examples": 30,
+    "git_sha": "8bcbf95f956ff517f4f0617366ce79cb38e605a9",
+    "git_branch": "main",
+    "git_dirty": true,
+    "python_version": "3.14.4",
+    "platform": "macOS-26.4.1-arm64-arm-64bit-Mach-O",
+    "env": {
+      "ANVIL_EMBEDDER": "sentence_transformer",
+      "ANVIL_LLM_BACKEND": "nvidia_nim",
+      "ANVIL_LLM_MAX_TOKENS": "8192",
+      "ANVIL_LLM_MODEL": "meta/llama-3.3-70b-instruct",
+      "ANVIL_LLM_TIMEOUT_S": "240",
+      "ANVIL_NIM_MODELS": "meta/llama-3.3-70b-instruct,qwen/qwen3-next-80b-a3b-instruct,moonshotai/kimi-k2-instruct-0905",
+      "ANVIL_ST_CACHE_DIR": "/Users/hetanshwaghela/.cache/anvil/sentence-transformers",
+      "ANVIL_ST_MODEL": "BAAI/bge-small-en-v1.5",
+      "NVIDIA_API_KEY": "<redacted:b30b600e>"
+    },
+    "notes": null
+  },
+  "aggregate": {
+    "retrieval_precision_at_k": 0.38799999999999996,
+    "retrieval_recall_at_k": 0.9866666666666667,
+    "entity_grounding": 1.0,
+    "calculation_correctness": 0.08333333333333333,
+    "refusal_calibration": 0.23333333333333334,
+    "citation_accuracy": 1.0,
+    "structural_completeness": 0.9866666666666667,
+    "faithfulness": 0.08
+  },
+  "pass_rate": 0.23333333333333334,
+  "n_examples": 30,
+  "n_passed": 7
+}

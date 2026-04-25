@@ -1,0 +1,264 @@
+[
+  {
+    "example_id": "gold-calc-001",
+    "category": "calculation",
+    "metrics": [
+      {
+        "name": "refusal_calibration",
+        "value": 0.0,
+        "passed": false,
+        "threshold": 1.0,
+        "details": {
+          "expected_refusal": 0,
+          "actual_refusal": 1
+        }
+      },
+      {
+        "name": "retrieval_precision_at_k",
+        "value": 0.0,
+        "passed": false,
+        "threshold": null,
+        "details": {}
+      },
+      {
+        "name": "retrieval_recall_at_k",
+        "value": 0.0,
+        "passed": false,
+        "threshold": 0.99,
+        "details": {
+          "k": 10,
+          "found": 0,
+          "expected": 3
+        }
+      },
+      {
+        "name": "faithfulness",
+        "value": 0.0,
+        "passed": false,
+        "threshold": 0.8,
+        "details": {
+          "supported": 0,
+          "total": 2
+        }
+      },
+      {
+        "name": "citation_accuracy",
+        "value": 1.0,
+        "passed": true,
+        "threshold": 0.8,
+        "details": {
+          "valid": 0,
+          "total": 0
+        }
+      },
+      {
+        "name": "entity_grounding",
+        "value": 1.0,
+        "passed": true,
+        "threshold": 1.0,
+        "details": {}
+      },
+      {
+        "name": "structural_completeness",
+        "value": 0.0,
+        "passed": false,
+        "threshold": 1.0,
+        "details": {
+          "covered": 0,
+          "total": 3
+        }
+      },
+      {
+        "name": "calculation_correctness",
+        "value": 0.0,
+        "passed": false,
+        "threshold": 1.0,
+        "details": {
+          "matched": 0,
+          "total": 6,
+          "S_mpa": "no matching step",
+          "E": "no matching step",
+          "t_min_mm": "no matching step",
+          "t_design_mm": "no matching step",
+          "t_nominal_mm": "no matching step",
+          "mawp_mpa": "no matching step"
+        }
+      }
+    ],
+    "passed": false
+  },
+  {
+    "example_id": "gold-calc-002",
+    "category": "calculation",
+    "metrics": [
+      {
+        "name": "refusal_calibration",
+        "value": 0.0,
+        "passed": false,
+        "threshold": 1.0,
+        "details": {
+          "expected_refusal": 0,
+          "actual_refusal": 1
+        }
+      },
+      {
+        "name": "retrieval_precision_at_k",
+        "value": 0.0,
+        "passed": false,
+        "threshold": null,
+        "details": {}
+      },
+      {
+        "name": "retrieval_recall_at_k",
+        "value": 0.0,
+        "passed": false,
+        "threshold": 0.99,
+        "details": {
+          "k": 10,
+          "found": 0,
+          "expected": 3
+        }
+      },
+      {
+        "name": "faithfulness",
+        "value": 0.0,
+        "passed": false,
+        "threshold": 0.8,
+        "details": {
+          "supported": 0,
+          "total": 2
+        }
+      },
+      {
+        "name": "citation_accuracy",
+        "value": 1.0,
+        "passed": true,
+        "threshold": 0.8,
+        "details": {
+          "valid": 0,
+          "total": 0
+        }
+      },
+      {
+        "name": "entity_grounding",
+        "value": 1.0,
+        "passed": true,
+        "threshold": 1.0,
+        "details": {}
+      },
+      {
+        "name": "structural_completeness",
+        "value": 0.0,
+        "passed": false,
+        "threshold": 1.0,
+        "details": {
+          "covered": 0,
+          "total": 3
+        }
+      },
+      {
+        "name": "calculation_correctness",
+        "value": 0.0,
+        "passed": false,
+        "threshold": 1.0,
+        "details": {
+          "matched": 0,
+          "total": 5,
+          "S_mpa": "no matching step",
+          "E": "no matching step",
+          "t_min_mm": "no matching step",
+          "t_nominal_mm": "no matching step",
+          "mawp_mpa": "no matching step"
+        }
+      }
+    ],
+    "passed": false
+  },
+  {
+    "example_id": "gold-calc-003",
+    "category": "calculation",
+    "metrics": [
+      {
+        "name": "refusal_calibration",
+        "value": 0.0,
+        "passed": false,
+        "threshold": 1.0,
+        "details": {
+          "expected_refusal": 0,
+          "actual_refusal": 1
+        }
+      },
+      {
+        "name": "retrieval_precision_at_k",
+        "value": 0.0,
+        "passed": false,
+        "threshold": null,
+        "details": {}
+      },
+      {
+        "name": "retrieval_recall_at_k",
+        "value": 0.0,
+        "passed": false,
+        "threshold": 0.99,
+        "details": {
+          "k": 10,
+          "found": 0,
+          "expected": 3
+        }
+      },
+      {
+        "name": "faithfulness",
+        "value": 0.0,
+        "passed": false,
+        "threshold": 0.8,
+        "details": {
+          "supported": 0,
+          "total": 2
+        }
+      },
+      {
+        "name": "citation_accuracy",
+        "value": 1.0,
+        "passed": true,
+        "threshold": 0.8,
+        "details": {
+          "valid": 0,
+          "total": 0
+        }
+      },
+      {
+        "name": "entity_grounding",
+        "value": 1.0,
+        "passed": true,
+        "threshold": 1.0,
+        "details": {}
+      },
+      {
+        "name": "structural_completeness",
+        "value": 0.0,
+        "passed": false,
+        "threshold": 1.0,
+        "details": {
+          "covered": 0,
+          "total": 3
+        }
+      },
+      {
+        "name": "calculation_correctness",
+        "value": 0.0,
+        "passed": false,
+        "threshold": 1.0,
+        "details": {
+          "matched": 0,
+          "total": 5,
+          "S_mpa": "no matching step",
+          "E": "no matching step",
+          "t_min_mm": "no matching step",
+          "t_nominal_mm": "no matching step",
+          "mawp_mpa": "no matching step"
+        }
+      }
+    ],
+    "passed": false
+  }
+]

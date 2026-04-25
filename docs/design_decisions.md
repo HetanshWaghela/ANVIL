@@ -315,3 +315,124 @@ docstring, in `.env.example`, in `docs/nim_integration.md`, and in
 the locked test in `tests/unit/test_nim_health.py` so a reviewer can
 trace the swap end-to-end. The live probe + drift report is the
 recommended check before each ablation matrix.
+
+---
+
+## ADR-012 · CLI is the reviewer workflow, scripts remain batch drivers
+
+**Context.** The original plan required a reviewer to run `anvil
+nim-check`, `anvil eval`, `anvil query`, `anvil calculate`, and
+`anvil compare`. Earlier implementation only exposed `nim-check`
+through the installed CLI, leaving the rest of the workflow split
+across scripts. That made the repo harder to evaluate quickly: a
+reviewer had to know which scripts were interactive, which produced
+run directories, and which were legacy compatibility paths.
+
+**Options considered.**
+
+1. Keep only `anvil nim-check` and document the scripts. This avoids
+   extra CLI code but leaves the public workflow fragmented.
+2. Move all script logic into the package and delete the scripts. This
+   creates one clean entry point but breaks existing CI and batch-study
+   commands.
+3. Add a thin stdlib `argparse` CLI over the primary workflows while
+   keeping scripts as batch-study drivers.
+
+**Chosen.** Option 3. `src/anvil/cli.py` now exposes:
+
+* `anvil nim-check`
+* `anvil ingest`
+* `anvil query`
+* `anvil calculate`
+* `anvil eval`
+* `anvil compare`
+
+The scripts under `scripts/` remain the right place for long-running
+studies such as ablations, calibration sweeps, NIM headline runs,
+parser benchmarks, and agent evaluation.
+
+**Rationale.** Reviewers get a single installed command surface for the
+main workflow without losing reproducible batch scripts. The CLI uses
+stdlib `argparse` rather than adding Click because the command surface
+is small, existing CI does not need another runtime dependency, and the
+project already uses explicit typed Python APIs internally. The scripts
+continue to serve as transparent examples of the exact experiment
+loops used to generate documentation tables.
+
+---
+
+## ADR-013 · Deployment artifact defaults to deterministic read-only demo
+
+**Context.** The build-out plan called for Docker/Fly or Railway polish
+and a public demo URL. A live NIM-backed demo is useful, but a public
+deployment that requires secrets, burns quota, or silently falls back to
+fake behavior would be misleading. The default demo should be safe to
+run without credentials while making the live-backend configuration
+explicit.
+
+**Options considered.**
+
+1. Do not add deployment files until a public URL exists. This avoids
+   unused files but leaves reviewers without a one-command deployment
+   path.
+2. Ship a Docker/Fly template that defaults to the fake backend and hash
+   embedder. Operators can opt into NIM by setting platform secrets.
+3. Ship a Docker/Fly template that defaults to NIM. This demonstrates
+   the production path but fails without secrets and risks accidental
+   quota usage.
+
+**Chosen.** Option 2. The repository includes a minimal `Dockerfile`
+and `fly.toml` configured for a read-only FastAPI demo with:
+
+* `ANVIL_LLM_BACKEND=fake`
+* `ANVIL_EMBEDDER=hash`
+* no committed secrets
+* explicit comments showing how to enable NIM with platform secrets
+
+**Rationale.** A deterministic default demo is honest and safe: anyone
+can deploy or run the API without a provider key, and no hidden network
+calls happen by accident. The NIM path remains first-class but is
+opt-in through environment variables/secrets. This mirrors the rest of
+ANVIL's philosophy: fake/offline paths are acceptable for CI and demos
+only when they are loud, documented, and never confused with live-model
+evaluation claims.
+
+---
+
+## ADR-014 · Hybrid PDF parser is feature-flagged; local pymupdf4llm stays default
+
+**Context.** The parser benchmark showed `pymupdf4llm` is the strongest
+currently measured default: it is local, free, structurally useful, and
+achieves high SPES-1 table/formula/reference recovery after the table
+repair fixes. Hosted parsers such as Reducto and Azure Document
+Intelligence may improve table-heavy real PDFs, but those paths are
+key-gated and not yet supported by committed benchmark rows.
+
+**Options considered.**
+
+1. Keep only `parse_pdf()` around `pymupdf4llm`. This is simple but
+   makes future parser bake-offs require changing ingestion code.
+2. Switch the default parser to a hosted provider. This may improve
+   some PDFs but adds cost, secrets, network dependency, and an
+   unmeasured production default.
+3. Add a feature-flagged hybrid parser wrapper that normalizes every
+   provider back to `DocumentElement` and falls back to local parsing
+   when hosted providers are unavailable.
+
+**Chosen.** Option 3, with `pymupdf4llm` still the default. The new
+hybrid parser prototype is controlled by `ANVIL_PDF_PARSER` and
+supports:
+
+* `pymupdf4llm` — local default;
+* `hybrid` — try keyed hosted parser paths, then local fallback;
+* `reducto` — key-gated hosted path;
+* `azure_di` — declared fail-loud placeholder until a tested adapter
+  and benchmark row exist.
+
+**Rationale.** Parser choice is now an explicit configuration decision,
+not a hidden code fork. Downstream retrieval and graph construction
+still receive the same typed `DocumentElement` objects regardless of
+provider. Local parsing remains the only defended default because it is
+the only path with committed measurements. Reducto and Azure DI stay
+behind feature flags until their outputs are benchmarked and documented
+rather than assumed to be better.

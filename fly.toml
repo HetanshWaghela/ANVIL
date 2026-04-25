@@ -1,0 +1,49 @@
+# Fly.io deployment template for the ANVIL FastAPI demo.
+#
+# Usage:
+#   1. Install Fly CLI: https://fly.io/docs/flyctl/install/
+#   2. Create or rename the app:
+#        fly apps create anvil-demo
+#      or edit `app = "anvil-demo"` below.
+#   3. Deploy:
+#        fly deploy
+#
+# The default deployment uses the fake backend and hash embedder so the public
+# demo is deterministic and does not require secrets. To run against NVIDIA NIM:
+#
+#   fly secrets set NVIDIA_API_KEY=nvapi-...
+#   fly secrets set ANVIL_LLM_BACKEND=nvidia_nim
+#   fly secrets set ANVIL_EMBEDDER=sentence_transformer
+#   fly secrets set ANVIL_LLM_MODEL=meta/llama-3.3-70b-instruct
+#
+# Keep the public demo read-only and avoid committing secrets.
+
+app = "anvil-demo"
+primary_region = "sjc"
+
+[build]
+  dockerfile = "Dockerfile"
+
+[env]
+  ANVIL_ENV = "production"
+  ANVIL_LLM_BACKEND = "fake"
+  ANVIL_EMBEDDER = "hash"
+  PORT = "8080"
+
+[http_service]
+  internal_port = 8080
+  force_https = true
+  auto_stop_machines = true
+  auto_start_machines = true
+  min_machines_running = 0
+  processes = ["app"]
+
+  [http_service.concurrency]
+    type = "requests"
+    soft_limit = 20
+    hard_limit = 40
+
+[[vm]]
+  cpu_kind = "shared"
+  cpus = 1
+  memory_mb = 1024

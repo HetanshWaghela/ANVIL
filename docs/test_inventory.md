@@ -89,9 +89,48 @@ deleted/updated in the same commit.
 | `unit/test_calibration.py::test_calibration_precision_holds_at_chosen_threshold` | M4 acceptance | Refusal precision = 1.0 at the chosen threshold (no in-domain false-refusal). |
 | `unit/test_calibration.py::test_calibration_higher_threshold_increases_false_refusals` | Sweep sanity | At threshold=0.30 at least one in-domain FP appears — sweep direction is informative. |
 
-## M5-M9 (filled as milestones land)
+## M5 — Real NIM baseline rows + headline artifacts
 
-— pending —
+| Test / artifact | Anchor | What it asserts |
+| :--- | :--- | :--- |
+| `unit/test_nim_health.py::test_nim_catalog_has_three_locked_models` | M5 / ADR-011 | The live NIM catalog remains intentionally small and reviewable after the catalog refresh. |
+| `unit/test_nim_health.py::test_cli_nim_check_list_reports_drift` | M5 / catalog drift | `anvil nim-check --list` reports locked-vs-live drift before expensive eval runs. |
+| `docs/headline_results.md` | M5 deliverable | Committed model comparison table links each headline number to a stamped run directory. |
+| `docs/nim_integration.md` | M5 deliverable | Documents the active catalog, key-gated behavior, and bake-off override path. |
+
+## M6 — Agentic tool-calling loop
+
+| Test / artifact | Anchor | What it asserts |
+| :--- | :--- | :--- |
+| `unit/test_agent.py::*` | M6 / agent loop invariants | Scripted agent backend, budget exhaustion, tool-error handling, decision invariants, and tool adapter behavior are locked without a live LLM. |
+| `integration/test_agent_eval.py::*` | M6 / evaluation parity | Agent runs are scored through the same metric surface as fixed-pipeline runs; budget exhaustion returns refusal-shaped responses. |
+| `docs/agent_loop.md` | M6 design artifact | Documents tool surface, loop guarantees, transcript persistence, and known limitations. |
+| `docs/pipeline_vs_agent.md` | M6 honesty gate | Explicitly states that live agent-vs-fixed NIM metrics are pending until committed run artifacts exist. |
+
+## M7 — Real-PDF parser benchmark
+
+| Test / artifact | Anchor | What it asserts |
+| :--- | :--- | :--- |
+| `unit/test_parser_metrics.py::*` | M7 metric definitions | Table F1, formula fidelity, paragraph-ref recall, and section recall behave deterministically. |
+| `unit/test_parser_benchmark.py::TestSchemaDriftGuard` | M7 cached-output guard | Cached parser benchmark outputs continue to match the expected schema. |
+| `docs/parser_benchmark.md` | M7 deliverable | Records SPES-1 and NASA parser results, parser fixes, remaining parser gaps, and the defended default parser. |
+| `src/anvil/parsing/hybrid_parser.py` | M7 prototype / ADR-014 | Feature-flagged parser switching normalizes providers back to `DocumentElement` while keeping `pymupdf4llm` as the defended default. |
+
+## M8 — Workshop-paper-grade report
+
+| Test / artifact | Anchor | What it asserts |
+| :--- | :--- | :--- |
+| `docs/report.md` | M8 deliverable | Consolidates system overview, related work, evaluation methodology, NIM results, ablations, calibration, parser benchmark, limitations, and reproducibility appendix. |
+| `docs/cost_budget.md` | M8 / reviewer transparency | Documents live NIM request budgeting, quota guardrails, and recommended experiment sequencing. |
+
+## M9 — CI, CLI, and deployment polish
+
+| Test / artifact | Anchor | What it asserts |
+| :--- | :--- | :--- |
+| `.github/workflows/ci.yml` | M9 CI gate | CI runs lint, type-check, tests, fake eval, and optional NIM health check. |
+| `src/anvil/cli.py` | M9 CLI surface / ADR-012 | Installed `anvil` command exposes `nim-check`, `ingest`, `query`, `calculate`, `eval`, and `compare`. |
+| `Dockerfile` | M9 deployment | Builds a deterministic read-only FastAPI demo image with no required secrets by default. |
+| `fly.toml` | M9 deployment / ADR-013 | Provides a Fly.io deployment template with fake-backend defaults and explicit NIM secret instructions. |
 
 ---
 

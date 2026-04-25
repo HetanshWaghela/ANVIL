@@ -1,0 +1,52 @@
+{
+  "run_id": "2026-04-25T16-03-59Z_nvidia_nim-deepseek-v4-flash_goldenv1_abl-baseline",
+  "manifest": {
+    "run_id": "2026-04-25T16-03-59Z_nvidia_nim-deepseek-v4-flash_goldenv1_abl-baseline",
+    "started_at_utc": "2026-04-25T16:07:31Z",
+    "finished_at_utc": "2026-04-25T16:07:31Z",
+    "backend": "nvidia_nim",
+    "model": "deepseek-ai/deepseek-v4-flash",
+    "base_url": null,
+    "ablation": "baseline",
+    "ablation_config": {
+      "name": "baseline",
+      "retrieval_mode": "hybrid",
+      "use_pinned_data": true,
+      "use_refusal_gate": true,
+      "use_citation_enforcer": true
+    },
+    "dataset_path": "tests/evaluation/golden_dataset.json",
+    "dataset_hash": "0b6db32f3d8cb3e7087cc278bdd807303350e51712d9453f021f8454b34befb7",
+    "n_examples": 30,
+    "git_sha": "8bcbf95f956ff517f4f0617366ce79cb38e605a9",
+    "git_branch": "main",
+    "git_dirty": true,
+    "python_version": "3.14.4",
+    "platform": "macOS-26.4.1-arm64-arm-64bit-Mach-O",
+    "env": {
+      "ANVIL_EMBEDDER": "sentence_transformer",
+      "ANVIL_LLM_BACKEND": "nvidia_nim",
+      "ANVIL_LLM_MAX_TOKENS": "8192",
+      "ANVIL_LLM_MODEL": "deepseek-ai/deepseek-v4-flash",
+      "ANVIL_LLM_TIMEOUT_S": "240",
+      "ANVIL_NIM_MODELS": "deepseek-ai/deepseek-v4-flash",
+      "ANVIL_ST_CACHE_DIR": "/Users/hetanshwaghela/.cache/anvil/sentence-transformers",
+      "ANVIL_ST_MODEL": "BAAI/bge-small-en-v1.5",
+      "NVIDIA_API_KEY": "<redacted:b30b600e>"
+    },
+    "notes": null
+  },
+  "aggregate": {
+    "retrieval_recall_at_k": 0.9866666666666667,
+    "structural_completeness": 0.9866666666666667,
+    "retrieval_precision_at_k": 0.38799999999999996,
+    "refusal_calibration": 0.9666666666666667,
+    "faithfulness": 0.93,
+    "entity_grounding": 0.96,
+    "calculation_correctness": 1.0,
+    "citation_accuracy": 1.0
+  },
+  "pass_rate": 0.8666666666666667,
+  "n_examples": 30,
+  "n_passed": 26
+}

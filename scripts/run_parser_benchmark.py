@@ -231,7 +231,15 @@ def run_reducto(pdf_path: Path) -> ParserOutput:
             files={"file": (pdf_path.name, pdf_path.read_bytes(), "application/pdf")},
         )
         upload_resp.raise_for_status()
-        document_url = upload_resp.json().get("document_url", upload_resp.json().get("url", ""))
+        upload_payload = upload_resp.json()
+        file_ref = (
+            upload_payload.get("file_id")
+            or upload_payload.get("document_url")
+            or upload_payload.get("url")
+            or ""
+        )
+        if not file_ref:
+            raise RuntimeError("Reducto upload response did not contain file_id/document_url/url")
 
         # Step 2: Parse the uploaded document
         parse_resp = client.post(
@@ -241,11 +249,15 @@ def run_reducto(pdf_path: Path) -> ParserOutput:
                 "Content-Type": "application/json",
             },
             json={
-                "document_url": document_url,
-                "advanced_options": {"table_output_format": "markdown"},
+                "input": file_ref,
+                "formatting": {"table_output_format": "md"},
             },
         )
-        parse_resp.raise_for_status()
+        if parse_resp.status_code >= 400:
+            raise RuntimeError(
+                "Reducto parse failed: "
+                f"HTTP {parse_resp.status_code}: {parse_resp.text[:500]}"
+            )
         result = parse_resp.json()
 
     # Extract markdown content from Reducto response

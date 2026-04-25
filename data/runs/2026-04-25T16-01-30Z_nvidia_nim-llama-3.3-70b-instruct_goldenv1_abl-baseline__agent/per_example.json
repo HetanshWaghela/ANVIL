@@ -1,0 +1,260 @@
+[
+  {
+    "example_id": "gold-calc-001",
+    "category": "calculation",
+    "metrics": [
+      {
+        "name": "refusal_calibration",
+        "value": 1.0,
+        "passed": true,
+        "threshold": 1.0,
+        "details": {
+          "expected_refusal": 0,
+          "actual_refusal": 0
+        }
+      },
+      {
+        "name": "retrieval_precision_at_k",
+        "value": 0.5,
+        "passed": true,
+        "threshold": 0.24000000000000005,
+        "details": {
+          "k": 10,
+          "relevant": 5,
+          "total": 10
+        }
+      },
+      {
+        "name": "retrieval_recall_at_k",
+        "value": 1.0,
+        "passed": true,
+        "threshold": 0.99,
+        "details": {
+          "k": 10,
+          "found": 3,
+          "expected": 3
+        }
+      },
+      {
+        "name": "faithfulness",
+        "value": 1.0,
+        "passed": true,
+        "threshold": 0.8,
+        "details": {
+          "supported": 4,
+          "total": 4
+        }
+      },
+      {
+        "name": "citation_accuracy",
+        "value": 1.0,
+        "passed": true,
+        "threshold": 0.8,
+        "details": {
+          "valid": 17,
+          "total": 17
+        }
+      },
+      {
+        "name": "entity_grounding",
+        "value": 1.0,
+        "passed": true,
+        "threshold": 1.0,
+        "details": {}
+      },
+      {
+        "name": "structural_completeness",
+        "value": 1.0,
+        "passed": true,
+        "threshold": 1.0,
+        "details": {
+          "covered": 3,
+          "total": 3
+        }
+      },
+      {
+        "name": "calculation_correctness",
+        "value": 1.0,
+        "passed": true,
+        "threshold": 1.0,
+        "details": {
+          "matched": 6,
+          "total": 6
+        }
+      }
+    ],
+    "passed": true
+  },
+  {
+    "example_id": "gold-calc-002",
+    "category": "calculation",
+    "metrics": [
+      {
+        "name": "refusal_calibration",
+        "value": 1.0,
+        "passed": true,
+        "threshold": 1.0,
+        "details": {
+          "expected_refusal": 0,
+          "actual_refusal": 0
+        }
+      },
+      {
+        "name": "retrieval_precision_at_k",
+        "value": 0.5,
+        "passed": true,
+        "threshold": 0.24000000000000005,
+        "details": {
+          "k": 10,
+          "relevant": 5,
+          "total": 10
+        }
+      },
+      {
+        "name": "retrieval_recall_at_k",
+        "value": 1.0,
+        "passed": true,
+        "threshold": 0.99,
+        "details": {
+          "k": 10,
+          "found": 3,
+          "expected": 3
+        }
+      },
+      {
+        "name": "faithfulness",
+        "value": 1.0,
+        "passed": true,
+        "threshold": 0.8,
+        "details": {
+          "supported": 4,
+          "total": 4
+        }
+      },
+      {
+        "name": "citation_accuracy",
+        "value": 1.0,
+        "passed": true,
+        "threshold": 0.8,
+        "details": {
+          "valid": 17,
+          "total": 17
+        }
+      },
+      {
+        "name": "entity_grounding",
+        "value": 1.0,
+        "passed": true,
+        "threshold": 1.0,
+        "details": {}
+      },
+      {
+        "name": "structural_completeness",
+        "value": 1.0,
+        "passed": true,
+        "threshold": 1.0,
+        "details": {
+          "covered": 3,
+          "total": 3
+        }
+      },
+      {
+        "name": "calculation_correctness",
+        "value": 1.0,
+        "passed": true,
+        "threshold": 1.0,
+        "details": {
+          "matched": 5,
+          "total": 5
+        }
+      }
+    ],
+    "passed": true
+  },
+  {
+    "example_id": "gold-calc-003",
+    "category": "calculation",
+    "metrics": [
+      {
+        "name": "refusal_calibration",
+        "value": 1.0,
+        "passed": true,
+        "threshold": 1.0,
+        "details": {
+          "expected_refusal": 0,
+          "actual_refusal": 0
+        }
+      },
+      {
+        "name": "retrieval_precision_at_k",
+        "value": 0.5,
+        "passed": true,
+        "threshold": 0.24000000000000005,
+        "details": {
+          "k": 10,
+          "relevant": 5,
+          "total": 10
+        }
+      },
+      {
+        "name": "retrieval_recall_at_k",
+        "value": 1.0,
+        "passed": true,
+        "threshold": 0.99,
+        "details": {
+          "k": 10,
+          "found": 3,
+          "expected": 3
+        }
+      },
+      {
+        "name": "faithfulness",
+        "value": 1.0,
+        "passed": true,
+        "threshold": 0.8,
+        "details": {
+          "supported": 4,
+          "total": 4
+        }
+      },
+      {
+        "name": "citation_accuracy",
+        "value": 1.0,
+        "passed": true,
+        "threshold": 0.8,
+        "details": {
+          "valid": 17,
+          "total": 17
+        }
+      },
+      {
+        "name": "entity_grounding",
+        "value": 1.0,
+        "passed": true,
+        "threshold": 1.0,
+        "details": {}
+      },
+      {
+        "name": "structural_completeness",
+        "value": 1.0,
+        "passed": true,
+        "threshold": 1.0,
+        "details": {
+          "covered": 3,
+          "total": 3
+        }
+      },
+      {
+        "name": "calculation_correctness",
+        "value": 1.0,
+        "passed": true,
+        "threshold": 1.0,
+        "details": {
+          "matched": 5,
+          "total": 5
+        }
+      }
+    ],
+    "passed": true
+  }
+]

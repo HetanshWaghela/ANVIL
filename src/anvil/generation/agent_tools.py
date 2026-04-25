@@ -19,14 +19,16 @@ below.
 
 from __future__ import annotations
 
+import re
 import time
 from collections.abc import Callable
-from typing import Any
+from typing import Any, cast
 
 from anvil import CalculationError
 from anvil.generation.calculation_engine import (
     CalculationEngine,
     CalculationInputs,
+    ComponentType,
 )
 from anvil.knowledge.graph_store import GraphStore
 from anvil.logging_config import get_logger
@@ -86,9 +88,7 @@ TOOL_DESCRIPTIONS: dict[str, dict[str, Any]] = {
                 "allowable_stress kinds; joint type label "
                 "(e.g. 'Type 1') for joint_efficiency."
             ),
-            "temp_c": (
-                "float — required only for kind='allowable_stress'."
-            ),
+            "temp_c": ("float — required only for kind='allowable_stress'."),
             "rt_level": (
                 "str — required only for kind='joint_efficiency' "
                 "(e.g. 'Full RT', 'Spot RT', 'No RT')."
@@ -152,23 +152,97 @@ def _coerce_joint_type(raw: Any) -> int:
     if isinstance(raw, bool):  # `bool` is a subclass of int — reject it
         raise ValueError(f"joint_type cannot be bool ({raw!r}).")
     if isinstance(raw, int):
-        return raw
+        if 1 <= raw <= 6:
+            return raw
+        raise ValueError(f"joint_type must be in the range 1–6; got {raw}.")
     if isinstance(raw, float) and raw.is_integer():
-        return int(raw)
+        value = int(raw)
+        if 1 <= value <= 6:
+            return value
+        raise ValueError(f"joint_type must be in the range 1–6; got {raw}.")
     if isinstance(raw, str):
         s = raw.strip().lower()
-        if s.startswith("type"):
-            s = s[len("type") :].strip()
-        try:
+        if re.fullmatch(r"[1-6]", s):
             return int(s)
+        match = re.search(r"\btype\s*([1-6])\b", s)
+        if match is not None:
+            return int(match.group(1))
+        try:
+            value = int(s)
+            if 1 <= value <= 6:
+                return value
+            raise ValueError
         except ValueError as exc:
             raise ValueError(
                 f"Cannot coerce joint_type={raw!r} to int. "
-                f"Expected an int (1–6) or a label like 'Type 1'."
+                f"Expected an int (1–6), a label like 'Type 1', "
+                f"or a phrase like 'Type 2 with full radiography'."
             ) from exc
+    raise ValueError(f"joint_type must be int or str (e.g. 'Type 1'); got {type(raw).__name__}.")
+
+
+def _coerce_component(raw: Any) -> str:
+    """Coerce LLM-shaped component phrases to CalculationEngine component ids."""
+    text = str(raw or "").strip().lower()
+    normalized = re.sub(r"[\s\-]+", "_", text)
+    if normalized in {
+        "cylindrical_shell",
+        "cylindrical_shell_inside_radius",
+        "inside_radius_cylindrical_shell",
+    }:
+        return "cylindrical_shell"
+    if normalized in {
+        "cylindrical_shell_outside_radius",
+        "outside_radius_cylindrical_shell",
+    }:
+        return "cylindrical_shell_outside_radius"
+    if normalized == "spherical_shell":
+        return "spherical_shell"
+
+    # Common LLM / user phrases seen in live NIM agent traces.
+    if "spher" in text:
+        return "spherical_shell"
+    if "outside" in text or re.search(r"\bod\b", text):
+        return "cylindrical_shell_outside_radius"
+    if "cylind" in text or "shell" in text or "inside" in text or re.search(r"\bid\b", text):
+        return "cylindrical_shell"
+
     raise ValueError(
-        f"joint_type must be int or str (e.g. 'Type 1'); got "
-        f"{type(raw).__name__}."
+        f"Cannot coerce component={raw!r}. Expected one of "
+        "'cylindrical_shell', 'cylindrical_shell_outside_radius', "
+        "'spherical_shell', or a phrase like 'cylindrical shell'."
+    )
+
+
+def _coerce_rt_level(raw: Any) -> str:
+    """Coerce LLM-shaped radiography phrases to pinned Table B-12 labels."""
+    text = str(raw or "").strip()
+    normalized = re.sub(r"[\s_\-]+", " ", text.lower()).strip()
+
+    if normalized in {"full rt", "full radiography", "fully radiographed", "full"}:
+        return "Full RT"
+    if normalized in {"spot rt", "spot radiography", "spot radiographed", "spot"}:
+        return "Spot RT"
+    if normalized in {
+        "no rt",
+        "no radiography",
+        "none",
+        "without radiography",
+        "not radiographed",
+        "no",
+    }:
+        return "No RT"
+
+    if "full" in normalized:
+        return "Full RT"
+    if "spot" in normalized:
+        return "Spot RT"
+    if "no" in normalized or "without" in normalized or "none" in normalized:
+        return "No RT"
+
+    raise ValueError(
+        f"Cannot coerce rt_level={raw!r}. Expected 'Full RT', 'Spot RT', "
+        "'No RT', or a phrase like 'full radiography'."
     )
 
 
@@ -216,10 +290,7 @@ class ToolRegistry:
         t0 = time.perf_counter()
         fn = self._registry.get(call.name)
         if fn is None:
-            err = (
-                f"Unknown tool {call.name!r}. Available: "
-                f"{sorted(self._registry)}."
-            )
+            err = f"Unknown tool {call.name!r}. Available: {sorted(self._registry)}."
             log.warning("agent.tool.unknown", tool=call.name)
             return ToolResult(
                 name=call.name,
@@ -331,9 +402,7 @@ class ToolRegistry:
         if kind == "joint_efficiency":
             rt = str(args.get("rt_level") or "").strip()
             if not rt:
-                raise ValueError(
-                    "pinned_lookup[joint_efficiency]: 'rt_level' is required."
-                )
+                raise ValueError("pinned_lookup[joint_efficiency]: 'rt_level' is required.")
             joint_type_int = _coerce_joint_type(key)
             E = get_joint_efficiency(joint_type_int, rt)
             return {
@@ -354,7 +423,7 @@ class ToolRegistry:
         # Build CalculationInputs from kwargs; let Pydantic validate.
         try:
             inputs = CalculationInputs(
-                component=args["component"],
+                component=cast(ComponentType, _coerce_component(args["component"])),
                 P_mpa=float(args["P_mpa"]),
                 design_temp_c=float(args["design_temp_c"]),
                 inside_diameter_mm=(
@@ -369,10 +438,8 @@ class ToolRegistry:
                 ),
                 material=str(args["material"]),
                 joint_type=_coerce_joint_type(args["joint_type"]),
-                rt_level=str(args["rt_level"]),
-                corrosion_allowance_mm=float(
-                    args.get("corrosion_allowance_mm") or 0.0
-                ),
+                rt_level=_coerce_rt_level(args["rt_level"]),
+                corrosion_allowance_mm=float(args.get("corrosion_allowance_mm") or 0.0),
             )
         except KeyError as exc:
             raise ValueError(f"calculate: missing required kwarg {exc}.") from exc
@@ -386,6 +453,16 @@ class ToolRegistry:
                 "ok": False,
                 "error": f"CalculationError: {exc}",
             }
+        citations = list(
+            {
+                (
+                    step.citation.source_element_id,
+                    step.citation.paragraph_ref,
+                    step.citation.quoted_text,
+                ): step.citation.model_dump(mode="json")
+                for step in result.steps
+            }.values()
+        )
         return {
             "ok": True,
             "S_mpa": result.S_mpa,
@@ -398,6 +475,8 @@ class ToolRegistry:
             "mawp_mpa": result.mawp_mpa,
             "n_steps": len(result.steps),
             "applicability_ok": result.applicability_ok,
+            "calculation_steps": [step.model_dump(mode="json") for step in result.steps],
+            "citations": citations,
         }
 
 

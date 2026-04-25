@@ -28,6 +28,7 @@ decisions.
 
 from __future__ import annotations
 
+import asyncio
 from collections import OrderedDict
 from dataclasses import dataclass, field
 from typing import Any
@@ -120,14 +121,18 @@ class AgentEvaluationRunner:
         self,
         agent: AnvilAgent,
         element_index: dict[str, DocumentElement] | None = None,
+        inter_example_delay_s: float = 0.0,
     ) -> None:
         self.agent = agent
         self.element_index = element_index
+        self.inter_example_delay_s = inter_example_delay_s
 
     async def run(self, examples: list[GoldenExample]) -> AgentRunSummary:
         per_example: list[EvaluationResult] = []
         outcomes: list[AgentOutcome] = []
-        for ex in examples:
+        for idx, ex in enumerate(examples):
+            if idx > 0 and self.inter_example_delay_s > 0:
+                await asyncio.sleep(self.inter_example_delay_s)
             outcome = await self.agent.run(ex.query)
             outcomes.append(outcome)
             retrieved = _aggregate_retrieval(outcome)

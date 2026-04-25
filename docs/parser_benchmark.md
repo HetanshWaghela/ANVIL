@@ -47,18 +47,19 @@ All metrics produce a score in [0, 1] where higher is better.
 
 | System | Table F1 | Formula Fid | Para Recall | Section Recall | Latency ms/pg | $/page |
 |--------|----------|-------------|-------------|----------------|---------------|--------|
-| **pymupdf4llm** | **0.957** | **1.000** | **1.000** | **0.882** | 116.0 | free |
-| **naive_pdfminer** | 0.000 | 0.000 | 0.000 | 0.000 | 21.1 | free |
-| reducto | — | — | — | — | — | ~$0.01 |
+| **pymupdf4llm** | **0.957** | **1.000** | **1.000** | **0.882** | 144.1 | free |
+| reducto | 0.731 | 0.000 | **1.000** | 0.765 | 6325.7 | ~$0.01 |
+| **naive_pdfminer** | 0.000 | 0.000 | 0.000 | 0.000 | 23.2 | free |
 
-> **Note**: Reducto was not run because `REDUCTO_API_KEY` is not set yet. Azure DI is no longer part of the default benchmark; it can still be requested explicitly with `--systems ...azure_di`.
+> **Note**: Reducto now runs with the current API schema (`upload.file_id` → parse `input`, table format `md`). It is useful evidence because it is a real hosted parser row, but it does not beat the local default on the controlled SPES-1 benchmark. Azure DI is no longer part of the default benchmark; it can still be requested explicitly with `--systems ...azure_di`.
 
 ### NASA SP-8007 (Real-World PDF)
 
 | System | Table F1 | Formula Fid | Para Recall | Section Recall | Latency ms/pg | $/page |
 |--------|----------|-------------|-------------|----------------|---------------|--------|
-| **pymupdf4llm** | 1.000 | 1.000 | 1.000 | 1.000 | 1299.7 | free |
-| **naive_pdfminer** | 0.000 | 1.000 | 1.000 | 0.000 | 13.6 | free |
+| **pymupdf4llm** | 1.000 | 1.000 | 1.000 | 1.000 | 1346.6 | free |
+| reducto | 0.000 | 1.000 | 1.000 | 0.704 | 721.5 | ~$0.01 |
+| **naive_pdfminer** | 0.000 | 1.000 | 1.000 | 0.000 | 15.7 | free |
 
 > **Note**: NASA SP-8007 ground truth is approximate (derived from pymupdf4llm output), so pymupdf4llm scores 1.0 by construction. The value here is in comparing *relative* performance: naive_pdfminer correctly extracts text (paragraphs, refs) but produces zero structural understanding (no tables, no section hierarchy).
 
@@ -155,13 +156,13 @@ pymupdf4llm: ## Part A → ## A-23 → ## A-27 → ## A-27(c)(1) (all same level
 
 **ANVIL ships with `pymupdf4llm` as the default parser**, with the following rationale:
 
-After applying the benchmark-driven fixes, pymupdf4llm scores **0.957 table F1**, **1.000 formula fidelity**, **1.000 paragraph ref recall**, and **0.882 section recall** on the controlled SPES-1 baseline. pymupdf4llm is the correct default for three reasons. First, **it is free and local**, requiring no API keys, no network access, and no per-page costs — critical for a compliance-grade system processing hundreds of pages of engineering standards. Second, **it is the only free parser that produces structural Markdown** — tables as pipe-tables, headings as `##` markers, code fences preserved — which the `parse_markdown_standard()` pipeline can consume directly. Third, the remaining table gap is now small and attributable to upstream PDF extraction loss, not simple header wrapping. Reducto should be evaluated when `REDUCTO_API_KEY` is available and may serve as a fallback for table-heavy PDFs; Azure DI is opt-in only.
+After applying the benchmark-driven fixes, pymupdf4llm scores **0.957 table F1**, **1.000 formula fidelity**, **1.000 paragraph ref recall**, and **0.882 section recall** on the controlled SPES-1 baseline. Reducto successfully runs and recovers paragraph references, but its current Markdown output loses SPES formula fidelity and trails pymupdf4llm on controlled table recovery. pymupdf4llm remains the correct default for three reasons. First, **it is free and local**, requiring no API keys, no network access, and no per-page costs — critical for a compliance-grade system processing hundreds of pages of engineering standards. Second, **it produces structural Markdown** — tables as pipe-tables, headings as `##` markers, code fences preserved — which the `parse_markdown_standard()` pipeline can consume directly. Third, the remaining table gap is now small and attributable to upstream PDF extraction loss, not simple header wrapping. Reducto remains a plausible fallback candidate for OCR-heavy PDFs, but it is not the defended default on the current benchmark; Azure DI is opt-in only.
 
 ---
 
 ## 5. Remaining Work
 
-1. **Evaluate Reducto when the API key is provisioned** — compare hosted extraction against the local parser on table-heavy PDFs.
+1. **Improve Reducto normalization** — inspect `data/parser_benchmark/reducto/*/output.json` and add provider-specific Markdown normalization if a hosted fallback is still desired.
 
 2. **Manual NASA ground truth** — replace the current best-effort NASA annotation with a small manually pinned subset so parser improvements are not judged against self-generated pseudo-ground-truth.
 

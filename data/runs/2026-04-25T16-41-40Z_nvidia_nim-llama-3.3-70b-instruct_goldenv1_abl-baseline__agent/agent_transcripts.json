@@ -1,0 +1,1834 @@
+[
+  {
+    "query": "Calculate the minimum required wall thickness for a cylindrical shell with inside diameter 1800 mm, design pressure 1.5 MPa, design temperature 350\u00b0C, material SM-516 Gr 70, Type 1 joint with full radiography, corrosion allowance 3.0 mm.",
+    "steps": [
+      {
+        "step_index": 0,
+        "call": {
+          "name": "retrieve_context",
+          "arguments": {
+            "query": "Calculate the minimum required wall thickness for a cylindrical shell with inside diameter 1800 mm, design pressure 1.5 MPa, design temperature 350\u00b0C, material SM-516 Gr 70, Type 1 joint with full radiography, corrosion allowance 3.0 mm.",
+            "top_k": 10
+          }
+        },
+        "result": {
+          "name": "retrieve_context",
+          "arguments": {
+            "query": "Calculate the minimum required wall thickness for a cylindrical shell with inside diameter 1800 mm, design pressure 1.5 MPa, design temperature 350\u00b0C, material SM-516 Gr 70, Type 1 joint with full radiography, corrosion allowance 3.0 mm.",
+            "top_k": 10
+          },
+          "output": {
+            "n": 10,
+            "chunks": [
+              {
+                "element_id": "sec-appendix-worked-example-informative",
+                "paragraph_ref": null,
+                "element_type": "section",
+                "page_number": 4,
+                "score": 0.8436,
+                "retrieval_source": "hybrid",
+                "content": "For a cylindrical shell with P = 1.5 MPa, inside diameter 1800 mm, design temperature 350\u00b0C, material SM-516 Gr 70, Type 1 joint with full RT, and 3.0 mm corrosion allowance, the minimum required thickness per A-27(c)(1) is computed using S = 114 MPa (Table M-1) and E = 1.00 (Table B-12). After adding corrosion allowance and rounding to the next standard plate, the design thickness is selected."
+              },
+              {
+                "element_id": "sec-a-27",
+                "paragraph_ref": "A-27",
+                "element_type": "section",
+                "page_number": 1,
+                "score": 0.83,
+                "retrieval_source": "hybrid",
+                "content": "(a) The minimum required thickness of shells subjected to internal pressure shall not be less than that computed by the following formulas, per A-27(c) and A-27(d).\n\n(b) The allowable stress S shall be obtained per A-23, and the joint efficiency E shall be obtained from Table B-12 (see B-12).\n\n(c) Cylindrical Shells.\n\n**A-27(c)(1) \u2014 Inside Radius Formula:**\n\n```\nt = (P \u00d7 R) / (S \u00d7 E \u2212 0.6 \u00d7 P)\n```\n\nwhere:\n\n- t = minimum required thickness, mm\n- P = design pressure, MPa\n- R = inside radius of the shell course, mm\n- S = maximum allowable stress at design temperature, MPa (see Table M-1)\n- E = joint efficiency (see Table B-12)\n\nThis formula applies when: t \u2264 R/2 AND P \u2264 0.385 \u00d7 S \u00d7 E. When these conditions are not satisfied, the rules of A-27(c)(3) shall be applied (not covered here).\n\n**A-27(c)(2) \u2014 Outside Radius Formula:**\n\n```\nt = (P \u00d7 Ro) / (S \u00d7 E + 0.4 \u00d7 P)\n```\n\nwhere Ro is the outside radius of the shell course. Applicable when P \u2264 0.385 \u00d7 S \u00d7 E.\n\n(d) Spherical Shells.\n\n**A-27(d) \u2014 Spherical Shell Formula:**\n\n```\nt = (P \u00d7 R) / (2 \u00d7 S \u00d7 E \u2212 0.2 \u00d7 P)\n```\n\nApplicable when t \u2264 0.356 \u00d7 R AND P \u2264 0.665 \u00d7 S \u00d7 E."
+              },
+              {
+                "element_id": "sec-a-25",
+                "paragraph_ref": "A-25",
+                "element_type": "section",
+                "page_number": 1,
+                "score": 0.8168,
+                "retrieval_source": "hybrid",
+                "content": "(a) A corrosion allowance (CA) shall be added to the minimum required thickness calculated by A-27 or A-32.\n\n(b) The corrosion allowance shall be specified in the design datasheet and shall not be taken as less than zero.\n\n(c) When back-calculating the Maximum Allowable Working Pressure (MAWP), the effective corroded thickness equals the nominal thickness minus the corrosion allowance."
+              },
+              {
+                "element_id": "sec-m-1",
+                "paragraph_ref": "M-1",
+                "element_type": "section",
+                "page_number": 3,
+                "score": 0.7917,
+                "retrieval_source": "hybrid",
+                "content": "The following table gives maximum allowable stress values S (MPa) for selected synthetic material specifications at tabulated design temperatures. See A-23 for use. For materials not listed, consult Part M supplementary tables.\n\n| Spec | Grade | Product Form | 40\u00b0C | 100\u00b0C | 150\u00b0C | 200\u00b0C | 250\u00b0C | 300\u00b0C | 350\u00b0C | 400\u00b0C | 450\u00b0C | 500\u00b0C |\n|---|---|---|---|---|---|---|---|---|---|---|---|---|\n| SM-516 | Gr 70 | Plate | 138 | 138 | 138 | 134 | 127 | 121 | 114 | 103 | 73 | 49 |\n| SM-515 | Gr 70 | Plate | 138 | 138 | 138 | 132 | 124 | 118 | 110 | 98 | 69 | 46 |\n| SM-106 | Gr B | Pipe | 118 | 118 | 118 | 115 | 108 | 102 | 96 | 86 | 61 | 41 |\n| SM-105 | \u2014 | Forging | 138 | 138 | 138 | 133 | 125 | 119 | 112 | 100 | 71 | 47 |\n| SM-240 | Type 304 | Plate | 137 | 127 | 119 | 113 | 108 | 103 | 100 | 97 | 95 | 93 |\n| SM-240 | Type 316 | Plate | 137 | 137 | 130 | 123 | 117 | 112 | 108 | 105 | 103 | 101 |"
+              },
+              {
+                "element_id": "sec-a-23",
+                "paragraph_ref": "A-23",
+                "element_type": "section",
+                "page_number": 1,
+                "score": 0.7861,
+                "retrieval_source": "hybrid",
+                "content": "(a) The maximum allowable stress values for materials used in the construction of pressure vessels shall be taken from Part M of this Standard. Specifically, allowable stress values for carbon and low-alloy steels shall be obtained from Table M-1 (see Part M).\n\n(b) Allowable stress values are tabulated at discrete design temperatures. When a design temperature falls between two tabulated values, linear interpolation shall be used, in accordance with A-23(c).\n\n(c) No extrapolation beyond the tabulated temperature range is permitted. If the design temperature exceeds the maximum tabulated temperature for a material, that material shall not be used."
+              },
+              {
+                "element_id": "sec-m-23",
+                "paragraph_ref": "M-23",
+                "element_type": "section",
+                "page_number": 3,
+                "score": 0.7696,
+                "retrieval_source": "hybrid",
+                "content": "(a) SM-516 Gr 70 shall not be used at design temperatures exceeding 500\u00b0C.\n\n(b) SM-106 Gr B shall not be used at design temperatures exceeding 500\u00b0C and is not permitted for cyclic service above 400\u00b0C without additional analysis.\n\n---"
+              },
+              {
+                "element_id": "sec-b-12",
+                "paragraph_ref": "B-12",
+                "element_type": "section",
+                "page_number": 3,
+                "score": 0.7682,
+                "retrieval_source": "hybrid",
+                "content": "(a) The joint efficiency E used in the thickness formulas of A-27 and A-32 shall be taken from Table B-12 as a function of the joint type (Types 1 through 6) and the extent of radiographic examination (Full RT, Spot RT, or None).\n\n(b) Table B-12 \u2014 Joint Efficiency Values:\n\n| Joint Type | Description | Full RT | Spot RT | No RT |\n|---|---|---|---|---|\n| 1 | Double-welded butt, full penetration | 1.00 | 0.85 | 0.70 |\n| 2 | Single-welded butt with backing strip | 0.90 | 0.80 | 0.65 |\n| 3 | Single-welded butt without backing | 0.80 | 0.70 | 0.60 |\n| 4 | Double full-fillet lap | 0.75 | 0.65 | 0.55 |\n| 5 | Single full-fillet lap with plug welds | 0.70 | 0.60 | 0.50 |\n| 6 | Single full-fillet lap without plug welds | 0.65 | 0.55 | 0.45 |\n\n(c) The radiography level selected shall be consistent with the service conditions and shall be documented.\n\n---"
+              },
+              {
+                "element_id": "tbl-m-1",
+                "paragraph_ref": "M-1",
+                "element_type": "table",
+                "page_number": 3,
+                "score": 0.7624,
+                "retrieval_source": "hybrid",
+                "content": "| Spec | Grade | Product Form | 40\u00b0C | 100\u00b0C | 150\u00b0C | 200\u00b0C | 250\u00b0C | 300\u00b0C | 350\u00b0C | 400\u00b0C | 450\u00b0C | 500\u00b0C |\n|---|---|---|---|---|---|---|---|---|---|---|---|---|\n| SM-516 | Gr 70 | Plate | 138 | 138 | 138 | 134 | 127 | 121 | 114 | 103 | 73 | 49 |\n| SM-515 | Gr 70 | Plate | 138 | 138 | 138 | 132 | 124 | 118 | 110 | 98 | 69 | 46 |\n| SM-106 | Gr B | Pipe | 118 | 118 | 118 | 115 | 108 | 102 | 96 | 86 | 61 | 41 |\n| SM-105 | \u2014 | Forging | 138 | 138 | 138 | 133 | 125 | 119 | 112 | 100 | 71 | 47 |\n| SM-240 | Type 304 | Plate | 137 | 127 | 119 | 113 | 108 | 103 | 100 | 97 | 95 | 93 |\n| SM-240 | Type 316 | Plate | 137 | 137 | 130 | 123 | 117 | 112 | 108 | 105 | 103 | 101 |"
+              },
+              {
+                "element_id": "tbl-b-12",
+                "paragraph_ref": "B-12",
+                "element_type": "table",
+                "page_number": 3,
+                "score": 0.7458,
+                "retrieval_source": "hybrid",
+                "content": "| Joint Type | Description | Full RT | Spot RT | No RT |\n|---|---|---|---|---|\n| 1 | Double-welded butt, full penetration | 1.00 | 0.85 | 0.70 |\n| 2 | Single-welded butt with backing strip | 0.90 | 0.80 | 0.65 |\n| 3 | Single-welded butt without backing | 0.80 | 0.70 | 0.60 |\n| 4 | Double full-fillet lap | 0.75 | 0.65 | 0.55 |\n| 5 | Single full-fillet lap with plug welds | 0.70 | 0.60 | 0.50 |\n| 6 | Single full-fillet lap without plug welds | 0.65 | 0.55 | 0.45 |"
+              },
+              {
+                "element_id": "sec-part-b-welding-requirements",
+                "paragraph_ref": null,
+                "element_type": "section",
+                "page_number": 2,
+                "score": 0.7284,
+                "retrieval_source": "hybrid",
+                "content": ""
+              }
+            ]
+          },
+          "error": null,
+          "duration_ms": 63.36629105499014
+        }
+      },
+      {
+        "step_index": 1,
+        "call": {
+          "name": "calculate",
+          "arguments": {
+            "component": "cylindrical shell",
+            "P_mpa": 1.5,
+            "design_temp_c": 350,
+            "inside_diameter_mm": 1800,
+            "outside_diameter_mm": null,
+            "material": "SM-516 Gr 70",
+            "joint_type": "Type 1 joint with full radiography",
+            "rt_level": "full radiography",
+            "corrosion_allowance_mm": 3.0
+          }
+        },
+        "result": {
+          "name": "calculate",
+          "arguments": {
+            "component": "cylindrical shell",
+            "P_mpa": 1.5,
+            "design_temp_c": 350,
+            "inside_diameter_mm": 1800,
+            "outside_diameter_mm": null,
+            "material": "SM-516 Gr 70",
+            "joint_type": "Type 1 joint with full radiography",
+            "rt_level": "full radiography",
+            "corrosion_allowance_mm": 3.0
+          },
+          "output": {
+            "ok": true,
+            "S_mpa": 114.0,
+            "E": 1.0,
+            "R_mm": 900.0,
+            "formula_ref": "A-27(c)(1)",
+            "t_min_mm": 11.94,
+            "t_design_mm": 14.94,
+            "t_nominal_mm": 16,
+            "mawp_mpa": 1.633,
+            "n_steps": 7,
+            "applicability_ok": true,
+            "calculation_steps": [
+              {
+                "step_number": 1,
+                "result_key": "allowable_stress",
+                "description": "Look up maximum allowable stress S from Table M-1.",
+                "formula": "S = Table M-1(SM-516 Gr 70, 350.0\u00b0C)",
+                "inputs": {
+                  "T": {
+                    "symbol": "T",
+                    "value": 350.0,
+                    "unit": "\u00b0C",
+                    "source": "user_input",
+                    "citation": null
+                  }
+                },
+                "result": 114.0,
+                "unit": "MPa",
+                "citation": {
+                  "source_element_id": "sec-m-1",
+                  "paragraph_ref": "Table M-1",
+                  "quoted_text": "| SM-516 | Gr 70 | Plate | 138 | 138 | 138 | 134 | 127 | 121 | 114 | 103 | 73 | 49 |",
+                  "page_number": 3
+                }
+              },
+              {
+                "step_number": 2,
+                "result_key": "joint_efficiency",
+                "description": "Look up joint efficiency E from Table B-12 for Type 1, Full RT.",
+                "formula": "E = Table B-12(Type 1, Full RT)",
+                "inputs": {
+                  "joint_type": {
+                    "symbol": "joint_type",
+                    "value": 1.0,
+                    "unit": "",
+                    "source": "user_input",
+                    "citation": null
+                  }
+                },
+                "result": 1.0,
+                "unit": "dimensionless",
+                "citation": {
+                  "source_element_id": "sec-b-12",
+                  "paragraph_ref": "Table B-12",
+                  "quoted_text": "| 1 | Double-welded butt, full penetration | 1.00 | 0.85 | 0.70 |",
+                  "page_number": 3
+                }
+              },
+              {
+                "step_number": 3,
+                "result_key": "applicability_check",
+                "description": "Check applicability of the simple thickness formula.",
+                "formula": "P \u2264 0.385 \u00d7 S \u00d7 E",
+                "inputs": {
+                  "P": {
+                    "symbol": "P",
+                    "value": 1.5,
+                    "unit": "MPa",
+                    "source": "user_input",
+                    "citation": null
+                  },
+                  "S": {
+                    "symbol": "S",
+                    "value": 114.0,
+                    "unit": "MPa",
+                    "source": "pinned_data",
+                    "citation": {
+                      "source_element_id": "sec-m-1",
+                      "paragraph_ref": "Table M-1",
+                      "quoted_text": "| SM-516 | Gr 70 | Plate | 138 | 138 | 138 | 134 | 127 | 121 | 114 | 103 | 73 | 49 |",
+                      "page_number": 3
+                    }
+                  },
+                  "E": {
+                    "symbol": "E",
+                    "value": 1.0,
+                    "unit": "dimensionless",
+                    "source": "pinned_data",
+                    "citation": {
+                      "source_element_id": "sec-b-12",
+                      "paragraph_ref": "Table B-12",
+                      "quoted_text": "| 1 | Double-welded butt, full penetration | 1.00 | 0.85 | 0.70 |",
+                      "page_number": 3
+                    }
+                  }
+                },
+                "result": 43.89,
+                "unit": "MPa",
+                "citation": {
+                  "source_element_id": "sec-a-27",
+                  "paragraph_ref": "A-27(c)(1)",
+                  "quoted_text": "(a) The minimum required thickness of shells subjected to internal pressure shall not be less than that computed by the following formulas, per A-27(c) and A-27(d)",
+                  "page_number": 1
+                }
+              },
+              {
+                "step_number": 4,
+                "result_key": "min_thickness",
+                "description": "Compute minimum required thickness per A-27(c)(1).",
+                "formula": "t = (P \u00d7 R) / (S \u00d7 E \u2212 0.6 \u00d7 P)",
+                "inputs": {
+                  "P": {
+                    "symbol": "P",
+                    "value": 1.5,
+                    "unit": "MPa",
+                    "source": "user_input",
+                    "citation": null
+                  },
+                  "R": {
+                    "symbol": "R",
+                    "value": 900.0,
+                    "unit": "mm",
+                    "source": "calculated",
+                    "citation": null
+                  },
+                  "S": {
+                    "symbol": "S",
+                    "value": 114.0,
+                    "unit": "MPa",
+                    "source": "pinned_data",
+                    "citation": {
+                      "source_element_id": "sec-m-1",
+                      "paragraph_ref": "Table M-1",
+                      "quoted_text": "| SM-516 | Gr 70 | Plate | 138 | 138 | 138 | 134 | 127 | 121 | 114 | 103 | 73 | 49 |",
+                      "page_number": 3
+                    }
+                  },
+                  "E": {
+                    "symbol": "E",
+                    "value": 1.0,
+                    "unit": "dimensionless",
+                    "source": "pinned_data",
+                    "citation": {
+                      "source_element_id": "sec-b-12",
+                      "paragraph_ref": "Table B-12",
+                      "quoted_text": "| 1 | Double-welded butt, full penetration | 1.00 | 0.85 | 0.70 |",
+                      "page_number": 3
+                    }
+                  }
+                },
+                "result": 11.94,
+                "unit": "mm",
+                "citation": {
+                  "source_element_id": "sec-a-27",
+                  "paragraph_ref": "A-27(c)(1)",
+                  "quoted_text": "(a) The minimum required thickness of shells subjected to internal pressure shall not be less than that computed by the following formulas, per A-27(c) and A-27(d)",
+                  "page_number": 1
+                }
+              },
+              {
+                "step_number": 5,
+                "result_key": "design_thickness",
+                "description": "Add corrosion allowance per A-25.",
+                "formula": "t_design = t_min + CA",
+                "inputs": {
+                  "t_min": {
+                    "symbol": "t_min",
+                    "value": 11.94,
+                    "unit": "mm",
+                    "source": "calculated",
+                    "citation": null
+                  },
+                  "CA": {
+                    "symbol": "CA",
+                    "value": 3.0,
+                    "unit": "mm",
+                    "source": "user_input",
+                    "citation": null
+                  }
+                },
+                "result": 14.94,
+                "unit": "mm",
+                "citation": {
+                  "source_element_id": "sec-a-25",
+                  "paragraph_ref": "A-25",
+                  "quoted_text": "(a) A corrosion allowance (CA) shall be added to the minimum required thickness calculated by A-27 or A-32",
+                  "page_number": 1
+                }
+              },
+              {
+                "step_number": 6,
+                "result_key": "nominal_plate",
+                "description": "Select next standard plate thickness.",
+                "formula": "t_nominal = next_standard_plate(t_design)",
+                "inputs": {
+                  "t_design": {
+                    "symbol": "t_design",
+                    "value": 14.94,
+                    "unit": "mm",
+                    "source": "calculated",
+                    "citation": null
+                  }
+                },
+                "result": 16.0,
+                "unit": "mm",
+                "citation": {
+                  "source_element_id": "sec-a-27",
+                  "paragraph_ref": "A-27(c)(1)",
+                  "quoted_text": "(a) The minimum required thickness of shells subjected to internal pressure shall not be less than that computed by the following formulas, per A-27(c) and A-27(d)",
+                  "page_number": 1
+                }
+              },
+              {
+                "step_number": 7,
+                "result_key": "mawp",
+                "description": "Back-calculate MAWP using corroded thickness.",
+                "formula": "P = (S \u00d7 E \u00d7 t_corr) / (R + 0.6 \u00d7 t_corr)",
+                "inputs": {
+                  "S": {
+                    "symbol": "S",
+                    "value": 114.0,
+                    "unit": "MPa",
+                    "source": "pinned_data",
+                    "citation": {
+                      "source_element_id": "sec-m-1",
+                      "paragraph_ref": "Table M-1",
+                      "quoted_text": "| SM-516 | Gr 70 | Plate | 138 | 138 | 138 | 134 | 127 | 121 | 114 | 103 | 73 | 49 |",
+                      "page_number": 3
+                    }
+                  },
+                  "E": {
+                    "symbol": "E",
+                    "value": 1.0,
+                    "unit": "dimensionless",
+                    "source": "pinned_data",
+                    "citation": {
+                      "source_element_id": "sec-b-12",
+                      "paragraph_ref": "Table B-12",
+                      "quoted_text": "| 1 | Double-welded butt, full penetration | 1.00 | 0.85 | 0.70 |",
+                      "page_number": 3
+                    }
+                  },
+                  "t_corr": {
+                    "symbol": "t_corr",
+                    "value": 13.0,
+                    "unit": "mm",
+                    "source": "calculated",
+                    "citation": null
+                  },
+                  "R": {
+                    "symbol": "R",
+                    "value": 900.0,
+                    "unit": "mm",
+                    "source": "calculated",
+                    "citation": null
+                  }
+                },
+                "result": 1.633,
+                "unit": "MPa",
+                "citation": {
+                  "source_element_id": "sec-a-27",
+                  "paragraph_ref": "A-27(c)(1)",
+                  "quoted_text": "(a) The minimum required thickness of shells subjected to internal pressure shall not be less than that computed by the following formulas, per A-27(c) and A-27(d)",
+                  "page_number": 1
+                }
+              }
+            ],
+            "citations": [
+              {
+                "source_element_id": "sec-m-1",
+                "paragraph_ref": "Table M-1",
+                "quoted_text": "| SM-516 | Gr 70 | Plate | 138 | 138 | 138 | 134 | 127 | 121 | 114 | 103 | 73 | 49 |",
+                "page_number": 3
+              },
+              {
+                "source_element_id": "sec-b-12",
+                "paragraph_ref": "Table B-12",
+                "quoted_text": "| 1 | Double-welded butt, full penetration | 1.00 | 0.85 | 0.70 |",
+                "page_number": 3
+              },
+              {
+                "source_element_id": "sec-a-27",
+                "paragraph_ref": "A-27(c)(1)",
+                "quoted_text": "(a) The minimum required thickness of shells subjected to internal pressure shall not be less than that computed by the following formulas, per A-27(c) and A-27(d)",
+                "page_number": 1
+              },
+              {
+                "source_element_id": "sec-a-25",
+                "paragraph_ref": "A-25",
+                "quoted_text": "(a) A corrosion allowance (CA) shall be added to the minimum required thickness calculated by A-27 or A-32",
+                "page_number": 1
+              }
+            ]
+          },
+          "error": null,
+          "duration_ms": 0.4576249630190432
+        }
+      }
+    ],
+    "final_response": {
+      "query": "Calculate the minimum required wall thickness for a cylindrical shell with inside diameter 1800 mm, design pressure 1.5 MPa, design temperature 350\u00b0C, material SM-516 Gr 70, Type 1 joint with full radiography, corrosion allowance 3.0 mm.",
+      "answer": "Minimum required thickness t_min = 11.94 mm; design thickness with corrosion allowance = 14.94 mm; selected nominal plate = 16 mm; MAWP back-calculated from the selected plate = 1.633 MPa.",
+      "citations": [
+        {
+          "source_element_id": "sec-m-1",
+          "paragraph_ref": "Table M-1",
+          "quoted_text": "| SM-516 | Gr 70 | Plate | 138 | 138 | 138 | 134 | 127 | 121 | 114 | 103 | 73 | 49 |",
+          "page_number": 3
+        },
+        {
+          "source_element_id": "sec-b-12",
+          "paragraph_ref": "Table B-12",
+          "quoted_text": "| 1 | Double-welded butt, full penetration | 1.00 | 0.85 | 0.70 |",
+          "page_number": 3
+        },
+        {
+          "source_element_id": "sec-a-27",
+          "paragraph_ref": "A-27(c)(1)",
+          "quoted_text": "(a) The minimum required thickness of shells subjected to internal pressure shall not be less than that computed by the following formulas, per A-27(c) and A-27(d)",
+          "page_number": 1
+        },
+        {
+          "source_element_id": "sec-a-25",
+          "paragraph_ref": "A-25",
+          "quoted_text": "(a) A corrosion allowance (CA) shall be added to the minimum required thickness calculated by A-27 or A-32",
+          "page_number": 1
+        }
+      ],
+      "calculation_steps": [
+        {
+          "step_number": 1,
+          "result_key": "allowable_stress",
+          "description": "Look up maximum allowable stress S from Table M-1.",
+          "formula": "S = Table M-1(SM-516 Gr 70, 350.0\u00b0C)",
+          "inputs": {
+            "T": {
+              "symbol": "T",
+              "value": 350.0,
+              "unit": "\u00b0C",
+              "source": "user_input",
+              "citation": null
+            }
+          },
+          "result": 114.0,
+          "unit": "MPa",
+          "citation": {
+            "source_element_id": "sec-m-1",
+            "paragraph_ref": "Table M-1",
+            "quoted_text": "| SM-516 | Gr 70 | Plate | 138 | 138 | 138 | 134 | 127 | 121 | 114 | 103 | 73 | 49 |",
+            "page_number": 3
+          }
+        },
+        {
+          "step_number": 2,
+          "result_key": "joint_efficiency",
+          "description": "Look up joint efficiency E from Table B-12 for Type 1, Full RT.",
+          "formula": "E = Table B-12(Type 1, Full RT)",
+          "inputs": {
+            "joint_type": {
+              "symbol": "joint_type",
+              "value": 1.0,
+              "unit": "",
+              "source": "user_input",
+              "citation": null
+            }
+          },
+          "result": 1.0,
+          "unit": "dimensionless",
+          "citation": {
+            "source_element_id": "sec-b-12",
+            "paragraph_ref": "Table B-12",
+            "quoted_text": "| 1 | Double-welded butt, full penetration | 1.00 | 0.85 | 0.70 |",
+            "page_number": 3
+          }
+        },
+        {
+          "step_number": 3,
+          "result_key": "applicability_check",
+          "description": "Check applicability of the simple thickness formula.",
+          "formula": "P \u2264 0.385 \u00d7 S \u00d7 E",
+          "inputs": {
+            "P": {
+              "symbol": "P",
+              "value": 1.5,
+              "unit": "MPa",
+              "source": "user_input",
+              "citation": null
+            },
+            "S": {
+              "symbol": "S",
+              "value": 114.0,
+              "unit": "MPa",
+              "source": "pinned_data",
+              "citation": {
+                "source_element_id": "sec-m-1",
+                "paragraph_ref": "Table M-1",
+                "quoted_text": "| SM-516 | Gr 70 | Plate | 138 | 138 | 138 | 134 | 127 | 121 | 114 | 103 | 73 | 49 |",
+                "page_number": 3
+              }
+            },
+            "E": {
+              "symbol": "E",
+              "value": 1.0,
+              "unit": "dimensionless",
+              "source": "pinned_data",
+              "citation": {
+                "source_element_id": "sec-b-12",
+                "paragraph_ref": "Table B-12",
+                "quoted_text": "| 1 | Double-welded butt, full penetration | 1.00 | 0.85 | 0.70 |",
+                "page_number": 3
+              }
+            }
+          },
+          "result": 43.89,
+          "unit": "MPa",
+          "citation": {
+            "source_element_id": "sec-a-27",
+            "paragraph_ref": "A-27(c)(1)",
+            "quoted_text": "(a) The minimum required thickness of shells subjected to internal pressure shall not be less than that computed by the following formulas, per A-27(c) and A-27(d)",
+            "page_number": 1
+          }
+        },
+        {
+          "step_number": 4,
+          "result_key": "min_thickness",
+          "description": "Compute minimum required thickness per A-27(c)(1).",
+          "formula": "t = (P \u00d7 R) / (S \u00d7 E \u2212 0.6 \u00d7 P)",
+          "inputs": {
+            "P": {
+              "symbol": "P",
+              "value": 1.5,
+              "unit": "MPa",
+              "source": "user_input",
+              "citation": null
+            },
+            "R": {
+              "symbol": "R",
+              "value": 900.0,
+              "unit": "mm",
+              "source": "calculated",
+              "citation": null
+            },
+            "S": {
+              "symbol": "S",
+              "value": 114.0,
+              "unit": "MPa",
+              "source": "pinned_data",
+              "citation": {
+                "source_element_id": "sec-m-1",
+                "paragraph_ref": "Table M-1",
+                "quoted_text": "| SM-516 | Gr 70 | Plate | 138 | 138 | 138 | 134 | 127 | 121 | 114 | 103 | 73 | 49 |",
+                "page_number": 3
+              }
+            },
+            "E": {
+              "symbol": "E",
+              "value": 1.0,
+              "unit": "dimensionless",
+              "source": "pinned_data",
+              "citation": {
+                "source_element_id": "sec-b-12",
+                "paragraph_ref": "Table B-12",
+                "quoted_text": "| 1 | Double-welded butt, full penetration | 1.00 | 0.85 | 0.70 |",
+                "page_number": 3
+              }
+            }
+          },
+          "result": 11.94,
+          "unit": "mm",
+          "citation": {
+            "source_element_id": "sec-a-27",
+            "paragraph_ref": "A-27(c)(1)",
+            "quoted_text": "(a) The minimum required thickness of shells subjected to internal pressure shall not be less than that computed by the following formulas, per A-27(c) and A-27(d)",
+            "page_number": 1
+          }
+        },
+        {
+          "step_number": 5,
+          "result_key": "design_thickness",
+          "description": "Add corrosion allowance per A-25.",
+          "formula": "t_design = t_min + CA",
+          "inputs": {
+            "t_min": {
+              "symbol": "t_min",
+              "value": 11.94,
+              "unit": "mm",
+              "source": "calculated",
+              "citation": null
+            },
+            "CA": {
+              "symbol": "CA",
+              "value": 3.0,
+              "unit": "mm",
+              "source": "user_input",
+              "citation": null
+            }
+          },
+          "result": 14.94,
+          "unit": "mm",
+          "citation": {
+            "source_element_id": "sec-a-25",
+            "paragraph_ref": "A-25",
+            "quoted_text": "(a) A corrosion allowance (CA) shall be added to the minimum required thickness calculated by A-27 or A-32",
+            "page_number": 1
+          }
+        },
+        {
+          "step_number": 6,
+          "result_key": "nominal_plate",
+          "description": "Select next standard plate thickness.",
+          "formula": "t_nominal = next_standard_plate(t_design)",
+          "inputs": {
+            "t_design": {
+              "symbol": "t_design",
+              "value": 14.94,
+              "unit": "mm",
+              "source": "calculated",
+              "citation": null
+            }
+          },
+          "result": 16.0,
+          "unit": "mm",
+          "citation": {
+            "source_element_id": "sec-a-27",
+            "paragraph_ref": "A-27(c)(1)",
+            "quoted_text": "(a) The minimum required thickness of shells subjected to internal pressure shall not be less than that computed by the following formulas, per A-27(c) and A-27(d)",
+            "page_number": 1
+          }
+        },
+        {
+          "step_number": 7,
+          "result_key": "mawp",
+          "description": "Back-calculate MAWP using corroded thickness.",
+          "formula": "P = (S \u00d7 E \u00d7 t_corr) / (R + 0.6 \u00d7 t_corr)",
+          "inputs": {
+            "S": {
+              "symbol": "S",
+              "value": 114.0,
+              "unit": "MPa",
+              "source": "pinned_data",
+              "citation": {
+                "source_element_id": "sec-m-1",
+                "paragraph_ref": "Table M-1",
+                "quoted_text": "| SM-516 | Gr 70 | Plate | 138 | 138 | 138 | 134 | 127 | 121 | 114 | 103 | 73 | 49 |",
+                "page_number": 3
+              }
+            },
+            "E": {
+              "symbol": "E",
+              "value": 1.0,
+              "unit": "dimensionless",
+              "source": "pinned_data",
+              "citation": {
+                "source_element_id": "sec-b-12",
+                "paragraph_ref": "Table B-12",
+                "quoted_text": "| 1 | Double-welded butt, full penetration | 1.00 | 0.85 | 0.70 |",
+                "page_number": 3
+              }
+            },
+            "t_corr": {
+              "symbol": "t_corr",
+              "value": 13.0,
+              "unit": "mm",
+              "source": "calculated",
+              "citation": null
+            },
+            "R": {
+              "symbol": "R",
+              "value": 900.0,
+              "unit": "mm",
+              "source": "calculated",
+              "citation": null
+            }
+          },
+          "result": 1.633,
+          "unit": "MPa",
+          "citation": {
+            "source_element_id": "sec-a-27",
+            "paragraph_ref": "A-27(c)(1)",
+            "quoted_text": "(a) The minimum required thickness of shells subjected to internal pressure shall not be less than that computed by the following formulas, per A-27(c) and A-27(d)",
+            "page_number": 1
+          }
+        }
+      ],
+      "confidence": "high",
+      "refusal_reason": null,
+      "retrieved_context_ids": [
+        "sec-a-25",
+        "sec-a-27",
+        "sec-b-12",
+        "sec-m-1"
+      ]
+    },
+    "termination": {
+      "kind": "finalized",
+      "detail": "Auto-finalized after successful deterministic calculation tool call."
+    },
+    "total_duration_ms": 3804.6345000038855,
+    "n_tool_calls": 2,
+    "n_tool_errors": 0
+  },
+  {
+    "query": "Compute minimum thickness for a cylindrical pressure vessel: ID=1500 mm, P=2.0 MPa, T=200\u00b0C, material SM-516 Gr 70, Type 1 joint, full RT, CA=2.0 mm.",
+    "steps": [],
+    "final_response": null,
+    "termination": {
+      "kind": "decider_error",
+      "detail": "InstructorRetryException: <failed_attempts>\n\n<generation number=\"1\">\n<exception>\n    Error code: 429 - {'status': 429, 'title': 'Too Many Requests'}\n</exception>\n<completion>\n    None\n</completion>\n</generation>\n\n<generation number=\"2\">\n<exception>\n    Error code: 429 - {'status': 429, 'title': 'Too Many Requests'}\n</exception>\n<completion>\n    None\n</completion>\n</generation>\n\n<generation number=\"3\">\n<exception>\n    Error code: 429 - {'status': 429, 'title': 'Too Many Requests'}\n</exception>\n<completion>\n    None\n</completion>\n</generation>\n\n</failed_attempts>\n\n<last_exception>\n    Error code: 429 - {'status': 429, 'title': 'Too Many Requests'}\n</last_exception>"
+    },
+    "total_duration_ms": 4340.498292003758,
+    "n_tool_calls": 0,
+    "n_tool_errors": 0
+  },
+  {
+    "query": "Find minimum required thickness for a cylindrical shell: ID=1200, P=1.0 MPa, T=300\u00b0C, SM-516 Gr 70, Type 2 with full radiography, corrosion allowance 1.5 mm.",
+    "steps": [],
+    "final_response": null,
+    "termination": {
+      "kind": "decider_error",
+      "detail": "InstructorRetryException: <failed_attempts>\n\n<generation number=\"1\">\n<exception>\n    Error code: 429 - {'status': 429, 'title': 'Too Many Requests'}\n</exception>\n<completion>\n    None\n</completion>\n</generation>\n\n<generation number=\"2\">\n<exception>\n    Error code: 429 - {'status': 429, 'title': 'Too Many Requests'}\n</exception>\n<completion>\n    None\n</completion>\n</generation>\n\n<generation number=\"3\">\n<exception>\n    Error code: 429 - {'status': 429, 'title': 'Too Many Requests'}\n</exception>\n<completion>\n    None\n</completion>\n</generation>\n\n</failed_attempts>\n\n<last_exception>\n    Error code: 429 - {'status': 429, 'title': 'Too Many Requests'}\n</last_exception>"
+    },
+    "total_duration_ms": 4360.644041968044,
+    "n_tool_calls": 0,
+    "n_tool_errors": 0
+  },
+  {
+    "query": "Compute thickness for a spherical vessel with ID=2000 mm, P=2.5 MPa, T=250\u00b0C, material SM-515 Gr 70, Type 1 with full RT, CA=3.0 mm.",
+    "steps": [],
+    "final_response": null,
+    "termination": {
+      "kind": "decider_error",
+      "detail": "InstructorRetryException: <failed_attempts>\n\n<generation number=\"1\">\n<exception>\n    Error code: 429 - {'status': 429, 'title': 'Too Many Requests'}\n</exception>\n<completion>\n    None\n</completion>\n</generation>\n\n<generation number=\"2\">\n<exception>\n    Error code: 429 - {'status': 429, 'title': 'Too Many Requests'}\n</exception>\n<completion>\n    None\n</completion>\n</generation>\n\n<generation number=\"3\">\n<exception>\n    Error code: 429 - {'status': 429, 'title': 'Too Many Requests'}\n</exception>\n<completion>\n    None\n</completion>\n</generation>\n\n</failed_attempts>\n\n<last_exception>\n    Error code: 429 - {'status': 429, 'title': 'Too Many Requests'}\n</last_exception>"
+    },
+    "total_duration_ms": 4353.535375033971,
+    "n_tool_calls": 0,
+    "n_tool_errors": 0
+  },
+  {
+    "query": "Compute minimum thickness for a small cylindrical pipe: ID=600 mm, P=3.0 MPa, T=150\u00b0C, SM-106 Gr B, Type 1 with spot radiography, CA=1.0 mm.",
+    "steps": [],
+    "final_response": null,
+    "termination": {
+      "kind": "decider_error",
+      "detail": "InstructorRetryException: <failed_attempts>\n\n<generation number=\"1\">\n<exception>\n    Error code: 429 - {'status': 429, 'title': 'Too Many Requests'}\n</exception>\n<completion>\n    None\n</completion>\n</generation>\n\n<generation number=\"2\">\n<exception>\n    Error code: 429 - {'status': 429, 'title': 'Too Many Requests'}\n</exception>\n<completion>\n    None\n</completion>\n</generation>\n\n<generation number=\"3\">\n<exception>\n    Error code: 429 - {'status': 429, 'title': 'Too Many Requests'}\n</exception>\n<completion>\n    None\n</completion>\n</generation>\n\n</failed_attempts>\n\n<last_exception>\n    Error code: 429 - {'status': 429, 'title': 'Too Many Requests'}\n</last_exception>"
+    },
+    "total_duration_ms": 4114.6954169962555,
+    "n_tool_calls": 0,
+    "n_tool_errors": 0
+  },
+  {
+    "query": "Compute thickness for a cylindrical shell ID=800 mm, P=1.2 MPa, T=450\u00b0C, material SM-240 Type 304, Type 1 Full RT, CA=1.5 mm.",
+    "steps": [],
+    "final_response": null,
+    "termination": {
+      "kind": "decider_error",
+      "detail": "InstructorRetryException: <failed_attempts>\n\n<generation number=\"1\">\n<exception>\n    Error code: 429 - {'status': 429, 'title': 'Too Many Requests'}\n</exception>\n<completion>\n    None\n</completion>\n</generation>\n\n<generation number=\"2\">\n<exception>\n    Error code: 429 - {'status': 429, 'title': 'Too Many Requests'}\n</exception>\n<completion>\n    None\n</completion>\n</generation>\n\n<generation number=\"3\">\n<exception>\n    Error code: 429 - {'status': 429, 'title': 'Too Many Requests'}\n</exception>\n<completion>\n    None\n</completion>\n</generation>\n\n</failed_attempts>\n\n<last_exception>\n    Error code: 429 - {'status': 429, 'title': 'Too Many Requests'}\n</last_exception>"
+    },
+    "total_duration_ms": 4418.866000021808,
+    "n_tool_calls": 0,
+    "n_tool_errors": 0
+  },
+  {
+    "query": "Compute cylindrical shell thickness: ID=1600, P=1.8 MPa, T=275\u00b0C, SM-516 Gr 70, Type 1 Full RT, CA=2.5 mm.",
+    "steps": [
+      {
+        "step_index": 0,
+        "call": {
+          "name": "retrieve_context",
+          "arguments": {
+            "query": "Compute cylindrical shell thickness: ID=1600, P=1.8 MPa, T=275\u00b0C, SM-516 Gr 70, Type 1 Full RT, CA=2.5 mm.",
+            "top_k": 10
+          }
+        },
+        "result": {
+          "name": "retrieve_context",
+          "arguments": {
+            "query": "Compute cylindrical shell thickness: ID=1600, P=1.8 MPa, T=275\u00b0C, SM-516 Gr 70, Type 1 Full RT, CA=2.5 mm.",
+            "top_k": 10
+          },
+          "output": {
+            "n": 10,
+            "chunks": [
+              {
+                "element_id": "sec-appendix-worked-example-informative",
+                "paragraph_ref": null,
+                "element_type": "section",
+                "page_number": 4,
+                "score": 0.6532,
+                "retrieval_source": "hybrid",
+                "content": "For a cylindrical shell with P = 1.5 MPa, inside diameter 1800 mm, design temperature 350\u00b0C, material SM-516 Gr 70, Type 1 joint with full RT, and 3.0 mm corrosion allowance, the minimum required thickness per A-27(c)(1) is computed using S = 114 MPa (Table M-1) and E = 1.00 (Table B-12). After adding corrosion allowance and rounding to the next standard plate, the design thickness is selected."
+              },
+              {
+                "element_id": "sec-a-27",
+                "paragraph_ref": "A-27",
+                "element_type": "section",
+                "page_number": 1,
+                "score": 0.6427,
+                "retrieval_source": "hybrid",
+                "content": "(a) The minimum required thickness of shells subjected to internal pressure shall not be less than that computed by the following formulas, per A-27(c) and A-27(d).\n\n(b) The allowable stress S shall be obtained per A-23, and the joint efficiency E shall be obtained from Table B-12 (see B-12).\n\n(c) Cylindrical Shells.\n\n**A-27(c)(1) \u2014 Inside Radius Formula:**\n\n```\nt = (P \u00d7 R) / (S \u00d7 E \u2212 0.6 \u00d7 P)\n```\n\nwhere:\n\n- t = minimum required thickness, mm\n- P = design pressure, MPa\n- R = inside radius of the shell course, mm\n- S = maximum allowable stress at design temperature, MPa (see Table M-1)\n- E = joint efficiency (see Table B-12)\n\nThis formula applies when: t \u2264 R/2 AND P \u2264 0.385 \u00d7 S \u00d7 E. When these conditions are not satisfied, the rules of A-27(c)(3) shall be applied (not covered here).\n\n**A-27(c)(2) \u2014 Outside Radius Formula:**\n\n```\nt = (P \u00d7 Ro) / (S \u00d7 E + 0.4 \u00d7 P)\n```\n\nwhere Ro is the outside radius of the shell course. Applicable when P \u2264 0.385 \u00d7 S \u00d7 E.\n\n(d) Spherical Shells.\n\n**A-27(d) \u2014 Spherical Shell Formula:**\n\n```\nt = (P \u00d7 R) / (2 \u00d7 S \u00d7 E \u2212 0.2 \u00d7 P)\n```\n\nApplicable when t \u2264 0.356 \u00d7 R AND P \u2264 0.665 \u00d7 S \u00d7 E."
+              },
+              {
+                "element_id": "sec-m-1",
+                "paragraph_ref": "M-1",
+                "element_type": "section",
+                "page_number": 3,
+                "score": 0.6178,
+                "retrieval_source": "hybrid",
+                "content": "The following table gives maximum allowable stress values S (MPa) for selected synthetic material specifications at tabulated design temperatures. See A-23 for use. For materials not listed, consult Part M supplementary tables.\n\n| Spec | Grade | Product Form | 40\u00b0C | 100\u00b0C | 150\u00b0C | 200\u00b0C | 250\u00b0C | 300\u00b0C | 350\u00b0C | 400\u00b0C | 450\u00b0C | 500\u00b0C |\n|---|---|---|---|---|---|---|---|---|---|---|---|---|\n| SM-516 | Gr 70 | Plate | 138 | 138 | 138 | 134 | 127 | 121 | 114 | 103 | 73 | 49 |\n| SM-515 | Gr 70 | Plate | 138 | 138 | 138 | 132 | 124 | 118 | 110 | 98 | 69 | 46 |\n| SM-106 | Gr B | Pipe | 118 | 118 | 118 | 115 | 108 | 102 | 96 | 86 | 61 | 41 |\n| SM-105 | \u2014 | Forging | 138 | 138 | 138 | 133 | 125 | 119 | 112 | 100 | 71 | 47 |\n| SM-240 | Type 304 | Plate | 137 | 127 | 119 | 113 | 108 | 103 | 100 | 97 | 95 | 93 |\n| SM-240 | Type 316 | Plate | 137 | 137 | 130 | 123 | 117 | 112 | 108 | 105 | 103 | 101 |"
+              },
+              {
+                "element_id": "tbl-b-12",
+                "paragraph_ref": "B-12",
+                "element_type": "table",
+                "page_number": 3,
+                "score": 0.6178,
+                "retrieval_source": "hybrid",
+                "content": "| Joint Type | Description | Full RT | Spot RT | No RT |\n|---|---|---|---|---|\n| 1 | Double-welded butt, full penetration | 1.00 | 0.85 | 0.70 |\n| 2 | Single-welded butt with backing strip | 0.90 | 0.80 | 0.65 |\n| 3 | Single-welded butt without backing | 0.80 | 0.70 | 0.60 |\n| 4 | Double full-fillet lap | 0.75 | 0.65 | 0.55 |\n| 5 | Single full-fillet lap with plug welds | 0.70 | 0.60 | 0.50 |\n| 6 | Single full-fillet lap without plug welds | 0.65 | 0.55 | 0.45 |"
+              },
+              {
+                "element_id": "tbl-m-1",
+                "paragraph_ref": "M-1",
+                "element_type": "table",
+                "page_number": 3,
+                "score": 0.6136,
+                "retrieval_source": "hybrid",
+                "content": "| Spec | Grade | Product Form | 40\u00b0C | 100\u00b0C | 150\u00b0C | 200\u00b0C | 250\u00b0C | 300\u00b0C | 350\u00b0C | 400\u00b0C | 450\u00b0C | 500\u00b0C |\n|---|---|---|---|---|---|---|---|---|---|---|---|---|\n| SM-516 | Gr 70 | Plate | 138 | 138 | 138 | 134 | 127 | 121 | 114 | 103 | 73 | 49 |\n| SM-515 | Gr 70 | Plate | 138 | 138 | 138 | 132 | 124 | 118 | 110 | 98 | 69 | 46 |\n| SM-106 | Gr B | Pipe | 118 | 118 | 118 | 115 | 108 | 102 | 96 | 86 | 61 | 41 |\n| SM-105 | \u2014 | Forging | 138 | 138 | 138 | 133 | 125 | 119 | 112 | 100 | 71 | 47 |\n| SM-240 | Type 304 | Plate | 137 | 127 | 119 | 113 | 108 | 103 | 100 | 97 | 95 | 93 |\n| SM-240 | Type 316 | Plate | 137 | 137 | 130 | 123 | 117 | 112 | 108 | 105 | 103 | 101 |"
+              },
+              {
+                "element_id": "sec-a-25",
+                "paragraph_ref": "A-25",
+                "element_type": "section",
+                "page_number": 1,
+                "score": 0.5948,
+                "retrieval_source": "hybrid",
+                "content": "(a) A corrosion allowance (CA) shall be added to the minimum required thickness calculated by A-27 or A-32.\n\n(b) The corrosion allowance shall be specified in the design datasheet and shall not be taken as less than zero.\n\n(c) When back-calculating the Maximum Allowable Working Pressure (MAWP), the effective corroded thickness equals the nominal thickness minus the corrosion allowance."
+              },
+              {
+                "element_id": "sec-b-12",
+                "paragraph_ref": "B-12",
+                "element_type": "section",
+                "page_number": 3,
+                "score": 0.5855,
+                "retrieval_source": "hybrid",
+                "content": "(a) The joint efficiency E used in the thickness formulas of A-27 and A-32 shall be taken from Table B-12 as a function of the joint type (Types 1 through 6) and the extent of radiographic examination (Full RT, Spot RT, or None).\n\n(b) Table B-12 \u2014 Joint Efficiency Values:\n\n| Joint Type | Description | Full RT | Spot RT | No RT |\n|---|---|---|---|---|\n| 1 | Double-welded butt, full penetration | 1.00 | 0.85 | 0.70 |\n| 2 | Single-welded butt with backing strip | 0.90 | 0.80 | 0.65 |\n| 3 | Single-welded butt without backing | 0.80 | 0.70 | 0.60 |\n| 4 | Double full-fillet lap | 0.75 | 0.65 | 0.55 |\n| 5 | Single full-fillet lap with plug welds | 0.70 | 0.60 | 0.50 |\n| 6 | Single full-fillet lap without plug welds | 0.65 | 0.55 | 0.45 |\n\n(c) The radiography level selected shall be consistent with the service conditions and shall be documented.\n\n---"
+              },
+              {
+                "element_id": "fml-a-32-f0",
+                "paragraph_ref": "A-32",
+                "element_type": "formula",
+                "page_number": 2,
+                "score": 0.5741,
+                "retrieval_source": "hybrid",
+                "content": "t = (P \u00d7 D) / (2 \u00d7 S \u00d7 E \u2212 0.2 \u00d7 P)"
+              },
+              {
+                "element_id": "sec-a-23",
+                "paragraph_ref": "A-23",
+                "element_type": "section",
+                "page_number": 1,
+                "score": 0.5733,
+                "retrieval_source": "hybrid",
+                "content": "(a) The maximum allowable stress values for materials used in the construction of pressure vessels shall be taken from Part M of this Standard. Specifically, allowable stress values for carbon and low-alloy steels shall be obtained from Table M-1 (see Part M).\n\n(b) Allowable stress values are tabulated at discrete design temperatures. When a design temperature falls between two tabulated values, linear interpolation shall be used, in accordance with A-23(c).\n\n(c) No extrapolation beyond the tabulated temperature range is permitted. If the design temperature exceeds the maximum tabulated temperature for a material, that material shall not be used."
+              },
+              {
+                "element_id": "sec-m-23",
+                "paragraph_ref": "M-23",
+                "element_type": "section",
+                "page_number": 3,
+                "score": 0.5675,
+                "retrieval_source": "hybrid",
+                "content": "(a) SM-516 Gr 70 shall not be used at design temperatures exceeding 500\u00b0C.\n\n(b) SM-106 Gr B shall not be used at design temperatures exceeding 500\u00b0C and is not permitted for cyclic service above 400\u00b0C without additional analysis.\n\n---"
+              }
+            ]
+          },
+          "error": null,
+          "duration_ms": 265.75612503802404
+        }
+      },
+      {
+        "step_index": 1,
+        "call": {
+          "name": "calculate",
+          "arguments": {
+            "component": "cylindrical shell",
+            "P_mpa": 1.8,
+            "design_temp_c": 275,
+            "inside_diameter_mm": 1600,
+            "outside_diameter_mm": null,
+            "material": "SM-516 Gr 70",
+            "joint_type": "Type 1 Full RT",
+            "rt_level": "Full",
+            "corrosion_allowance_mm": 2.5
+          }
+        },
+        "result": {
+          "name": "calculate",
+          "arguments": {
+            "component": "cylindrical shell",
+            "P_mpa": 1.8,
+            "design_temp_c": 275,
+            "inside_diameter_mm": 1600,
+            "outside_diameter_mm": null,
+            "material": "SM-516 Gr 70",
+            "joint_type": "Type 1 Full RT",
+            "rt_level": "Full",
+            "corrosion_allowance_mm": 2.5
+          },
+          "output": {
+            "ok": true,
+            "S_mpa": 124.0,
+            "E": 1.0,
+            "R_mm": 800.0,
+            "formula_ref": "A-27(c)(1)",
+            "t_min_mm": 11.71,
+            "t_design_mm": 14.21,
+            "t_nominal_mm": 16,
+            "mawp_mpa": 2.072,
+            "n_steps": 7,
+            "applicability_ok": true,
+            "calculation_steps": [
+              {
+                "step_number": 1,
+                "result_key": "allowable_stress",
+                "description": "Look up maximum allowable stress S from Table M-1.",
+                "formula": "S = Table M-1(SM-516 Gr 70, 275.0\u00b0C)",
+                "inputs": {
+                  "T": {
+                    "symbol": "T",
+                    "value": 275.0,
+                    "unit": "\u00b0C",
+                    "source": "user_input",
+                    "citation": null
+                  }
+                },
+                "result": 124.0,
+                "unit": "MPa",
+                "citation": {
+                  "source_element_id": "sec-m-1",
+                  "paragraph_ref": "Table M-1",
+                  "quoted_text": "| SM-516 | Gr 70 | Plate | 138 | 138 | 138 | 134 | 127 | 121 | 114 | 103 | 73 | 49 |",
+                  "page_number": 3
+                }
+              },
+              {
+                "step_number": 2,
+                "result_key": "joint_efficiency",
+                "description": "Look up joint efficiency E from Table B-12 for Type 1, Full RT.",
+                "formula": "E = Table B-12(Type 1, Full RT)",
+                "inputs": {
+                  "joint_type": {
+                    "symbol": "joint_type",
+                    "value": 1.0,
+                    "unit": "",
+                    "source": "user_input",
+                    "citation": null
+                  }
+                },
+                "result": 1.0,
+                "unit": "dimensionless",
+                "citation": {
+                  "source_element_id": "sec-b-12",
+                  "paragraph_ref": "Table B-12",
+                  "quoted_text": "| 1 | Double-welded butt, full penetration | 1.00 | 0.85 | 0.70 |",
+                  "page_number": 3
+                }
+              },
+              {
+                "step_number": 3,
+                "result_key": "applicability_check",
+                "description": "Check applicability of the simple thickness formula.",
+                "formula": "P \u2264 0.385 \u00d7 S \u00d7 E",
+                "inputs": {
+                  "P": {
+                    "symbol": "P",
+                    "value": 1.8,
+                    "unit": "MPa",
+                    "source": "user_input",
+                    "citation": null
+                  },
+                  "S": {
+                    "symbol": "S",
+                    "value": 124.0,
+                    "unit": "MPa",
+                    "source": "pinned_data",
+                    "citation": {
+                      "source_element_id": "sec-m-1",
+                      "paragraph_ref": "Table M-1",
+                      "quoted_text": "| SM-516 | Gr 70 | Plate | 138 | 138 | 138 | 134 | 127 | 121 | 114 | 103 | 73 | 49 |",
+                      "page_number": 3
+                    }
+                  },
+                  "E": {
+                    "symbol": "E",
+                    "value": 1.0,
+                    "unit": "dimensionless",
+                    "source": "pinned_data",
+                    "citation": {
+                      "source_element_id": "sec-b-12",
+                      "paragraph_ref": "Table B-12",
+                      "quoted_text": "| 1 | Double-welded butt, full penetration | 1.00 | 0.85 | 0.70 |",
+                      "page_number": 3
+                    }
+                  }
+                },
+                "result": 47.74,
+                "unit": "MPa",
+                "citation": {
+                  "source_element_id": "sec-a-27",
+                  "paragraph_ref": "A-27(c)(1)",
+                  "quoted_text": "(a) The minimum required thickness of shells subjected to internal pressure shall not be less than that computed by the following formulas, per A-27(c) and A-27(d)",
+                  "page_number": 1
+                }
+              },
+              {
+                "step_number": 4,
+                "result_key": "min_thickness",
+                "description": "Compute minimum required thickness per A-27(c)(1).",
+                "formula": "t = (P \u00d7 R) / (S \u00d7 E \u2212 0.6 \u00d7 P)",
+                "inputs": {
+                  "P": {
+                    "symbol": "P",
+                    "value": 1.8,
+                    "unit": "MPa",
+                    "source": "user_input",
+                    "citation": null
+                  },
+                  "R": {
+                    "symbol": "R",
+                    "value": 800.0,
+                    "unit": "mm",
+                    "source": "calculated",
+                    "citation": null
+                  },
+                  "S": {
+                    "symbol": "S",
+                    "value": 124.0,
+                    "unit": "MPa",
+                    "source": "pinned_data",
+                    "citation": {
+                      "source_element_id": "sec-m-1",
+                      "paragraph_ref": "Table M-1",
+                      "quoted_text": "| SM-516 | Gr 70 | Plate | 138 | 138 | 138 | 134 | 127 | 121 | 114 | 103 | 73 | 49 |",
+                      "page_number": 3
+                    }
+                  },
+                  "E": {
+                    "symbol": "E",
+                    "value": 1.0,
+                    "unit": "dimensionless",
+                    "source": "pinned_data",
+                    "citation": {
+                      "source_element_id": "sec-b-12",
+                      "paragraph_ref": "Table B-12",
+                      "quoted_text": "| 1 | Double-welded butt, full penetration | 1.00 | 0.85 | 0.70 |",
+                      "page_number": 3
+                    }
+                  }
+                },
+                "result": 11.71,
+                "unit": "mm",
+                "citation": {
+                  "source_element_id": "sec-a-27",
+                  "paragraph_ref": "A-27(c)(1)",
+                  "quoted_text": "(a) The minimum required thickness of shells subjected to internal pressure shall not be less than that computed by the following formulas, per A-27(c) and A-27(d)",
+                  "page_number": 1
+                }
+              },
+              {
+                "step_number": 5,
+                "result_key": "design_thickness",
+                "description": "Add corrosion allowance per A-25.",
+                "formula": "t_design = t_min + CA",
+                "inputs": {
+                  "t_min": {
+                    "symbol": "t_min",
+                    "value": 11.71,
+                    "unit": "mm",
+                    "source": "calculated",
+                    "citation": null
+                  },
+                  "CA": {
+                    "symbol": "CA",
+                    "value": 2.5,
+                    "unit": "mm",
+                    "source": "user_input",
+                    "citation": null
+                  }
+                },
+                "result": 14.21,
+                "unit": "mm",
+                "citation": {
+                  "source_element_id": "sec-a-25",
+                  "paragraph_ref": "A-25",
+                  "quoted_text": "(a) A corrosion allowance (CA) shall be added to the minimum required thickness calculated by A-27 or A-32",
+                  "page_number": 1
+                }
+              },
+              {
+                "step_number": 6,
+                "result_key": "nominal_plate",
+                "description": "Select next standard plate thickness.",
+                "formula": "t_nominal = next_standard_plate(t_design)",
+                "inputs": {
+                  "t_design": {
+                    "symbol": "t_design",
+                    "value": 14.21,
+                    "unit": "mm",
+                    "source": "calculated",
+                    "citation": null
+                  }
+                },
+                "result": 16.0,
+                "unit": "mm",
+                "citation": {
+                  "source_element_id": "sec-a-27",
+                  "paragraph_ref": "A-27(c)(1)",
+                  "quoted_text": "(a) The minimum required thickness of shells subjected to internal pressure shall not be less than that computed by the following formulas, per A-27(c) and A-27(d)",
+                  "page_number": 1
+                }
+              },
+              {
+                "step_number": 7,
+                "result_key": "mawp",
+                "description": "Back-calculate MAWP using corroded thickness.",
+                "formula": "P = (S \u00d7 E \u00d7 t_corr) / (R + 0.6 \u00d7 t_corr)",
+                "inputs": {
+                  "S": {
+                    "symbol": "S",
+                    "value": 124.0,
+                    "unit": "MPa",
+                    "source": "pinned_data",
+                    "citation": {
+                      "source_element_id": "sec-m-1",
+                      "paragraph_ref": "Table M-1",
+                      "quoted_text": "| SM-516 | Gr 70 | Plate | 138 | 138 | 138 | 134 | 127 | 121 | 114 | 103 | 73 | 49 |",
+                      "page_number": 3
+                    }
+                  },
+                  "E": {
+                    "symbol": "E",
+                    "value": 1.0,
+                    "unit": "dimensionless",
+                    "source": "pinned_data",
+                    "citation": {
+                      "source_element_id": "sec-b-12",
+                      "paragraph_ref": "Table B-12",
+                      "quoted_text": "| 1 | Double-welded butt, full penetration | 1.00 | 0.85 | 0.70 |",
+                      "page_number": 3
+                    }
+                  },
+                  "t_corr": {
+                    "symbol": "t_corr",
+                    "value": 13.5,
+                    "unit": "mm",
+                    "source": "calculated",
+                    "citation": null
+                  },
+                  "R": {
+                    "symbol": "R",
+                    "value": 800.0,
+                    "unit": "mm",
+                    "source": "calculated",
+                    "citation": null
+                  }
+                },
+                "result": 2.072,
+                "unit": "MPa",
+                "citation": {
+                  "source_element_id": "sec-a-27",
+                  "paragraph_ref": "A-27(c)(1)",
+                  "quoted_text": "(a) The minimum required thickness of shells subjected to internal pressure shall not be less than that computed by the following formulas, per A-27(c) and A-27(d)",
+                  "page_number": 1
+                }
+              }
+            ],
+            "citations": [
+              {
+                "source_element_id": "sec-m-1",
+                "paragraph_ref": "Table M-1",
+                "quoted_text": "| SM-516 | Gr 70 | Plate | 138 | 138 | 138 | 134 | 127 | 121 | 114 | 103 | 73 | 49 |",
+                "page_number": 3
+              },
+              {
+                "source_element_id": "sec-b-12",
+                "paragraph_ref": "Table B-12",
+                "quoted_text": "| 1 | Double-welded butt, full penetration | 1.00 | 0.85 | 0.70 |",
+                "page_number": 3
+              },
+              {
+                "source_element_id": "sec-a-27",
+                "paragraph_ref": "A-27(c)(1)",
+                "quoted_text": "(a) The minimum required thickness of shells subjected to internal pressure shall not be less than that computed by the following formulas, per A-27(c) and A-27(d)",
+                "page_number": 1
+              },
+              {
+                "source_element_id": "sec-a-25",
+                "paragraph_ref": "A-25",
+                "quoted_text": "(a) A corrosion allowance (CA) shall be added to the minimum required thickness calculated by A-27 or A-32",
+                "page_number": 1
+              }
+            ]
+          },
+          "error": null,
+          "duration_ms": 0.2763750380836427
+        }
+      }
+    ],
+    "final_response": {
+      "query": "Compute cylindrical shell thickness: ID=1600, P=1.8 MPa, T=275\u00b0C, SM-516 Gr 70, Type 1 Full RT, CA=2.5 mm.",
+      "answer": "Minimum required thickness t_min = 11.71 mm; design thickness with corrosion allowance = 14.21 mm; selected nominal plate = 16 mm; MAWP back-calculated from the selected plate = 2.072 MPa.",
+      "citations": [
+        {
+          "source_element_id": "sec-m-1",
+          "paragraph_ref": "Table M-1",
+          "quoted_text": "| SM-516 | Gr 70 | Plate | 138 | 138 | 138 | 134 | 127 | 121 | 114 | 103 | 73 | 49 |",
+          "page_number": 3
+        },
+        {
+          "source_element_id": "sec-b-12",
+          "paragraph_ref": "Table B-12",
+          "quoted_text": "| 1 | Double-welded butt, full penetration | 1.00 | 0.85 | 0.70 |",
+          "page_number": 3
+        },
+        {
+          "source_element_id": "sec-a-27",
+          "paragraph_ref": "A-27(c)(1)",
+          "quoted_text": "(a) The minimum required thickness of shells subjected to internal pressure shall not be less than that computed by the following formulas, per A-27(c) and A-27(d)",
+          "page_number": 1
+        },
+        {
+          "source_element_id": "sec-a-25",
+          "paragraph_ref": "A-25",
+          "quoted_text": "(a) A corrosion allowance (CA) shall be added to the minimum required thickness calculated by A-27 or A-32",
+          "page_number": 1
+        }
+      ],
+      "calculation_steps": [
+        {
+          "step_number": 1,
+          "result_key": "allowable_stress",
+          "description": "Look up maximum allowable stress S from Table M-1.",
+          "formula": "S = Table M-1(SM-516 Gr 70, 275.0\u00b0C)",
+          "inputs": {
+            "T": {
+              "symbol": "T",
+              "value": 275.0,
+              "unit": "\u00b0C",
+              "source": "user_input",
+              "citation": null
+            }
+          },
+          "result": 124.0,
+          "unit": "MPa",
+          "citation": {
+            "source_element_id": "sec-m-1",
+            "paragraph_ref": "Table M-1",
+            "quoted_text": "| SM-516 | Gr 70 | Plate | 138 | 138 | 138 | 134 | 127 | 121 | 114 | 103 | 73 | 49 |",
+            "page_number": 3
+          }
+        },
+        {
+          "step_number": 2,
+          "result_key": "joint_efficiency",
+          "description": "Look up joint efficiency E from Table B-12 for Type 1, Full RT.",
+          "formula": "E = Table B-12(Type 1, Full RT)",
+          "inputs": {
+            "joint_type": {
+              "symbol": "joint_type",
+              "value": 1.0,
+              "unit": "",
+              "source": "user_input",
+              "citation": null
+            }
+          },
+          "result": 1.0,
+          "unit": "dimensionless",
+          "citation": {
+            "source_element_id": "sec-b-12",
+            "paragraph_ref": "Table B-12",
+            "quoted_text": "| 1 | Double-welded butt, full penetration | 1.00 | 0.85 | 0.70 |",
+            "page_number": 3
+          }
+        },
+        {
+          "step_number": 3,
+          "result_key": "applicability_check",
+          "description": "Check applicability of the simple thickness formula.",
+          "formula": "P \u2264 0.385 \u00d7 S \u00d7 E",
+          "inputs": {
+            "P": {
+              "symbol": "P",
+              "value": 1.8,
+              "unit": "MPa",
+              "source": "user_input",
+              "citation": null
+            },
+            "S": {
+              "symbol": "S",
+              "value": 124.0,
+              "unit": "MPa",
+              "source": "pinned_data",
+              "citation": {
+                "source_element_id": "sec-m-1",
+                "paragraph_ref": "Table M-1",
+                "quoted_text": "| SM-516 | Gr 70 | Plate | 138 | 138 | 138 | 134 | 127 | 121 | 114 | 103 | 73 | 49 |",
+                "page_number": 3
+              }
+            },
+            "E": {
+              "symbol": "E",
+              "value": 1.0,
+              "unit": "dimensionless",
+              "source": "pinned_data",
+              "citation": {
+                "source_element_id": "sec-b-12",
+                "paragraph_ref": "Table B-12",
+                "quoted_text": "| 1 | Double-welded butt, full penetration | 1.00 | 0.85 | 0.70 |",
+                "page_number": 3
+              }
+            }
+          },
+          "result": 47.74,
+          "unit": "MPa",
+          "citation": {
+            "source_element_id": "sec-a-27",
+            "paragraph_ref": "A-27(c)(1)",
+            "quoted_text": "(a) The minimum required thickness of shells subjected to internal pressure shall not be less than that computed by the following formulas, per A-27(c) and A-27(d)",
+            "page_number": 1
+          }
+        },
+        {
+          "step_number": 4,
+          "result_key": "min_thickness",
+          "description": "Compute minimum required thickness per A-27(c)(1).",
+          "formula": "t = (P \u00d7 R) / (S \u00d7 E \u2212 0.6 \u00d7 P)",
+          "inputs": {
+            "P": {
+              "symbol": "P",
+              "value": 1.8,
+              "unit": "MPa",
+              "source": "user_input",
+              "citation": null
+            },
+            "R": {
+              "symbol": "R",
+              "value": 800.0,
+              "unit": "mm",
+              "source": "calculated",
+              "citation": null
+            },
+            "S": {
+              "symbol": "S",
+              "value": 124.0,
+              "unit": "MPa",
+              "source": "pinned_data",
+              "citation": {
+                "source_element_id": "sec-m-1",
+                "paragraph_ref": "Table M-1",
+                "quoted_text": "| SM-516 | Gr 70 | Plate | 138 | 138 | 138 | 134 | 127 | 121 | 114 | 103 | 73 | 49 |",
+                "page_number": 3
+              }
+            },
+            "E": {
+              "symbol": "E",
+              "value": 1.0,
+              "unit": "dimensionless",
+              "source": "pinned_data",
+              "citation": {
+                "source_element_id": "sec-b-12",
+                "paragraph_ref": "Table B-12",
+                "quoted_text": "| 1 | Double-welded butt, full penetration | 1.00 | 0.85 | 0.70 |",
+                "page_number": 3
+              }
+            }
+          },
+          "result": 11.71,
+          "unit": "mm",
+          "citation": {
+            "source_element_id": "sec-a-27",
+            "paragraph_ref": "A-27(c)(1)",
+            "quoted_text": "(a) The minimum required thickness of shells subjected to internal pressure shall not be less than that computed by the following formulas, per A-27(c) and A-27(d)",
+            "page_number": 1
+          }
+        },
+        {
+          "step_number": 5,
+          "result_key": "design_thickness",
+          "description": "Add corrosion allowance per A-25.",
+          "formula": "t_design = t_min + CA",
+          "inputs": {
+            "t_min": {
+              "symbol": "t_min",
+              "value": 11.71,
+              "unit": "mm",
+              "source": "calculated",
+              "citation": null
+            },
+            "CA": {
+              "symbol": "CA",
+              "value": 2.5,
+              "unit": "mm",
+              "source": "user_input",
+              "citation": null
+            }
+          },
+          "result": 14.21,
+          "unit": "mm",
+          "citation": {
+            "source_element_id": "sec-a-25",
+            "paragraph_ref": "A-25",
+            "quoted_text": "(a) A corrosion allowance (CA) shall be added to the minimum required thickness calculated by A-27 or A-32",
+            "page_number": 1
+          }
+        },
+        {
+          "step_number": 6,
+          "result_key": "nominal_plate",
+          "description": "Select next standard plate thickness.",
+          "formula": "t_nominal = next_standard_plate(t_design)",
+          "inputs": {
+            "t_design": {
+              "symbol": "t_design",
+              "value": 14.21,
+              "unit": "mm",
+              "source": "calculated",
+              "citation": null
+            }
+          },
+          "result": 16.0,
+          "unit": "mm",
+          "citation": {
+            "source_element_id": "sec-a-27",
+            "paragraph_ref": "A-27(c)(1)",
+            "quoted_text": "(a) The minimum required thickness of shells subjected to internal pressure shall not be less than that computed by the following formulas, per A-27(c) and A-27(d)",
+            "page_number": 1
+          }
+        },
+        {
+          "step_number": 7,
+          "result_key": "mawp",
+          "description": "Back-calculate MAWP using corroded thickness.",
+          "formula": "P = (S \u00d7 E \u00d7 t_corr) / (R + 0.6 \u00d7 t_corr)",
+          "inputs": {
+            "S": {
+              "symbol": "S",
+              "value": 124.0,
+              "unit": "MPa",
+              "source": "pinned_data",
+              "citation": {
+                "source_element_id": "sec-m-1",
+                "paragraph_ref": "Table M-1",
+                "quoted_text": "| SM-516 | Gr 70 | Plate | 138 | 138 | 138 | 134 | 127 | 121 | 114 | 103 | 73 | 49 |",
+                "page_number": 3
+              }
+            },
+            "E": {
+              "symbol": "E",
+              "value": 1.0,
+              "unit": "dimensionless",
+              "source": "pinned_data",
+              "citation": {
+                "source_element_id": "sec-b-12",
+                "paragraph_ref": "Table B-12",
+                "quoted_text": "| 1 | Double-welded butt, full penetration | 1.00 | 0.85 | 0.70 |",
+                "page_number": 3
+              }
+            },
+            "t_corr": {
+              "symbol": "t_corr",
+              "value": 13.5,
+              "unit": "mm",
+              "source": "calculated",
+              "citation": null
+            },
+            "R": {
+              "symbol": "R",
+              "value": 800.0,
+              "unit": "mm",
+              "source": "calculated",
+              "citation": null
+            }
+          },
+          "result": 2.072,
+          "unit": "MPa",
+          "citation": {
+            "source_element_id": "sec-a-27",
+            "paragraph_ref": "A-27(c)(1)",
+            "quoted_text": "(a) The minimum required thickness of shells subjected to internal pressure shall not be less than that computed by the following formulas, per A-27(c) and A-27(d)",
+            "page_number": 1
+          }
+        }
+      ],
+      "confidence": "high",
+      "refusal_reason": null,
+      "retrieved_context_ids": [
+        "sec-a-25",
+        "sec-a-27",
+        "sec-b-12",
+        "sec-m-1"
+      ]
+    },
+    "termination": {
+      "kind": "finalized",
+      "detail": "Auto-finalized after successful deterministic calculation tool call."
+    },
+    "total_duration_ms": 6333.1286670290865,
+    "n_tool_calls": 2,
+    "n_tool_errors": 0
+  },
+  {
+    "query": "Compute thickness for cylindrical shell OD=1000 mm, P=1.0 MPa, T=200\u00b0C, SM-516 Gr 70, Type 2 Full RT, CA=1.5 mm.",
+    "steps": [],
+    "final_response": null,
+    "termination": {
+      "kind": "decider_error",
+      "detail": "InstructorRetryException: <failed_attempts>\n\n<generation number=\"1\">\n<exception>\n    Error code: 429 - {'status': 429, 'title': 'Too Many Requests'}\n</exception>\n<completion>\n    None\n</completion>\n</generation>\n\n<generation number=\"2\">\n<exception>\n    Error code: 429 - {'status': 429, 'title': 'Too Many Requests'}\n</exception>\n<completion>\n    None\n</completion>\n</generation>\n\n<generation number=\"3\">\n<exception>\n    Error code: 429 - {'status': 429, 'title': 'Too Many Requests'}\n</exception>\n<completion>\n    None\n</completion>\n</generation>\n\n</failed_attempts>\n\n<last_exception>\n    Error code: 429 - {'status': 429, 'title': 'Too Many Requests'}\n</last_exception>"
+    },
+    "total_duration_ms": 4296.604833973106,
+    "n_tool_calls": 0,
+    "n_tool_errors": 0
+  },
+  {
+    "query": "Compute thickness for spherical vessel ID=1400 mm, P=4.0 MPa, T=400\u00b0C, SM-240 Type 316, Type 1 Full RT, CA=2.0 mm.",
+    "steps": [],
+    "final_response": null,
+    "termination": {
+      "kind": "decider_error",
+      "detail": "InstructorRetryException: <failed_attempts>\n\n<generation number=\"1\">\n<exception>\n    Error code: 429 - {'status': 429, 'title': 'Too Many Requests'}\n</exception>\n<completion>\n    None\n</completion>\n</generation>\n\n<generation number=\"2\">\n<exception>\n    Error code: 429 - {'status': 429, 'title': 'Too Many Requests'}\n</exception>\n<completion>\n    None\n</completion>\n</generation>\n\n<generation number=\"3\">\n<exception>\n    Error code: 429 - {'status': 429, 'title': 'Too Many Requests'}\n</exception>\n<completion>\n    None\n</completion>\n</generation>\n\n</failed_attempts>\n\n<last_exception>\n    Error code: 429 - {'status': 429, 'title': 'Too Many Requests'}\n</last_exception>"
+    },
+    "total_duration_ms": 4050.7175840320997,
+    "n_tool_calls": 0,
+    "n_tool_errors": 0
+  },
+  {
+    "query": "Compute thickness for ID=500 mm, P=0.5 MPa, T=100\u00b0C, SM-106 Gr B, Type 3 joint with no radiography, CA=1.0 mm.",
+    "steps": [],
+    "final_response": null,
+    "termination": {
+      "kind": "decider_error",
+      "detail": "InstructorRetryException: <failed_attempts>\n\n<generation number=\"1\">\n<exception>\n    Error code: 429 - {'status': 429, 'title': 'Too Many Requests'}\n</exception>\n<completion>\n    None\n</completion>\n</generation>\n\n<generation number=\"2\">\n<exception>\n    Error code: 429 - {'status': 429, 'title': 'Too Many Requests'}\n</exception>\n<completion>\n    None\n</completion>\n</generation>\n\n<generation number=\"3\">\n<exception>\n    Error code: 429 - {'status': 429, 'title': 'Too Many Requests'}\n</exception>\n<completion>\n    None\n</completion>\n</generation>\n\n</failed_attempts>\n\n<last_exception>\n    Error code: 429 - {'status': 429, 'title': 'Too Many Requests'}\n</last_exception>"
+    },
+    "total_duration_ms": 4252.952124981675,
+    "n_tool_calls": 0,
+    "n_tool_errors": 0
+  },
+  {
+    "query": "What is the allowable stress of SM-516 Gr 70 at 300\u00b0C?",
+    "steps": [],
+    "final_response": null,
+    "termination": {
+      "kind": "decider_error",
+      "detail": "InstructorRetryException: <failed_attempts>\n\n<generation number=\"1\">\n<exception>\n    Error code: 429 - {'status': 429, 'title': 'Too Many Requests'}\n</exception>\n<completion>\n    None\n</completion>\n</generation>\n\n<generation number=\"2\">\n<exception>\n    Error code: 429 - {'status': 429, 'title': 'Too Many Requests'}\n</exception>\n<completion>\n    None\n</completion>\n</generation>\n\n<generation number=\"3\">\n<exception>\n    Error code: 429 - {'status': 429, 'title': 'Too Many Requests'}\n</exception>\n<completion>\n    None\n</completion>\n</generation>\n\n</failed_attempts>\n\n<last_exception>\n    Error code: 429 - {'status': 429, 'title': 'Too Many Requests'}\n</last_exception>"
+    },
+    "total_duration_ms": 4143.805874977261,
+    "n_tool_calls": 0,
+    "n_tool_errors": 0
+  },
+  {
+    "query": "What joint efficiency applies to a Type 1 double-welded butt joint with full radiography?",
+    "steps": [],
+    "final_response": null,
+    "termination": {
+      "kind": "decider_error",
+      "detail": "InstructorRetryException: <failed_attempts>\n\n<generation number=\"1\">\n<exception>\n    Error code: 429 - {'status': 429, 'title': 'Too Many Requests'}\n</exception>\n<completion>\n    None\n</completion>\n</generation>\n\n<generation number=\"2\">\n<exception>\n    Error code: 429 - {'status': 429, 'title': 'Too Many Requests'}\n</exception>\n<completion>\n    None\n</completion>\n</generation>\n\n<generation number=\"3\">\n<exception>\n    Error code: 429 - {'status': 429, 'title': 'Too Many Requests'}\n</exception>\n<completion>\n    None\n</completion>\n</generation>\n\n</failed_attempts>\n\n<last_exception>\n    Error code: 429 - {'status': 429, 'title': 'Too Many Requests'}\n</last_exception>"
+    },
+    "total_duration_ms": 4184.8598750075325,
+    "n_tool_calls": 0,
+    "n_tool_errors": 0
+  },
+  {
+    "query": "What is the maximum design temperature for SM-106 Gr B?",
+    "steps": [],
+    "final_response": null,
+    "termination": {
+      "kind": "decider_error",
+      "detail": "InstructorRetryException: <failed_attempts>\n\n<generation number=\"1\">\n<exception>\n    Error code: 429 - {'status': 429, 'title': 'Too Many Requests'}\n</exception>\n<completion>\n    None\n</completion>\n</generation>\n\n<generation number=\"2\">\n<exception>\n    Error code: 429 - {'status': 429, 'title': 'Too Many Requests'}\n</exception>\n<completion>\n    None\n</completion>\n</generation>\n\n<generation number=\"3\">\n<exception>\n    Error code: 429 - {'status': 429, 'title': 'Too Many Requests'}\n</exception>\n<completion>\n    None\n</completion>\n</generation>\n\n</failed_attempts>\n\n<last_exception>\n    Error code: 429 - {'status': 429, 'title': 'Too Many Requests'}\n</last_exception>"
+    },
+    "total_duration_ms": 4236.161624954548,
+    "n_tool_calls": 0,
+    "n_tool_errors": 0
+  },
+  {
+    "query": "What is the joint efficiency for a Type 4 double full-fillet lap joint with spot radiography?",
+    "steps": [],
+    "final_response": null,
+    "termination": {
+      "kind": "decider_error",
+      "detail": "InstructorRetryException: <failed_attempts>\n\n<generation number=\"1\">\n<exception>\n    Error code: 429 - {'status': 429, 'title': 'Too Many Requests'}\n</exception>\n<completion>\n    None\n</completion>\n</generation>\n\n<generation number=\"2\">\n<exception>\n    Error code: 429 - {'status': 429, 'title': 'Too Many Requests'}\n</exception>\n<completion>\n    None\n</completion>\n</generation>\n\n<generation number=\"3\">\n<exception>\n    Error code: 429 - {'status': 429, 'title': 'Too Many Requests'}\n</exception>\n<completion>\n    None\n</completion>\n</generation>\n\n</failed_attempts>\n\n<last_exception>\n    Error code: 429 - {'status': 429, 'title': 'Too Many Requests'}\n</last_exception>"
+    },
+    "total_duration_ms": 4291.992000013124,
+    "n_tool_calls": 0,
+    "n_tool_errors": 0
+  },
+  {
+    "query": "What is the allowable stress of SM-240 Type 304 at 500\u00b0C?",
+    "steps": [],
+    "final_response": null,
+    "termination": {
+      "kind": "decider_error",
+      "detail": "InstructorRetryException: <failed_attempts>\n\n<generation number=\"1\">\n<exception>\n    Error code: 429 - {'status': 429, 'title': 'Too Many Requests'}\n</exception>\n<completion>\n    None\n</completion>\n</generation>\n\n<generation number=\"2\">\n<exception>\n    Error code: 429 - {'status': 429, 'title': 'Too Many Requests'}\n</exception>\n<completion>\n    None\n</completion>\n</generation>\n\n<generation number=\"3\">\n<exception>\n    Error code: 429 - {'status': 429, 'title': 'Too Many Requests'}\n</exception>\n<completion>\n    None\n</completion>\n</generation>\n\n</failed_attempts>\n\n<last_exception>\n    Error code: 429 - {'status': 429, 'title': 'Too Many Requests'}\n</last_exception>"
+    },
+    "total_duration_ms": 4267.813541984651,
+    "n_tool_calls": 0,
+    "n_tool_errors": 0
+  },
+  {
+    "query": "What inputs are required to apply the cylindrical shell thickness formula in A-27(c)(1)?",
+    "steps": [],
+    "final_response": null,
+    "termination": {
+      "kind": "decider_error",
+      "detail": "InstructorRetryException: <failed_attempts>\n\n<generation number=\"1\">\n<exception>\n    Error code: 429 - {'status': 429, 'title': 'Too Many Requests'}\n</exception>\n<completion>\n    None\n</completion>\n</generation>\n\n<generation number=\"2\">\n<exception>\n    Error code: 429 - {'status': 429, 'title': 'Too Many Requests'}\n</exception>\n<completion>\n    None\n</completion>\n</generation>\n\n<generation number=\"3\">\n<exception>\n    Error code: 429 - {'status': 429, 'title': 'Too Many Requests'}\n</exception>\n<completion>\n    None\n</completion>\n</generation>\n\n</failed_attempts>\n\n<last_exception>\n    Error code: 429 - {'status': 429, 'title': 'Too Many Requests'}\n</last_exception>"
+    },
+    "total_duration_ms": 4067.7545409998856,
+    "n_tool_calls": 0,
+    "n_tool_errors": 0
+  },
+  {
+    "query": "Where is the allowable stress for carbon steel defined in SPES-1?",
+    "steps": [],
+    "final_response": null,
+    "termination": {
+      "kind": "decider_error",
+      "detail": "InstructorRetryException: <failed_attempts>\n\n<generation number=\"1\">\n<exception>\n    Error code: 429 - {'status': 429, 'title': 'Too Many Requests'}\n</exception>\n<completion>\n    None\n</completion>\n</generation>\n\n<generation number=\"2\">\n<exception>\n    Error code: 429 - {'status': 429, 'title': 'Too Many Requests'}\n</exception>\n<completion>\n    None\n</completion>\n</generation>\n\n<generation number=\"3\">\n<exception>\n    Error code: 429 - {'status': 429, 'title': 'Too Many Requests'}\n</exception>\n<completion>\n    None\n</completion>\n</generation>\n\n</failed_attempts>\n\n<last_exception>\n    Error code: 429 - {'status': 429, 'title': 'Too Many Requests'}\n</last_exception>"
+    },
+    "total_duration_ms": 4520.654208026826,
+    "n_tool_calls": 0,
+    "n_tool_errors": 0
+  },
+  {
+    "query": "Under what applicability limits does the inside-radius thickness formula apply?",
+    "steps": [],
+    "final_response": null,
+    "termination": {
+      "kind": "decider_error",
+      "detail": "InstructorRetryException: <failed_attempts>\n\n<generation number=\"1\">\n<exception>\n    Error code: 429 - {'status': 429, 'title': 'Too Many Requests'}\n</exception>\n<completion>\n    None\n</completion>\n</generation>\n\n<generation number=\"2\">\n<exception>\n    Error code: 429 - {'status': 429, 'title': 'Too Many Requests'}\n</exception>\n<completion>\n    None\n</completion>\n</generation>\n\n<generation number=\"3\">\n<exception>\n    Error code: 429 - {'status': 429, 'title': 'Too Many Requests'}\n</exception>\n<completion>\n    None\n</completion>\n</generation>\n\n</failed_attempts>\n\n<last_exception>\n    Error code: 429 - {'status': 429, 'title': 'Too Many Requests'}\n</last_exception>"
+    },
+    "total_duration_ms": 5078.3579999697395,
+    "n_tool_calls": 0,
+    "n_tool_errors": 0
+  },
+  {
+    "query": "What paragraph governs corrosion allowance and how does it relate to thickness?",
+    "steps": [],
+    "final_response": null,
+    "termination": {
+      "kind": "decider_error",
+      "detail": "InstructorRetryException: <failed_attempts>\n\n<generation number=\"1\">\n<exception>\n    Error code: 429 - {'status': 429, 'title': 'Too Many Requests'}\n</exception>\n<completion>\n    None\n</completion>\n</generation>\n\n<generation number=\"2\">\n<exception>\n    Error code: 429 - {'status': 429, 'title': 'Too Many Requests'}\n</exception>\n<completion>\n    None\n</completion>\n</generation>\n\n<generation number=\"3\">\n<exception>\n    Error code: 429 - {'status': 429, 'title': 'Too Many Requests'}\n</exception>\n<completion>\n    None\n</completion>\n</generation>\n\n</failed_attempts>\n\n<last_exception>\n    Error code: 429 - {'status': 429, 'title': 'Too Many Requests'}\n</last_exception>"
+    },
+    "total_duration_ms": 4707.01154100243,
+    "n_tool_calls": 0,
+    "n_tool_errors": 0
+  },
+  {
+    "query": "Which table provides joint efficiency values for welded joints?",
+    "steps": [],
+    "final_response": null,
+    "termination": {
+      "kind": "decider_error",
+      "detail": "InstructorRetryException: <failed_attempts>\n\n<generation number=\"1\">\n<exception>\n    Error code: 429 - {'status': 429, 'title': 'Too Many Requests'}\n</exception>\n<completion>\n    None\n</completion>\n</generation>\n\n<generation number=\"2\">\n<exception>\n    Error code: 429 - {'status': 429, 'title': 'Too Many Requests'}\n</exception>\n<completion>\n    None\n</completion>\n</generation>\n\n<generation number=\"3\">\n<exception>\n    Error code: 429 - {'status': 429, 'title': 'Too Many Requests'}\n</exception>\n<completion>\n    None\n</completion>\n</generation>\n\n</failed_attempts>\n\n<last_exception>\n    Error code: 429 - {'status': 429, 'title': 'Too Many Requests'}\n</last_exception>"
+    },
+    "total_duration_ms": 4474.821291980334,
+    "n_tool_calls": 0,
+    "n_tool_errors": 0
+  },
+  {
+    "query": "What is the weather in San Jose today?",
+    "steps": [],
+    "final_response": null,
+    "termination": {
+      "kind": "decider_error",
+      "detail": "InstructorRetryException: <failed_attempts>\n\n<generation number=\"1\">\n<exception>\n    Error code: 429 - {'status': 429, 'title': 'Too Many Requests'}\n</exception>\n<completion>\n    None\n</completion>\n</generation>\n\n<generation number=\"2\">\n<exception>\n    Error code: 429 - {'status': 429, 'title': 'Too Many Requests'}\n</exception>\n<completion>\n    None\n</completion>\n</generation>\n\n<generation number=\"3\">\n<exception>\n    Error code: 429 - {'status': 429, 'title': 'Too Many Requests'}\n</exception>\n<completion>\n    None\n</completion>\n</generation>\n\n</failed_attempts>\n\n<last_exception>\n    Error code: 429 - {'status': 429, 'title': 'Too Many Requests'}\n</last_exception>"
+    },
+    "total_duration_ms": 4541.753290977795,
+    "n_tool_calls": 0,
+    "n_tool_errors": 0
+  },
+  {
+    "query": "What is the allowable stress of Titanium Grade 5 at 800\u00b0C?",
+    "steps": [],
+    "final_response": null,
+    "termination": {
+      "kind": "decider_error",
+      "detail": "InstructorRetryException: <failed_attempts>\n\n<generation number=\"1\">\n<exception>\n    Error code: 429 - {'status': 429, 'title': 'Too Many Requests'}\n</exception>\n<completion>\n    None\n</completion>\n</generation>\n\n<generation number=\"2\">\n<exception>\n    Error code: 429 - {'status': 429, 'title': 'Too Many Requests'}\n</exception>\n<completion>\n    None\n</completion>\n</generation>\n\n<generation number=\"3\">\n<exception>\n    Error code: 429 - {'status': 429, 'title': 'Too Many Requests'}\n</exception>\n<completion>\n    None\n</completion>\n</generation>\n\n</failed_attempts>\n\n<last_exception>\n    Error code: 429 - {'status': 429, 'title': 'Too Many Requests'}\n</last_exception>"
+    },
+    "total_duration_ms": 4374.460083025042,
+    "n_tool_calls": 0,
+    "n_tool_errors": 0
+  },
+  {
+    "query": "How much does a hot dog cost?",
+    "steps": [],
+    "final_response": null,
+    "termination": {
+      "kind": "decider_error",
+      "detail": "InstructorRetryException: <failed_attempts>\n\n<generation number=\"1\">\n<exception>\n    Error code: 429 - {'status': 429, 'title': 'Too Many Requests'}\n</exception>\n<completion>\n    None\n</completion>\n</generation>\n\n<generation number=\"2\">\n<exception>\n    Error code: 429 - {'status': 429, 'title': 'Too Many Requests'}\n</exception>\n<completion>\n    None\n</completion>\n</generation>\n\n<generation number=\"3\">\n<exception>\n    Error code: 429 - {'status': 429, 'title': 'Too Many Requests'}\n</exception>\n<completion>\n    None\n</completion>\n</generation>\n\n</failed_attempts>\n\n<last_exception>\n    Error code: 429 - {'status': 429, 'title': 'Too Many Requests'}\n</last_exception>"
+    },
+    "total_duration_ms": 4713.69829098694,
+    "n_tool_calls": 0,
+    "n_tool_errors": 0
+  },
+  {
+    "query": "Give me the thickness of a cylindrical shell made of SM-999 Gr XYZ at 200\u00b0C.",
+    "steps": [],
+    "final_response": null,
+    "termination": {
+      "kind": "decider_error",
+      "detail": "InstructorRetryException: <failed_attempts>\n\n<generation number=\"1\">\n<exception>\n    Error code: 429 - {'status': 429, 'title': 'Too Many Requests'}\n</exception>\n<completion>\n    None\n</completion>\n</generation>\n\n<generation number=\"2\">\n<exception>\n    Error code: 429 - {'status': 429, 'title': 'Too Many Requests'}\n</exception>\n<completion>\n    None\n</completion>\n</generation>\n\n<generation number=\"3\">\n<exception>\n    Error code: 429 - {'status': 429, 'title': 'Too Many Requests'}\n</exception>\n<completion>\n    None\n</completion>\n</generation>\n\n</failed_attempts>\n\n<last_exception>\n    Error code: 429 - {'status': 429, 'title': 'Too Many Requests'}\n</last_exception>"
+    },
+    "total_duration_ms": 4501.720916014165,
+    "n_tool_calls": 0,
+    "n_tool_errors": 0
+  },
+  {
+    "query": "Compute thickness for cylindrical shell, SM-516 Gr 70 at 700\u00b0C, P=1.0 MPa, ID=1000 mm, Type 1 Full RT, CA=2 mm.",
+    "steps": [],
+    "final_response": null,
+    "termination": {
+      "kind": "decider_error",
+      "detail": "InstructorRetryException: <failed_attempts>\n\n<generation number=\"1\">\n<exception>\n    Error code: 429 - {'status': 429, 'title': 'Too Many Requests'}\n</exception>\n<completion>\n    None\n</completion>\n</generation>\n\n<generation number=\"2\">\n<exception>\n    Error code: 429 - {'status': 429, 'title': 'Too Many Requests'}\n</exception>\n<completion>\n    None\n</completion>\n</generation>\n\n<generation number=\"3\">\n<exception>\n    Error code: 429 - {'status': 429, 'title': 'Too Many Requests'}\n</exception>\n<completion>\n    None\n</completion>\n</generation>\n\n</failed_attempts>\n\n<last_exception>\n    Error code: 429 - {'status': 429, 'title': 'Too Many Requests'}\n</last_exception>"
+    },
+    "total_duration_ms": 4300.285457982682,
+    "n_tool_calls": 0,
+    "n_tool_errors": 0
+  },
+  {
+    "query": "Compute cylindrical shell thickness at P=1.8 MPa, ID=1600 mm, T=275\u00b0C, SM-516 Gr 70, Type 1 Full RT, CA=2.5 mm.",
+    "steps": [],
+    "final_response": null,
+    "termination": {
+      "kind": "decider_error",
+      "detail": "InstructorRetryException: <failed_attempts>\n\n<generation number=\"1\">\n<exception>\n    Error code: 429 - {'status': 429, 'title': 'Too Many Requests'}\n</exception>\n<completion>\n    None\n</completion>\n</generation>\n\n<generation number=\"2\">\n<exception>\n    Error code: 429 - {'status': 429, 'title': 'Too Many Requests'}\n</exception>\n<completion>\n    None\n</completion>\n</generation>\n\n<generation number=\"3\">\n<exception>\n    Error code: 429 - {'status': 429, 'title': 'Too Many Requests'}\n</exception>\n<completion>\n    None\n</completion>\n</generation>\n\n</failed_attempts>\n\n<last_exception>\n    Error code: 429 - {'status': 429, 'title': 'Too Many Requests'}\n</last_exception>"
+    },
+    "total_duration_ms": 4322.263833950274,
+    "n_tool_calls": 0,
+    "n_tool_errors": 0
+  },
+  {
+    "query": "For a cylindrical shell design at exactly P = 0.385 \u00d7 S \u00d7 E, does the simple formula still apply?",
+    "steps": [],
+    "final_response": null,
+    "termination": {
+      "kind": "decider_error",
+      "detail": "InstructorRetryException: <failed_attempts>\n\n<generation number=\"1\">\n<exception>\n    Error code: 429 - {'status': 429, 'title': 'Too Many Requests'}\n</exception>\n<completion>\n    None\n</completion>\n</generation>\n\n<generation number=\"2\">\n<exception>\n    Error code: 429 - {'status': 429, 'title': 'Too Many Requests'}\n</exception>\n<completion>\n    None\n</completion>\n</generation>\n\n<generation number=\"3\">\n<exception>\n    Error code: 429 - {'status': 429, 'title': 'Too Many Requests'}\n</exception>\n<completion>\n    None\n</completion>\n</generation>\n\n</failed_attempts>\n\n<last_exception>\n    Error code: 429 - {'status': 429, 'title': 'Too Many Requests'}\n</last_exception>"
+    },
+    "total_duration_ms": 4189.132749976125,
+    "n_tool_calls": 0,
+    "n_tool_errors": 0
+  },
+  {
+    "query": "What happens when a design temperature exactly matches a tabulated value like 300\u00b0C?",
+    "steps": [],
+    "final_response": null,
+    "termination": {
+      "kind": "decider_error",
+      "detail": "InstructorRetryException: <failed_attempts>\n\n<generation number=\"1\">\n<exception>\n    Error code: 429 - {'status': 429, 'title': 'Too Many Requests'}\n</exception>\n<completion>\n    None\n</completion>\n</generation>\n\n<generation number=\"2\">\n<exception>\n    Error code: 429 - {'status': 429, 'title': 'Too Many Requests'}\n</exception>\n<completion>\n    None\n</completion>\n</generation>\n\n<generation number=\"3\">\n<exception>\n    Error code: 429 - {'status': 429, 'title': 'Too Many Requests'}\n</exception>\n<completion>\n    None\n</completion>\n</generation>\n\n</failed_attempts>\n\n<last_exception>\n    Error code: 429 - {'status': 429, 'title': 'Too Many Requests'}\n</last_exception>"
+    },
+    "total_duration_ms": 4441.120208008215,
+    "n_tool_calls": 0,
+    "n_tool_errors": 0
+  },
+  {
+    "query": "Compute cylindrical shell thickness at P=2.5 MPa, ID=2000 mm, T=450\u00b0C, SM-516 Gr 70, Type 1 Full RT, CA=2 mm.",
+    "steps": [],
+    "final_response": null,
+    "termination": {
+      "kind": "decider_error",
+      "detail": "InstructorRetryException: <failed_attempts>\n\n<generation number=\"1\">\n<exception>\n    Error code: 429 - {'status': 429, 'title': 'Too Many Requests'}\n</exception>\n<completion>\n    None\n</completion>\n</generation>\n\n<generation number=\"2\">\n<exception>\n    Error code: 429 - {'status': 429, 'title': 'Too Many Requests'}\n</exception>\n<completion>\n    None\n</completion>\n</generation>\n\n<generation number=\"3\">\n<exception>\n    Error code: 429 - {'status': 429, 'title': 'Too Many Requests'}\n</exception>\n<completion>\n    None\n</completion>\n</generation>\n\n</failed_attempts>\n\n<last_exception>\n    Error code: 429 - {'status': 429, 'title': 'Too Many Requests'}\n</last_exception>"
+    },
+    "total_duration_ms": 4244.875749980565,
+    "n_tool_calls": 0,
+    "n_tool_errors": 0
+  },
+  {
+    "query": "What is the joint efficiency for a Type 6 joint with no radiography?",
+    "steps": [],
+    "final_response": null,
+    "termination": {
+      "kind": "decider_error",
+      "detail": "InstructorRetryException: <failed_attempts>\n\n<generation number=\"1\">\n<exception>\n    Error code: 429 - {'status': 429, 'title': 'Too Many Requests'}\n</exception>\n<completion>\n    None\n</completion>\n</generation>\n\n<generation number=\"2\">\n<exception>\n    Error code: 429 - {'status': 429, 'title': 'Too Many Requests'}\n</exception>\n<completion>\n    None\n</completion>\n</generation>\n\n<generation number=\"3\">\n<exception>\n    Error code: 429 - {'status': 429, 'title': 'Too Many Requests'}\n</exception>\n<completion>\n    None\n</completion>\n</generation>\n\n</failed_attempts>\n\n<last_exception>\n    Error code: 429 - {'status': 429, 'title': 'Too Many Requests'}\n</last_exception>"
+    },
+    "total_duration_ms": 4126.917957968544,
+    "n_tool_calls": 0,
+    "n_tool_errors": 0
+  }
+]

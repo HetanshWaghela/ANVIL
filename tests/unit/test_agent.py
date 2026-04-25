@@ -29,7 +29,12 @@ from anvil.generation.agent_backend import (
     AgentDecision,
     ScriptedAgentBackend,
 )
-from anvil.generation.agent_tools import ToolRegistry, _coerce_joint_type
+from anvil.generation.agent_tools import (
+    ToolRegistry,
+    _coerce_component,
+    _coerce_joint_type,
+    _coerce_rt_level,
+)
 from anvil.pipeline import build_pipeline
 from anvil.schemas.agent import (
     AgentBudget,
@@ -137,6 +142,50 @@ async def test_happy_path_records_full_transcript(registry: ToolRegistry) -> Non
     assert summary["finalized"] is True
 
 
+@pytest.mark.asyncio
+async def test_successful_calculation_auto_finalizes(registry: ToolRegistry) -> None:
+    """A successful deterministic calculation should terminate the agent loop
+    immediately without requiring an extra LLM finalize turn.
+
+    The agent first hydrates the transcript with retrieval evidence, then
+    auto-finalizes after the trusted calculation engine produces steps and
+    citations. This avoids extra model calls while preserving provenance.
+    """
+    decider = ScriptedAgentBackend(
+        [
+            ToolCall(
+                name="calculate",
+                arguments={
+                    "component": "cylindrical_shell",
+                    "P_mpa": 1.5,
+                    "design_temp_c": 200,
+                    "inside_diameter_mm": 1000,
+                    "material": "SM-516 Gr 70",
+                    "joint_type": "Type 1",
+                    "rt_level": "Full RT",
+                    "corrosion_allowance_mm": 0.0,
+                },
+            )
+        ]
+    )
+    agent = AnvilAgent(decider=decider, registry=registry, budget=AgentBudget())
+    outcome = await agent.run("Calculate cylindrical shell thickness.")
+
+    assert outcome.transcript.termination.kind == "finalized"
+    assert "Auto-finalized" in outcome.transcript.termination.detail
+    assert outcome.transcript.n_tool_calls == 2
+    assert outcome.transcript.n_tool_errors == 0
+    assert [s.call.name for s in outcome.transcript.steps] == [
+        "retrieve_context",
+        "calculate",
+    ]
+    assert outcome.transcript.final_response == outcome.response
+    assert outcome.response.confidence == ResponseConfidence.HIGH
+    assert outcome.response.calculation_steps
+    assert outcome.response.citations
+    assert "Minimum required thickness" in outcome.response.answer
+
+
 # ---------------------------------------------------------------------------
 # 2) Step-budget exhaustion
 # ---------------------------------------------------------------------------
@@ -174,9 +223,7 @@ async def test_step_budget_exhaustion_yields_refusal(registry: ToolRegistry) -> 
 @pytest.mark.asyncio
 async def test_tool_error_budget_yields_refusal(registry: ToolRegistry) -> None:
     """4 unknown-tool calls with max_tool_errors=3 ⇒ tool_error_limit."""
-    decider = ScriptedAgentBackend(
-        [ToolCall(name="not_a_real_tool", arguments={})] * 5
-    )
+    decider = ScriptedAgentBackend([ToolCall(name="not_a_real_tool", arguments={})] * 5)
     agent = AnvilAgent(
         decider=decider,
         registry=registry,
@@ -234,9 +281,7 @@ def test_tool_retrieve_context(registry: ToolRegistry) -> None:
 
 
 def test_tool_retrieve_context_validates_query(registry: ToolRegistry) -> None:
-    out = registry.execute(
-        ToolCall(name="retrieve_context", arguments={"query": "", "top_k": 5})
-    )
+    out = registry.execute(ToolCall(name="retrieve_context", arguments={"query": "", "top_k": 5}))
     assert not out.ok
     assert "query" in (out.error or "").lower()
 
@@ -404,12 +449,47 @@ def test_coerce_joint_type_accepts_llm_shapes() -> None:
     assert _coerce_joint_type("1") == 1
     assert _coerce_joint_type("Type 1") == 1
     assert _coerce_joint_type("type  3") == 3
+    assert _coerce_joint_type("Type 2 with full radiography") == 2
     assert _coerce_joint_type(2.0) == 2
+
+
+def test_coerce_component_accepts_llm_shapes() -> None:
+    assert _coerce_component("cylindrical_shell") == "cylindrical_shell"
+    assert _coerce_component("cylindrical shell") == "cylindrical_shell"
+    assert _coerce_component("inside-radius cylindrical shell") == "cylindrical_shell"
+    assert _coerce_component("OD cylindrical shell") == "cylindrical_shell_outside_radius"
+    assert (
+        _coerce_component("outside radius cylindrical shell") == "cylindrical_shell_outside_radius"
+    )
+    assert _coerce_component("spherical vessel") == "spherical_shell"
+
+
+def test_coerce_component_rejects_invalid_inputs() -> None:
+    with pytest.raises(ValueError):
+        _coerce_component("heat exchanger tube sheet")
+
+
+def test_coerce_rt_level_accepts_llm_shapes() -> None:
+    assert _coerce_rt_level("Full RT") == "Full RT"
+    assert _coerce_rt_level("full radiography") == "Full RT"
+    assert _coerce_rt_level("fully radiographed") == "Full RT"
+    assert _coerce_rt_level("Spot RT") == "Spot RT"
+    assert _coerce_rt_level("spot radiography") == "Spot RT"
+    assert _coerce_rt_level("No RT") == "No RT"
+    assert _coerce_rt_level("no radiography") == "No RT"
+    assert _coerce_rt_level("without radiography") == "No RT"
+
+
+def test_coerce_rt_level_rejects_invalid_inputs() -> None:
+    with pytest.raises(ValueError):
+        _coerce_rt_level("partial radiography")
 
 
 def test_coerce_joint_type_rejects_invalid_inputs() -> None:
     with pytest.raises(ValueError):
         _coerce_joint_type("seven")
+    with pytest.raises(ValueError):
+        _coerce_joint_type("7")
     with pytest.raises(ValueError):
         _coerce_joint_type(True)  # bool is rejected even though it's an int subclass
     with pytest.raises(ValueError):
