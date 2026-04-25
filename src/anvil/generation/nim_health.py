@@ -35,24 +35,34 @@ from anvil.logging_config import get_logger
 log = get_logger(__name__)
 
 
-# Locked NIM model catalog — see plan §0 (Decisions locked from the
-# clarifying round). Each entry covers a different design-space corner so
-# the eval table reads as a real comparison rather than three flavors of
-# the same family.
+# Locked NIM model catalog — see plan §0 + ADR-011 (catalog refresh
+# 2026-04-25). Each entry covers a different design-space corner so the
+# eval table reads as a real comparison rather than three flavors of
+# the same family. Live-probed against `integrate.api.nvidia.com/v1`
+# on 2026-04-25 — see `data/runs/` headline runs for measured pass
+# rates per model.
+#
+# Replacements 2026-04-25:
+#   - `deepseek-ai/deepseek-v3.1` → DEPRECATED (EOL 2026-04-15 per the
+#     `410 Gone` response from NIM).
+#   - `nvidia/llama-3.1-nemotron-70b-instruct` → 404 (rotated out of the
+#     hosted catalog) — replaced with the current `super-49b-v1.5` line
+#     which carries the same NVIDIA-RLHF lineage.
+#   - Added `openai/gpt-oss-120b` for OpenAI-family coverage on NIM.
 NIM_MODELS: dict[str, dict[str, Any]] = {
     "meta/llama-3.3-70b-instruct": {
         "label": "llama-3.3-70b",
         "purpose": "strong general instruction-follower (eval baseline)",
         "supports_reasoning": False,
     },
-    "deepseek-ai/deepseek-v3.1": {
-        "label": "deepseek-v3.1",
-        "purpose": "reasoning-mode stress test (chat_template_kwargs.thinking)",
+    "nvidia/llama-3.3-nemotron-super-49b-v1.5": {
+        "label": "nemotron-super-49b",
+        "purpose": "NVIDIA-tuned reasoning model (thinking-mode stress test)",
         "supports_reasoning": True,
     },
-    "nvidia/llama-3.1-nemotron-70b-instruct": {
-        "label": "nemotron-70b",
-        "purpose": "NVIDIA-tuned instruction-follower (NIM-native baseline)",
+    "openai/gpt-oss-120b": {
+        "label": "gpt-oss-120b",
+        "purpose": "OpenAI open-weight 120b (GPT-family coverage on NIM)",
         "supports_reasoning": False,
     },
 }

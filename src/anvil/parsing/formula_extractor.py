@@ -10,6 +10,8 @@ from anvil.schemas.document import FormulaVariable, ParsedFormula
 _CODE_FENCE = re.compile(r"```(?:.*?)?\n(.*?)\n```", re.DOTALL)
 
 # A simple right-hand-side detector: `<var> = <expr>`
+# Allows zero or more spaces around '=' to handle pymupdf4llm's
+# whitespace-stripped output (e.g. 't=(P×R)/(S×E−0.6×P)').
 _EQUATION = re.compile(r"^\s*([A-Za-z][A-Za-z0-9_]*)\s*=\s*(.+)$")
 
 # Detect the "applicability sentence" that typically follows each formula

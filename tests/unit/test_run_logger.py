@@ -174,6 +174,20 @@ def test_build_manifest_redacts_env_secrets(
     assert m.env.get("ANVIL_LLM_MODEL") == "meta/llama-3.3-70b-instruct"
 
 
+def test_build_manifest_captures_embedder_env(
+    monkeypatch: pytest.MonkeyPatch,
+) -> None:
+    monkeypatch.setenv("ANVIL_EMBEDDER", "sentence_transformer")
+    monkeypatch.setenv("ANVIL_ST_MODEL", "BAAI/bge-small-en-v1.5")
+    monkeypatch.setenv("ANVIL_ST_CACHE_DIR", "/tmp/anvil-st")
+
+    m = build_manifest(run_id="t-embedder-env", backend="fake")
+
+    assert m.env["ANVIL_EMBEDDER"] == "sentence_transformer"
+    assert m.env["ANVIL_ST_MODEL"] == "BAAI/bge-small-en-v1.5"
+    assert m.env["ANVIL_ST_CACHE_DIR"] == "/tmp/anvil-st"
+
+
 def test_build_manifest_attaches_dataset_hash() -> None:
     examples = _toy_examples()
     m = build_manifest(

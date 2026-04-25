@@ -76,13 +76,15 @@ def _ok_response(model: str, content: str = "OK") -> httpx.Response:
 
 
 def test_nim_catalog_has_three_locked_models() -> None:
-    """The plan locks 3 models at §0. Adding a 4th must be a deliberate
-    decision (ADR), not a silent edit. Encode that contract."""
+    """The plan locks 3 models at §0 / ADR-011. Adding a 4th must be a
+    deliberate decision (ADR + this lock), not a silent edit. Encode
+    that contract — and pin the exact model ids so a catalog refresh
+    forces a coordinated edit of code + ADR + this test together."""
     assert len(NIM_MODELS) == 3
     expected = {
         "meta/llama-3.3-70b-instruct",
-        "deepseek-ai/deepseek-v3.1",
-        "nvidia/llama-3.1-nemotron-70b-instruct",
+        "nvidia/llama-3.3-nemotron-super-49b-v1.5",
+        "openai/gpt-oss-120b",
     }
     assert set(NIM_MODELS) == expected
     # Every entry must carry the metadata the CLI / health check rely on.
@@ -90,6 +92,9 @@ def test_nim_catalog_has_three_locked_models() -> None:
         assert isinstance(meta["label"], str) and meta["label"], model_id
         assert isinstance(meta["purpose"], str) and meta["purpose"], model_id
         assert isinstance(meta["supports_reasoning"], bool), model_id
+    # At least one model in the catalog supports reasoning passthrough,
+    # so the `ANVIL_NIM_REASONING` env-var path is actually exercised.
+    assert any(m["supports_reasoning"] for m in NIM_MODELS.values())
 
 
 # ---------------------------------------------------------------------------
@@ -350,7 +355,7 @@ def test_cli_nim_check_list_reports_drift(
             json={
                 "data": [
                     {"id": "meta/llama-3.3-70b-instruct"},
-                    {"id": "deepseek-ai/deepseek-v3.1"},
+                    {"id": "openai/gpt-oss-120b"},
                     {"id": "minimaxai/minimax-m2.7"},
                 ],
             },
@@ -361,7 +366,12 @@ def test_cli_nim_check_list_reports_drift(
     parsed = json.loads(capsys.readouterr().out)
     drift = parsed["catalog_drift"]
     assert drift["live_count"] == 3
-    assert "nvidia/llama-3.1-nemotron-70b-instruct" in drift["missing_from_live"]
+    # The Nemotron entry is in our locked catalog but absent from the
+    # mocked live list — must surface as drift.
+    assert (
+        "nvidia/llama-3.3-nemotron-super-49b-v1.5"
+        in drift["missing_from_live"]
+    )
     assert "minimaxai/minimax-m2.7" in drift["new_in_live"]
 
 

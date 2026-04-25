@@ -103,3 +103,30 @@ class AnvilResponse(BaseModel):
         if self.confidence != ResponseConfidence.INSUFFICIENT and not self.citations:
             raise ValueError("Non-refusal responses must have at least one citation")
         return self
+
+
+class LLMAnvilResponse(BaseModel):
+    """Subset of `AnvilResponse` that the LLM is allowed to produce.
+
+    Calculation steps are deliberately absent. They are computed and injected by
+    the deterministic host-side calculation engine, so a model cannot invent a
+    step key, formula, input value, or citation that fails schema validation
+    before the trusted steps are attached.
+    """
+
+    query: str
+    answer: str
+    citations: list[Citation] = Field(default_factory=list)
+    confidence: ResponseConfidence
+    refusal_reason: str | None = None
+    retrieved_context_ids: list[str] = Field(default_factory=list)
+
+    @model_validator(mode="after")
+    def validate_refusal_consistency(self) -> LLMAnvilResponse:
+        if self.confidence == ResponseConfidence.INSUFFICIENT and not self.refusal_reason:
+            raise ValueError("Must provide refusal_reason when confidence is insufficient")
+        if self.confidence != ResponseConfidence.INSUFFICIENT and self.refusal_reason:
+            raise ValueError("refusal_reason should only be set when confidence is insufficient")
+        if self.confidence != ResponseConfidence.INSUFFICIENT and not self.citations:
+            raise ValueError("Non-refusal responses must have at least one citation")
+        return self

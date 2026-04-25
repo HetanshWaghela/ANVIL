@@ -15,7 +15,7 @@ from anvil.evaluation.metrics import (
     retrieval_recall_at_k,
     structural_completeness,
 )
-from anvil.generation.generator import AnvilGenerator
+from anvil.generation.generator import AnvilGenerator, GenerationOutcome
 from anvil.schemas.document import DocumentElement
 from anvil.schemas.evaluation import EvaluationResult, GoldenExample, MetricScore
 from anvil.schemas.generation import AnvilResponse
@@ -24,9 +24,17 @@ from anvil.schemas.retrieval import RetrievedChunk
 
 @dataclass
 class RunSummary:
-    """Aggregated result of an evaluation run."""
+    """Aggregated result of an evaluation run.
+
+    `outcomes` carries one `GenerationOutcome` per example, parallel to
+    `per_example`, so callers (notably the run-logger / headline-runs
+    script) can record raw responses without invoking the generator a
+    second time. Re-invoking would double the cost of every real-NIM
+    eval run, an issue caught in M5 testing.
+    """
 
     per_example: list[EvaluationResult]
+    outcomes: list[GenerationOutcome] = field(default_factory=list)
     aggregate: dict[str, float] = field(default_factory=dict)
     pass_rate: float = 0.0
 
@@ -46,11 +54,13 @@ class EvaluationRunner:
 
     async def run(self, examples: list[GoldenExample]) -> RunSummary:
         per_example: list[EvaluationResult] = []
+        outcomes: list[GenerationOutcome] = []
         # Reuse the generator's element_index so citation_accuracy can
         # validate canonical-ref quotes against the parsed standard.
         element_index = getattr(self.generator, "element_index", None)
         for ex in examples:
             outcome = await self.generator.generate(ex.query, top_k=10)
+            outcomes.append(outcome)
             metrics = self._score(
                 ex,
                 outcome.response,
@@ -85,7 +95,10 @@ class EvaluationRunner:
             else 0.0
         )
         return RunSummary(
-            per_example=per_example, aggregate=aggregate, pass_rate=pass_rate
+            per_example=per_example,
+            outcomes=outcomes,
+            aggregate=aggregate,
+            pass_rate=pass_rate,
         )
 
     def _score(

@@ -19,6 +19,7 @@ from __future__ import annotations
 
 from pathlib import Path
 
+from anvil.evaluation.agent_runner import AgentRunSummary
 from anvil.evaluation.manifest import RunManifest
 from anvil.evaluation.runner import RunSummary
 from anvil.schemas.evaluation import EvaluationResult, MetricScore
@@ -41,7 +42,7 @@ def _fmt(value: float | None, ndigits: int = 3) -> str:
     return f"{value:.{ndigits}f}"
 
 
-def _ranked_metrics(summary: RunSummary) -> list[str]:
+def _ranked_metrics(summary: RunSummary | AgentRunSummary) -> list[str]:
     """Stable order: known metrics first, anything new alphabetically."""
     known = [m for m in _METRIC_ORDER if m in summary.aggregate]
     extras = sorted(set(summary.aggregate) - set(_METRIC_ORDER))
@@ -49,7 +50,7 @@ def _ranked_metrics(summary: RunSummary) -> list[str]:
 
 
 def _failing_examples(
-    summary: RunSummary, limit: int = 5
+    summary: RunSummary | AgentRunSummary, limit: int = 5
 ) -> list[EvaluationResult]:
     """Return up to `limit` failed examples, lowest-score first.
 
@@ -74,7 +75,7 @@ def _metric_row(name: str, score: MetricScore) -> str:
 
 
 def render_report(
-    summary: RunSummary,
+    summary: RunSummary | AgentRunSummary,
     manifest: RunManifest,
     *,
     artifact_links: dict[str, str] | None = None,
@@ -203,7 +204,7 @@ def render_report(
 
 
 def write_report(
-    summary: RunSummary,
+    summary: RunSummary | AgentRunSummary,
     manifest: RunManifest,
     path: Path,
 ) -> None:

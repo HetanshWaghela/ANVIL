@@ -1,0 +1,42 @@
+[
+  {
+    "system": "pymupdf4llm",
+    "pdf_path": "data/parser_benchmark/pdfs/nasa_sp8007.pdf",
+    "table_recovery_f1": 1.0,
+    "formula_fidelity": 1.0,
+    "paragraph_ref_recall": 1.0,
+    "section_recall": 1.0,
+    "latency_ms_per_page": 1345.37,
+    "cost_usd_per_page": null
+  },
+  {
+    "system": "naive_pdfminer",
+    "pdf_path": "data/parser_benchmark/pdfs/nasa_sp8007.pdf",
+    "table_recovery_f1": 0.0,
+    "formula_fidelity": 1.0,
+    "paragraph_ref_recall": 1.0,
+    "section_recall": 0.0,
+    "latency_ms_per_page": 16.05,
+    "cost_usd_per_page": null
+  },
+  {
+    "system": "pymupdf4llm",
+    "pdf_path": "data/parser_benchmark/pdfs/spes1_synthetic.pdf",
+    "table_recovery_f1": 0.4828,
+    "formula_fidelity": 1.0,
+    "paragraph_ref_recall": 1.0,
+    "section_recall": 0.8824,
+    "latency_ms_per_page": 132.77,
+    "cost_usd_per_page": null
+  },
+  {
+    "system": "naive_pdfminer",
+    "pdf_path": "data/parser_benchmark/pdfs/spes1_synthetic.pdf",
+    "table_recovery_f1": 0.0,
+    "formula_fidelity": 0.0,
+    "paragraph_ref_recall": 0.0,
+    "section_recall": 0.0,
+    "latency_ms_per_page": 35.16,
+    "cost_usd_per_page": null
+  }
+]

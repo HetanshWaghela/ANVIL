@@ -2,6 +2,11 @@
 
 from __future__ import annotations
 
+from anvil.evaluation.agent_runner import (
+    AgentEvaluationRunner,
+    AgentRunSummary,
+    transcripts_to_jsonable,
+)
 from anvil.evaluation.dataset import load_golden_dataset
 from anvil.evaluation.manifest import (
     RunManifest,
@@ -30,12 +35,15 @@ from anvil.evaluation.run_logger import (
 from anvil.evaluation.runner import EvaluationRunner, RunSummary
 
 __all__ = [
+    "AgentEvaluationRunner",
+    "AgentRunSummary",
     "EvaluationRunner",
     "RegressionReport",
     "RunLogger",
     "RunLoggerConfig",
     "RunManifest",
     "RunSummary",
+    "transcripts_to_jsonable",
     "build_manifest",
     "calculation_correctness",
     "citation_accuracy",

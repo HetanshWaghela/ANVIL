@@ -1,0 +1,2225 @@
+{
+  "system": "pymupdf4llm",
+  "pdf_path": "data/parser_benchmark/pdfs/spes1_synthetic.pdf",
+  "page_count": 3,
+  "elements": [
+    {
+      "element_id": "sec-synthetic-pressure-equipment-standard-spes-1",
+      "element_type": "section",
+      "paragraph_ref": null,
+      "title": "**Synthetic Pressure Equipment Standard (SPES-1)**",
+      "content": "_A fictional standard mirroring the ASME BPVC Section VIII Div. 1 structure for use in anvil._ ",
+      "page_number": 1,
+      "parent_id": null,
+      "cross_references": [],
+      "table": null,
+      "formula": null,
+      "metadata": {}
+    },
+    {
+      "element_id": "sec-part-a-general-requirements",
+      "element_type": "section",
+      "paragraph_ref": null,
+      "title": "**Part A — General Requirements**",
+      "content": "",
+      "page_number": 1,
+      "parent_id": null,
+      "cross_references": [],
+      "table": null,
+      "formula": null,
+      "metadata": {}
+    },
+    {
+      "element_id": "sec-a-23",
+      "element_type": "section",
+      "paragraph_ref": "A-23",
+      "title": "**A-23 Maximum Allowable Stress Values**",
+      "content": "- (a) The maximum allowable stress values for materials used in the construction of pressure vessels shall be taken from Part M of this Standard. Specifically, allowable stress values for carbon and low-alloy steels shall be obtained from Table M-1 (see Part M). \n\n- (b) Allowable stress values are tabulated at discrete design temperatures. When a design temperature falls between two tabulated values, linear interpolation shall be used, in accordance with A-23(c). \n\n- (c) No extrapolation beyond the tabulated temperature range is permitted. If the design temperature exceeds the maximum tabulated temperature for a material, that material shall not be used. ",
+      "page_number": 1,
+      "parent_id": null,
+      "cross_references": [
+        {
+          "source_id": "sec-a-23",
+          "target_id": "tbl-m-1",
+          "reference_text": "shall be obtained from Table M-1",
+          "reference_type": "references"
+        }
+      ],
+      "table": null,
+      "formula": null,
+      "metadata": {}
+    },
+    {
+      "element_id": "sec-a-25",
+      "element_type": "section",
+      "paragraph_ref": "A-25",
+      "title": "**A-25 Corrosion**",
+      "content": "- (a) A corrosion allowance (CA) shall be added to the minimum required thickness calculated by A-27 or A-32. \n\n- (b) The corrosion allowance shall be specified in the design datasheet and shall not be taken as less than zero. \n\n- (c) When back-calculating the Maximum Allowable Working Pressure (MAWP), the effective corroded thickness equals the nominal thickness minus the corrosion allowance. ",
+      "page_number": 1,
+      "parent_id": null,
+      "cross_references": [
+        {
+          "source_id": "sec-a-25",
+          "target_id": "fml-a-27-f0",
+          "reference_text": "A-27",
+          "reference_type": "references"
+        },
+        {
+          "source_id": "sec-a-25",
+          "target_id": "fml-a-32-f0",
+          "reference_text": "A-32",
+          "reference_type": "references"
+        }
+      ],
+      "table": null,
+      "formula": null,
+      "metadata": {}
+    },
+    {
+      "element_id": "sec-a-27",
+      "element_type": "section",
+      "paragraph_ref": "A-27",
+      "title": "**A-27 Thickness of Shells Under Internal Pressure**",
+      "content": "- (a) The minimum required thickness of shells subjected to internal pressure shall not be less than that computed by the following formulas, per A-27(c) and A-27(d). \n\n- (b) The allowable stress S shall be obtained per A-23, and the joint efficiency E shall be obtained from Table B-12 (see B-12). \n\n- (c) Cylindrical Shells. ",
+      "page_number": 1,
+      "parent_id": null,
+      "cross_references": [
+        {
+          "source_id": "sec-a-27",
+          "target_id": "sec-a-23",
+          "reference_text": "per A-23",
+          "reference_type": "references"
+        },
+        {
+          "source_id": "sec-a-27",
+          "target_id": "tbl-b-12",
+          "reference_text": "shall be obtained from Table B-12",
+          "reference_type": "references"
+        },
+        {
+          "source_id": "sec-a-27",
+          "target_id": "fml-a-27-f0",
+          "reference_text": "A-27",
+          "reference_type": "references"
+        }
+      ],
+      "table": null,
+      "formula": null,
+      "metadata": {}
+    },
+    {
+      "element_id": "sec-a-27",
+      "element_type": "section",
+      "paragraph_ref": "A-27",
+      "title": "**A-27(c)(1) — Inside Radius Formula:**",
+      "content": "```\nt=(P×R)/(S×E−0.6×P)\n```\n\nwhere: \n\n- t = minimum required thickness, mm \n\n- P = design pressure, MPa \n\n- R = inside radius of the shell course, mm \n\n- S = maximum allowable stress at design temperature, MPa (see Table M-1) \n\n1 \n\n- E = joint efficiency (see Table B-12) \n\nThis formula applies when: t ≤R/2 AND P ≤0.385 × S × E. When these conditions are not satisfied, the rules of A-27(c)(3) shall be applied (not covered here). ",
+      "page_number": 1,
+      "parent_id": null,
+      "cross_references": [
+        {
+          "source_id": "sec-a-27",
+          "target_id": "tbl-m-1",
+          "reference_text": "see Table M-1",
+          "reference_type": "references"
+        },
+        {
+          "source_id": "sec-a-27",
+          "target_id": "tbl-b-12",
+          "reference_text": "see Table B-12",
+          "reference_type": "references"
+        },
+        {
+          "source_id": "sec-a-27",
+          "target_id": "fml-a-27-f0",
+          "reference_text": "A-27",
+          "reference_type": "references"
+        }
+      ],
+      "table": null,
+      "formula": null,
+      "metadata": {}
+    },
+    {
+      "element_id": "fml-a-27-f0",
+      "element_type": "formula",
+      "paragraph_ref": "A-27",
+      "title": "A-27-f0",
+      "content": "t=(P×R)/(S×E−0.6×P)",
+      "page_number": 1,
+      "parent_id": "sec-a-27",
+      "cross_references": [],
+      "table": null,
+      "formula": {
+        "formula_id": "A-27-f0",
+        "latex": "t = \\frac{P\\times R}{S\\times E-0.6\\times P}",
+        "plain_text": "t=(P×R)/(S×E−0.6×P)",
+        "variables": [
+          {
+            "symbol": "P",
+            "name": "design pressure",
+            "unit": "MPa",
+            "source": "user_input"
+          },
+          {
+            "symbol": "R",
+            "name": "inside radius",
+            "unit": "mm",
+            "source": "derived from inside_diameter/2"
+          },
+          {
+            "symbol": "S",
+            "name": "maximum allowable stress",
+            "unit": "MPa",
+            "source": "Table M-1"
+          },
+          {
+            "symbol": "E",
+            "name": "joint efficiency",
+            "unit": "dimensionless",
+            "source": "Table B-12"
+          },
+          {
+            "symbol": "t",
+            "name": "minimum required thickness",
+            "unit": "mm",
+            "source": "calculated"
+          }
+        ],
+        "applicability_conditions": [
+          "t ≤R/2",
+          "P ≤0.385 × S × E"
+        ],
+        "source_paragraph": "A-27"
+      },
+      "metadata": {}
+    },
+    {
+      "element_id": "sec-a-27",
+      "element_type": "section",
+      "paragraph_ref": "A-27",
+      "title": "**A-27(c)(2) — Outside Radius Formula:**",
+      "content": "```\nt=(P×Ro)/(S×E+0.4×P)\n```\n\nwhere Ro is the outside radius of the shell course. Applicable when P ≤0.385 × S × E. \n\n- (d) Spherical Shells. ",
+      "page_number": 2,
+      "parent_id": null,
+      "cross_references": [],
+      "table": null,
+      "formula": null,
+      "metadata": {}
+    },
+    {
+      "element_id": "fml-a-27-f0",
+      "element_type": "formula",
+      "paragraph_ref": "A-27",
+      "title": "A-27-f0",
+      "content": "t=(P×Ro)/(S×E+0.4×P)",
+      "page_number": 2,
+      "parent_id": "sec-a-27",
+      "cross_references": [],
+      "table": null,
+      "formula": {
+        "formula_id": "A-27-f0",
+        "latex": "t = \\frac{P\\times Ro}{S\\times E+0.4\\times P}",
+        "plain_text": "t=(P×Ro)/(S×E+0.4×P)",
+        "variables": [
+          {
+            "symbol": "Ro",
+            "name": "outside radius",
+            "unit": "mm",
+            "source": "derived from outside_diameter/2"
+          },
+          {
+            "symbol": "P",
+            "name": "design pressure",
+            "unit": "MPa",
+            "source": "user_input"
+          },
+          {
+            "symbol": "S",
+            "name": "maximum allowable stress",
+            "unit": "MPa",
+            "source": "Table M-1"
+          },
+          {
+            "symbol": "E",
+            "name": "joint efficiency",
+            "unit": "dimensionless",
+            "source": "Table B-12"
+          },
+          {
+            "symbol": "t",
+            "name": "minimum required thickness",
+            "unit": "mm",
+            "source": "calculated"
+          }
+        ],
+        "applicability_conditions": [
+          "P ≤0.385 × S × E"
+        ],
+        "source_paragraph": "A-27"
+      },
+      "metadata": {}
+    },
+    {
+      "element_id": "sec-a-27",
+      "element_type": "section",
+      "paragraph_ref": "A-27",
+      "title": "**A-27(d) — Spherical Shell Formula:**",
+      "content": "```\nt=(P×R)/(2×S×E−0.2×P)\n```\n\nApplicable when t ≤0.356 × R AND P ≤0.665 × S × E. ",
+      "page_number": 2,
+      "parent_id": null,
+      "cross_references": [],
+      "table": null,
+      "formula": null,
+      "metadata": {}
+    },
+    {
+      "element_id": "fml-a-27-f0",
+      "element_type": "formula",
+      "paragraph_ref": "A-27",
+      "title": "A-27-f0",
+      "content": "t=(P×R)/(2×S×E−0.2×P)",
+      "page_number": 2,
+      "parent_id": "sec-a-27",
+      "cross_references": [],
+      "table": null,
+      "formula": {
+        "formula_id": "A-27-f0",
+        "latex": "t = \\frac{P\\times R}{2\\times S\\times E-0.2\\times P}",
+        "plain_text": "t=(P×R)/(2×S×E−0.2×P)",
+        "variables": [
+          {
+            "symbol": "P",
+            "name": "design pressure",
+            "unit": "MPa",
+            "source": "user_input"
+          },
+          {
+            "symbol": "R",
+            "name": "inside radius",
+            "unit": "mm",
+            "source": "derived from inside_diameter/2"
+          },
+          {
+            "symbol": "S",
+            "name": "maximum allowable stress",
+            "unit": "MPa",
+            "source": "Table M-1"
+          },
+          {
+            "symbol": "E",
+            "name": "joint efficiency",
+            "unit": "dimensionless",
+            "source": "Table B-12"
+          },
+          {
+            "symbol": "t",
+            "name": "minimum required thickness",
+            "unit": "mm",
+            "source": "calculated"
+          }
+        ],
+        "applicability_conditions": [
+          "t ≤0.356 × R",
+          "P ≤0.665 × S × E"
+        ],
+        "source_paragraph": "A-27"
+      },
+      "metadata": {}
+    },
+    {
+      "element_id": "sec-a-32",
+      "element_type": "section",
+      "paragraph_ref": "A-32",
+      "title": "**A-32 Formed Heads**",
+      "content": "Formed heads (ellipsoidal, torispherical, hemispherical, conical) are covered by this paragraph. For a 2:1 ellipsoidal head: \n\n```\nt=(P×D)/(2×S×E−0.2×P)\n```\n\nwhere D is the inside diameter. The joint efficiency E shall be taken from Table B-12 and the allowable stress S from Table M-1 per A-23. ",
+      "page_number": 2,
+      "parent_id": null,
+      "cross_references": [
+        {
+          "source_id": "sec-a-32",
+          "target_id": "tbl-b-12",
+          "reference_text": "shall be taken from Table B-12",
+          "reference_type": "references"
+        },
+        {
+          "source_id": "sec-a-32",
+          "target_id": "tbl-m-1",
+          "reference_text": "from Table M-1",
+          "reference_type": "references"
+        },
+        {
+          "source_id": "sec-a-32",
+          "target_id": "sec-a-23",
+          "reference_text": "per A-23",
+          "reference_type": "references"
+        }
+      ],
+      "table": null,
+      "formula": null,
+      "metadata": {}
+    },
+    {
+      "element_id": "fml-a-32-f0",
+      "element_type": "formula",
+      "paragraph_ref": "A-32",
+      "title": "A-32-f0",
+      "content": "t=(P×D)/(2×S×E−0.2×P)",
+      "page_number": 2,
+      "parent_id": "sec-a-32",
+      "cross_references": [],
+      "table": null,
+      "formula": {
+        "formula_id": "A-32-f0",
+        "latex": "t = \\frac{P\\times D}{2\\times S\\times E-0.2\\times P}",
+        "plain_text": "t=(P×D)/(2×S×E−0.2×P)",
+        "variables": [
+          {
+            "symbol": "P",
+            "name": "design pressure",
+            "unit": "MPa",
+            "source": "user_input"
+          },
+          {
+            "symbol": "S",
+            "name": "maximum allowable stress",
+            "unit": "MPa",
+            "source": "Table M-1"
+          },
+          {
+            "symbol": "E",
+            "name": "joint efficiency",
+            "unit": "dimensionless",
+            "source": "Table B-12"
+          },
+          {
+            "symbol": "t",
+            "name": "minimum required thickness",
+            "unit": "mm",
+            "source": "calculated"
+          },
+          {
+            "symbol": "D",
+            "name": "inside diameter",
+            "unit": "mm",
+            "source": "user_input"
+          }
+        ],
+        "applicability_conditions": [],
+        "source_paragraph": "A-32"
+      },
+      "metadata": {}
+    },
+    {
+      "element_id": "sec-part-b-welding-requirements",
+      "element_type": "section",
+      "paragraph_ref": null,
+      "title": "**Part B — Welding Requirements**",
+      "content": "",
+      "page_number": 3,
+      "parent_id": null,
+      "cross_references": [],
+      "table": null,
+      "formula": null,
+      "metadata": {}
+    },
+    {
+      "element_id": "sec-b-12",
+      "element_type": "section",
+      "paragraph_ref": "B-12",
+      "title": "**B-12 Joint Efficiency**",
+      "content": "- (a) The joint efficiency E used in the thickness formulas of A-27 and A-32 shall be taken from Table B-12 as a function of the joint type (Types 1 through 6) and the extent of radiographic examination (Full RT, Spot RT, or None). \n\n- (b) Table B-12 — Joint Efficiency Values: \n\n|Joint Type|Description|Full RT|Spot RT|No RT|\n|---|---|---|---|---|\n|1|Double-welded butt, full penetration|1.00|0.85|0.70|\n|2|Single-welded butt with backing strip|0.90|0.80|0.65|\n|3|Single-welded butt without backing|0.80|0.70|0.60|\n|4|Double full-fllet lap|0.75|0.65|0.55|\n|5|Single full-fllet lap with plug welds|0.70|0.60|0.50|\n|6|Single full-fllet lap without plug welds|0.65|0.55|0.45|\n\n\n\n- (c) The radiography level selected shall be consistent with the service conditions and shall be documented. \n\n2 ",
+      "page_number": 3,
+      "parent_id": null,
+      "cross_references": [
+        {
+          "source_id": "sec-b-12",
+          "target_id": "tbl-b-12",
+          "reference_text": "shall be taken from Table B-12",
+          "reference_type": "references"
+        },
+        {
+          "source_id": "sec-b-12",
+          "target_id": "fml-a-27-f0",
+          "reference_text": "A-27",
+          "reference_type": "references"
+        },
+        {
+          "source_id": "sec-b-12",
+          "target_id": "fml-a-32-f0",
+          "reference_text": "A-32",
+          "reference_type": "references"
+        }
+      ],
+      "table": null,
+      "formula": null,
+      "metadata": {}
+    },
+    {
+      "element_id": "tbl-b-12",
+      "element_type": "table",
+      "paragraph_ref": "B-12",
+      "title": "Table B-12",
+      "content": "|Joint Type|Description|Full RT|Spot RT|No RT|\n|---|---|---|---|---|\n|1|Double-welded butt, full penetration|1.00|0.85|0.70|\n|2|Single-welded butt with backing strip|0.90|0.80|0.65|\n|3|Single-welded butt without backing|0.80|0.70|0.60|\n|4|Double full-fllet lap|0.75|0.65|0.55|\n|5|Single full-fllet lap with plug welds|0.70|0.60|0.50|\n|6|Single full-fllet lap without plug welds|0.65|0.55|0.45|",
+      "page_number": 3,
+      "parent_id": "sec-b-12",
+      "cross_references": [],
+      "table": {
+        "table_id": "B-12",
+        "caption": null,
+        "headers": [
+          "Joint Type",
+          "Description",
+          "Full RT",
+          "Spot RT",
+          "No RT"
+        ],
+        "rows": [
+          [
+            {
+              "row": 0,
+              "col": 0,
+              "text": "1",
+              "is_header": false,
+              "spans_rows": 1,
+              "spans_cols": 1
+            },
+            {
+              "row": 0,
+              "col": 1,
+              "text": "Double-welded butt, full penetration",
+              "is_header": false,
+              "spans_rows": 1,
+              "spans_cols": 1
+            },
+            {
+              "row": 0,
+              "col": 2,
+              "text": "1.00",
+              "is_header": false,
+              "spans_rows": 1,
+              "spans_cols": 1
+            },
+            {
+              "row": 0,
+              "col": 3,
+              "text": "0.85",
+              "is_header": false,
+              "spans_rows": 1,
+              "spans_cols": 1
+            },
+            {
+              "row": 0,
+              "col": 4,
+              "text": "0.70",
+              "is_header": false,
+              "spans_rows": 1,
+              "spans_cols": 1
+            }
+          ],
+          [
+            {
+              "row": 1,
+              "col": 0,
+              "text": "2",
+              "is_header": false,
+              "spans_rows": 1,
+              "spans_cols": 1
+            },
+            {
+              "row": 1,
+              "col": 1,
+              "text": "Single-welded butt with backing strip",
+              "is_header": false,
+              "spans_rows": 1,
+              "spans_cols": 1
+            },
+            {
+              "row": 1,
+              "col": 2,
+              "text": "0.90",
+              "is_header": false,
+              "spans_rows": 1,
+              "spans_cols": 1
+            },
+            {
+              "row": 1,
+              "col": 3,
+              "text": "0.80",
+              "is_header": false,
+              "spans_rows": 1,
+              "spans_cols": 1
+            },
+            {
+              "row": 1,
+              "col": 4,
+              "text": "0.65",
+              "is_header": false,
+              "spans_rows": 1,
+              "spans_cols": 1
+            }
+          ],
+          [
+            {
+              "row": 2,
+              "col": 0,
+              "text": "3",
+              "is_header": false,
+              "spans_rows": 1,
+              "spans_cols": 1
+            },
+            {
+              "row": 2,
+              "col": 1,
+              "text": "Single-welded butt without backing",
+              "is_header": false,
+              "spans_rows": 1,
+              "spans_cols": 1
+            },
+            {
+              "row": 2,
+              "col": 2,
+              "text": "0.80",
+              "is_header": false,
+              "spans_rows": 1,
+              "spans_cols": 1
+            },
+            {
+              "row": 2,
+              "col": 3,
+              "text": "0.70",
+              "is_header": false,
+              "spans_rows": 1,
+              "spans_cols": 1
+            },
+            {
+              "row": 2,
+              "col": 4,
+              "text": "0.60",
+              "is_header": false,
+              "spans_rows": 1,
+              "spans_cols": 1
+            }
+          ],
+          [
+            {
+              "row": 3,
+              "col": 0,
+              "text": "4",
+              "is_header": false,
+              "spans_rows": 1,
+              "spans_cols": 1
+            },
+            {
+              "row": 3,
+              "col": 1,
+              "text": "Double full-fllet lap",
+              "is_header": false,
+              "spans_rows": 1,
+              "spans_cols": 1
+            },
+            {
+              "row": 3,
+              "col": 2,
+              "text": "0.75",
+              "is_header": false,
+              "spans_rows": 1,
+              "spans_cols": 1
+            },
+            {
+              "row": 3,
+              "col": 3,
+              "text": "0.65",
+              "is_header": false,
+              "spans_rows": 1,
+              "spans_cols": 1
+            },
+            {
+              "row": 3,
+              "col": 4,
+              "text": "0.55",
+              "is_header": false,
+              "spans_rows": 1,
+              "spans_cols": 1
+            }
+          ],
+          [
+            {
+              "row": 4,
+              "col": 0,
+              "text": "5",
+              "is_header": false,
+              "spans_rows": 1,
+              "spans_cols": 1
+            },
+            {
+              "row": 4,
+              "col": 1,
+              "text": "Single full-fllet lap with plug welds",
+              "is_header": false,
+              "spans_rows": 1,
+              "spans_cols": 1
+            },
+            {
+              "row": 4,
+              "col": 2,
+              "text": "0.70",
+              "is_header": false,
+              "spans_rows": 1,
+              "spans_cols": 1
+            },
+            {
+              "row": 4,
+              "col": 3,
+              "text": "0.60",
+              "is_header": false,
+              "spans_rows": 1,
+              "spans_cols": 1
+            },
+            {
+              "row": 4,
+              "col": 4,
+              "text": "0.50",
+              "is_header": false,
+              "spans_rows": 1,
+              "spans_cols": 1
+            }
+          ],
+          [
+            {
+              "row": 5,
+              "col": 0,
+              "text": "6",
+              "is_header": false,
+              "spans_rows": 1,
+              "spans_cols": 1
+            },
+            {
+              "row": 5,
+              "col": 1,
+              "text": "Single full-fllet lap without plug welds",
+              "is_header": false,
+              "spans_rows": 1,
+              "spans_cols": 1
+            },
+            {
+              "row": 5,
+              "col": 2,
+              "text": "0.65",
+              "is_header": false,
+              "spans_rows": 1,
+              "spans_cols": 1
+            },
+            {
+              "row": 5,
+              "col": 3,
+              "text": "0.55",
+              "is_header": false,
+              "spans_rows": 1,
+              "spans_cols": 1
+            },
+            {
+              "row": 5,
+              "col": 4,
+              "text": "0.45",
+              "is_header": false,
+              "spans_rows": 1,
+              "spans_cols": 1
+            }
+          ]
+        ],
+        "source_page": 3,
+        "source_paragraph": "B-12"
+      },
+      "formula": null,
+      "metadata": {}
+    },
+    {
+      "element_id": "sec-part-m-material-properties",
+      "element_type": "section",
+      "paragraph_ref": null,
+      "title": "**Part M — Material Properties**",
+      "content": "",
+      "page_number": 3,
+      "parent_id": null,
+      "cross_references": [],
+      "table": null,
+      "formula": null,
+      "metadata": {}
+    },
+    {
+      "element_id": "sec-m-1",
+      "element_type": "section",
+      "paragraph_ref": "M-1",
+      "title": "**M-1 Table M-1 — Allowable Stress Values for Carbon and Low-Alloy Steels**",
+      "content": "The following table gives maximum allowable stress values S (MPa) for selected synthetic material specifications at tabulated design temperatures. See A-23 for use. For materials not listed, consult Part M supplementary tables. \n\n|||Product|Product||||||||||\n|---|---|---|---|---|---|---|---|---|---|---|---|---|\n|Spec|Grade|Form|40°C|100°C|150°C|200°C|250°C|300°C|350°C|400°C|450°C|500°C|\n|SM-|Gr|Plate|138|138|138|134|127|121|114|103|73|49|\n|516|70||||||||||||\n|SM-|Gr|Plate|138|138|138|132|124|118|110|98|69|46|\n|515|70||||||||||||\n|SM-|Gr B|Pipe|118|118|118|115|108|102|96|86|61|41|\n|106|||||||||||||\n|SM-|—|Forging138||138|138|133|125|119|112|100|71|47|\n|105|||||||||||||\n|SM-|Type|Plate|137|127|119|113|108|103|100|97|95|93|\n|240|304||||||||||||\n|SM-|Type|Plate|137|137|130|123|117|112|108|105|103|101|\n|240|316||||||||||||",
+      "page_number": 3,
+      "parent_id": null,
+      "cross_references": [
+        {
+          "source_id": "sec-m-1",
+          "target_id": "sec-a-23",
+          "reference_text": "See A-23",
+          "reference_type": "references"
+        }
+      ],
+      "table": null,
+      "formula": null,
+      "metadata": {}
+    },
+    {
+      "element_id": "tbl-m-1",
+      "element_type": "table",
+      "paragraph_ref": "M-1",
+      "title": "Table M-1",
+      "content": "|||Product|Product||||||||||\n|---|---|---|---|---|---|---|---|---|---|---|---|---|\n|Spec|Grade|Form|40°C|100°C|150°C|200°C|250°C|300°C|350°C|400°C|450°C|500°C|\n|SM-|Gr|Plate|138|138|138|134|127|121|114|103|73|49|\n|516|70||||||||||||\n|SM-|Gr|Plate|138|138|138|132|124|118|110|98|69|46|\n|515|70||||||||||||\n|SM-|Gr B|Pipe|118|118|118|115|108|102|96|86|61|41|\n|106|||||||||||||\n|SM-|—|Forging138||138|138|133|125|119|112|100|71|47|\n|105|||||||||||||\n|SM-|Type|Plate|137|127|119|113|108|103|100|97|95|93|\n|240|304||||||||||||\n|SM-|Type|Plate|137|137|130|123|117|112|108|105|103|101|\n|240|316||||||||||||",
+      "page_number": 3,
+      "parent_id": "sec-m-1",
+      "cross_references": [],
+      "table": {
+        "table_id": "M-1",
+        "caption": null,
+        "headers": [
+          "",
+          "",
+          "Product",
+          "Product",
+          "",
+          "",
+          "",
+          "",
+          "",
+          "",
+          "",
+          "",
+          ""
+        ],
+        "rows": [
+          [
+            {
+              "row": 0,
+              "col": 0,
+              "text": "Spec",
+              "is_header": false,
+              "spans_rows": 1,
+              "spans_cols": 1
+            },
+            {
+              "row": 0,
+              "col": 1,
+              "text": "Grade",
+              "is_header": false,
+              "spans_rows": 1,
+              "spans_cols": 1
+            },
+            {
+              "row": 0,
+              "col": 2,
+              "text": "Form",
+              "is_header": false,
+              "spans_rows": 1,
+              "spans_cols": 1
+            },
+            {
+              "row": 0,
+              "col": 3,
+              "text": "40°C",
+              "is_header": false,
+              "spans_rows": 1,
+              "spans_cols": 1
+            },
+            {
+              "row": 0,
+              "col": 4,
+              "text": "100°C",
+              "is_header": false,
+              "spans_rows": 1,
+              "spans_cols": 1
+            },
+            {
+              "row": 0,
+              "col": 5,
+              "text": "150°C",
+              "is_header": false,
+              "spans_rows": 1,
+              "spans_cols": 1
+            },
+            {
+              "row": 0,
+              "col": 6,
+              "text": "200°C",
+              "is_header": false,
+              "spans_rows": 1,
+              "spans_cols": 1
+            },
+            {
+              "row": 0,
+              "col": 7,
+              "text": "250°C",
+              "is_header": false,
+              "spans_rows": 1,
+              "spans_cols": 1
+            },
+            {
+              "row": 0,
+              "col": 8,
+              "text": "300°C",
+              "is_header": false,
+              "spans_rows": 1,
+              "spans_cols": 1
+            },
+            {
+              "row": 0,
+              "col": 9,
+              "text": "350°C",
+              "is_header": false,
+              "spans_rows": 1,
+              "spans_cols": 1
+            },
+            {
+              "row": 0,
+              "col": 10,
+              "text": "400°C",
+              "is_header": false,
+              "spans_rows": 1,
+              "spans_cols": 1
+            },
+            {
+              "row": 0,
+              "col": 11,
+              "text": "450°C",
+              "is_header": false,
+              "spans_rows": 1,
+              "spans_cols": 1
+            },
+            {
+              "row": 0,
+              "col": 12,
+              "text": "500°C",
+              "is_header": false,
+              "spans_rows": 1,
+              "spans_cols": 1
+            }
+          ],
+          [
+            {
+              "row": 1,
+              "col": 0,
+              "text": "SM-",
+              "is_header": false,
+              "spans_rows": 1,
+              "spans_cols": 1
+            },
+            {
+              "row": 1,
+              "col": 1,
+              "text": "Gr",
+              "is_header": false,
+              "spans_rows": 1,
+              "spans_cols": 1
+            },
+            {
+              "row": 1,
+              "col": 2,
+              "text": "Plate",
+              "is_header": false,
+              "spans_rows": 1,
+              "spans_cols": 1
+            },
+            {
+              "row": 1,
+              "col": 3,
+              "text": "138",
+              "is_header": false,
+              "spans_rows": 1,
+              "spans_cols": 1
+            },
+            {
+              "row": 1,
+              "col": 4,
+              "text": "138",
+              "is_header": false,
+              "spans_rows": 1,
+              "spans_cols": 1
+            },
+            {
+              "row": 1,
+              "col": 5,
+              "text": "138",
+              "is_header": false,
+              "spans_rows": 1,
+              "spans_cols": 1
+            },
+            {
+              "row": 1,
+              "col": 6,
+              "text": "134",
+              "is_header": false,
+              "spans_rows": 1,
+              "spans_cols": 1
+            },
+            {
+              "row": 1,
+              "col": 7,
+              "text": "127",
+              "is_header": false,
+              "spans_rows": 1,
+              "spans_cols": 1
+            },
+            {
+              "row": 1,
+              "col": 8,
+              "text": "121",
+              "is_header": false,
+              "spans_rows": 1,
+              "spans_cols": 1
+            },
+            {
+              "row": 1,
+              "col": 9,
+              "text": "114",
+              "is_header": false,
+              "spans_rows": 1,
+              "spans_cols": 1
+            },
+            {
+              "row": 1,
+              "col": 10,
+              "text": "103",
+              "is_header": false,
+              "spans_rows": 1,
+              "spans_cols": 1
+            },
+            {
+              "row": 1,
+              "col": 11,
+              "text": "73",
+              "is_header": false,
+              "spans_rows": 1,
+              "spans_cols": 1
+            },
+            {
+              "row": 1,
+              "col": 12,
+              "text": "49",
+              "is_header": false,
+              "spans_rows": 1,
+              "spans_cols": 1
+            }
+          ],
+          [
+            {
+              "row": 2,
+              "col": 0,
+              "text": "516",
+              "is_header": false,
+              "spans_rows": 1,
+              "spans_cols": 1
+            },
+            {
+              "row": 2,
+              "col": 1,
+              "text": "70",
+              "is_header": false,
+              "spans_rows": 1,
+              "spans_cols": 1
+            },
+            {
+              "row": 2,
+              "col": 2,
+              "text": "",
+              "is_header": false,
+              "spans_rows": 1,
+              "spans_cols": 1
+            },
+            {
+              "row": 2,
+              "col": 3,
+              "text": "",
+              "is_header": false,
+              "spans_rows": 1,
+              "spans_cols": 1
+            },
+            {
+              "row": 2,
+              "col": 4,
+              "text": "",
+              "is_header": false,
+              "spans_rows": 1,
+              "spans_cols": 1
+            },
+            {
+              "row": 2,
+              "col": 5,
+              "text": "",
+              "is_header": false,
+              "spans_rows": 1,
+              "spans_cols": 1
+            },
+            {
+              "row": 2,
+              "col": 6,
+              "text": "",
+              "is_header": false,
+              "spans_rows": 1,
+              "spans_cols": 1
+            },
+            {
+              "row": 2,
+              "col": 7,
+              "text": "",
+              "is_header": false,
+              "spans_rows": 1,
+              "spans_cols": 1
+            },
+            {
+              "row": 2,
+              "col": 8,
+              "text": "",
+              "is_header": false,
+              "spans_rows": 1,
+              "spans_cols": 1
+            },
+            {
+              "row": 2,
+              "col": 9,
+              "text": "",
+              "is_header": false,
+              "spans_rows": 1,
+              "spans_cols": 1
+            },
+            {
+              "row": 2,
+              "col": 10,
+              "text": "",
+              "is_header": false,
+              "spans_rows": 1,
+              "spans_cols": 1
+            },
+            {
+              "row": 2,
+              "col": 11,
+              "text": "",
+              "is_header": false,
+              "spans_rows": 1,
+              "spans_cols": 1
+            },
+            {
+              "row": 2,
+              "col": 12,
+              "text": "",
+              "is_header": false,
+              "spans_rows": 1,
+              "spans_cols": 1
+            }
+          ],
+          [
+            {
+              "row": 3,
+              "col": 0,
+              "text": "SM-",
+              "is_header": false,
+              "spans_rows": 1,
+              "spans_cols": 1
+            },
+            {
+              "row": 3,
+              "col": 1,
+              "text": "Gr",
+              "is_header": false,
+              "spans_rows": 1,
+              "spans_cols": 1
+            },
+            {
+              "row": 3,
+              "col": 2,
+              "text": "Plate",
+              "is_header": false,
+              "spans_rows": 1,
+              "spans_cols": 1
+            },
+            {
+              "row": 3,
+              "col": 3,
+              "text": "138",
+              "is_header": false,
+              "spans_rows": 1,
+              "spans_cols": 1
+            },
+            {
+              "row": 3,
+              "col": 4,
+              "text": "138",
+              "is_header": false,
+              "spans_rows": 1,
+              "spans_cols": 1
+            },
+            {
+              "row": 3,
+              "col": 5,
+              "text": "138",
+              "is_header": false,
+              "spans_rows": 1,
+              "spans_cols": 1
+            },
+            {
+              "row": 3,
+              "col": 6,
+              "text": "132",
+              "is_header": false,
+              "spans_rows": 1,
+              "spans_cols": 1
+            },
+            {
+              "row": 3,
+              "col": 7,
+              "text": "124",
+              "is_header": false,
+              "spans_rows": 1,
+              "spans_cols": 1
+            },
+            {
+              "row": 3,
+              "col": 8,
+              "text": "118",
+              "is_header": false,
+              "spans_rows": 1,
+              "spans_cols": 1
+            },
+            {
+              "row": 3,
+              "col": 9,
+              "text": "110",
+              "is_header": false,
+              "spans_rows": 1,
+              "spans_cols": 1
+            },
+            {
+              "row": 3,
+              "col": 10,
+              "text": "98",
+              "is_header": false,
+              "spans_rows": 1,
+              "spans_cols": 1
+            },
+            {
+              "row": 3,
+              "col": 11,
+              "text": "69",
+              "is_header": false,
+              "spans_rows": 1,
+              "spans_cols": 1
+            },
+            {
+              "row": 3,
+              "col": 12,
+              "text": "46",
+              "is_header": false,
+              "spans_rows": 1,
+              "spans_cols": 1
+            }
+          ],
+          [
+            {
+              "row": 4,
+              "col": 0,
+              "text": "515",
+              "is_header": false,
+              "spans_rows": 1,
+              "spans_cols": 1
+            },
+            {
+              "row": 4,
+              "col": 1,
+              "text": "70",
+              "is_header": false,
+              "spans_rows": 1,
+              "spans_cols": 1
+            },
+            {
+              "row": 4,
+              "col": 2,
+              "text": "",
+              "is_header": false,
+              "spans_rows": 1,
+              "spans_cols": 1
+            },
+            {
+              "row": 4,
+              "col": 3,
+              "text": "",
+              "is_header": false,
+              "spans_rows": 1,
+              "spans_cols": 1
+            },
+            {
+              "row": 4,
+              "col": 4,
+              "text": "",
+              "is_header": false,
+              "spans_rows": 1,
+              "spans_cols": 1
+            },
+            {
+              "row": 4,
+              "col": 5,
+              "text": "",
+              "is_header": false,
+              "spans_rows": 1,
+              "spans_cols": 1
+            },
+            {
+              "row": 4,
+              "col": 6,
+              "text": "",
+              "is_header": false,
+              "spans_rows": 1,
+              "spans_cols": 1
+            },
+            {
+              "row": 4,
+              "col": 7,
+              "text": "",
+              "is_header": false,
+              "spans_rows": 1,
+              "spans_cols": 1
+            },
+            {
+              "row": 4,
+              "col": 8,
+              "text": "",
+              "is_header": false,
+              "spans_rows": 1,
+              "spans_cols": 1
+            },
+            {
+              "row": 4,
+              "col": 9,
+              "text": "",
+              "is_header": false,
+              "spans_rows": 1,
+              "spans_cols": 1
+            },
+            {
+              "row": 4,
+              "col": 10,
+              "text": "",
+              "is_header": false,
+              "spans_rows": 1,
+              "spans_cols": 1
+            },
+            {
+              "row": 4,
+              "col": 11,
+              "text": "",
+              "is_header": false,
+              "spans_rows": 1,
+              "spans_cols": 1
+            },
+            {
+              "row": 4,
+              "col": 12,
+              "text": "",
+              "is_header": false,
+              "spans_rows": 1,
+              "spans_cols": 1
+            }
+          ],
+          [
+            {
+              "row": 5,
+              "col": 0,
+              "text": "SM-",
+              "is_header": false,
+              "spans_rows": 1,
+              "spans_cols": 1
+            },
+            {
+              "row": 5,
+              "col": 1,
+              "text": "Gr B",
+              "is_header": false,
+              "spans_rows": 1,
+              "spans_cols": 1
+            },
+            {
+              "row": 5,
+              "col": 2,
+              "text": "Pipe",
+              "is_header": false,
+              "spans_rows": 1,
+              "spans_cols": 1
+            },
+            {
+              "row": 5,
+              "col": 3,
+              "text": "118",
+              "is_header": false,
+              "spans_rows": 1,
+              "spans_cols": 1
+            },
+            {
+              "row": 5,
+              "col": 4,
+              "text": "118",
+              "is_header": false,
+              "spans_rows": 1,
+              "spans_cols": 1
+            },
+            {
+              "row": 5,
+              "col": 5,
+              "text": "118",
+              "is_header": false,
+              "spans_rows": 1,
+              "spans_cols": 1
+            },
+            {
+              "row": 5,
+              "col": 6,
+              "text": "115",
+              "is_header": false,
+              "spans_rows": 1,
+              "spans_cols": 1
+            },
+            {
+              "row": 5,
+              "col": 7,
+              "text": "108",
+              "is_header": false,
+              "spans_rows": 1,
+              "spans_cols": 1
+            },
+            {
+              "row": 5,
+              "col": 8,
+              "text": "102",
+              "is_header": false,
+              "spans_rows": 1,
+              "spans_cols": 1
+            },
+            {
+              "row": 5,
+              "col": 9,
+              "text": "96",
+              "is_header": false,
+              "spans_rows": 1,
+              "spans_cols": 1
+            },
+            {
+              "row": 5,
+              "col": 10,
+              "text": "86",
+              "is_header": false,
+              "spans_rows": 1,
+              "spans_cols": 1
+            },
+            {
+              "row": 5,
+              "col": 11,
+              "text": "61",
+              "is_header": false,
+              "spans_rows": 1,
+              "spans_cols": 1
+            },
+            {
+              "row": 5,
+              "col": 12,
+              "text": "41",
+              "is_header": false,
+              "spans_rows": 1,
+              "spans_cols": 1
+            }
+          ],
+          [
+            {
+              "row": 6,
+              "col": 0,
+              "text": "106",
+              "is_header": false,
+              "spans_rows": 1,
+              "spans_cols": 1
+            },
+            {
+              "row": 6,
+              "col": 1,
+              "text": "",
+              "is_header": false,
+              "spans_rows": 1,
+              "spans_cols": 1
+            },
+            {
+              "row": 6,
+              "col": 2,
+              "text": "",
+              "is_header": false,
+              "spans_rows": 1,
+              "spans_cols": 1
+            },
+            {
+              "row": 6,
+              "col": 3,
+              "text": "",
+              "is_header": false,
+              "spans_rows": 1,
+              "spans_cols": 1
+            },
+            {
+              "row": 6,
+              "col": 4,
+              "text": "",
+              "is_header": false,
+              "spans_rows": 1,
+              "spans_cols": 1
+            },
+            {
+              "row": 6,
+              "col": 5,
+              "text": "",
+              "is_header": false,
+              "spans_rows": 1,
+              "spans_cols": 1
+            },
+            {
+              "row": 6,
+              "col": 6,
+              "text": "",
+              "is_header": false,
+              "spans_rows": 1,
+              "spans_cols": 1
+            },
+            {
+              "row": 6,
+              "col": 7,
+              "text": "",
+              "is_header": false,
+              "spans_rows": 1,
+              "spans_cols": 1
+            },
+            {
+              "row": 6,
+              "col": 8,
+              "text": "",
+              "is_header": false,
+              "spans_rows": 1,
+              "spans_cols": 1
+            },
+            {
+              "row": 6,
+              "col": 9,
+              "text": "",
+              "is_header": false,
+              "spans_rows": 1,
+              "spans_cols": 1
+            },
+            {
+              "row": 6,
+              "col": 10,
+              "text": "",
+              "is_header": false,
+              "spans_rows": 1,
+              "spans_cols": 1
+            },
+            {
+              "row": 6,
+              "col": 11,
+              "text": "",
+              "is_header": false,
+              "spans_rows": 1,
+              "spans_cols": 1
+            },
+            {
+              "row": 6,
+              "col": 12,
+              "text": "",
+              "is_header": false,
+              "spans_rows": 1,
+              "spans_cols": 1
+            }
+          ],
+          [
+            {
+              "row": 7,
+              "col": 0,
+              "text": "SM-",
+              "is_header": false,
+              "spans_rows": 1,
+              "spans_cols": 1
+            },
+            {
+              "row": 7,
+              "col": 1,
+              "text": "—",
+              "is_header": false,
+              "spans_rows": 1,
+              "spans_cols": 1
+            },
+            {
+              "row": 7,
+              "col": 2,
+              "text": "Forging138",
+              "is_header": false,
+              "spans_rows": 1,
+              "spans_cols": 1
+            },
+            {
+              "row": 7,
+              "col": 3,
+              "text": "",
+              "is_header": false,
+              "spans_rows": 1,
+              "spans_cols": 1
+            },
+            {
+              "row": 7,
+              "col": 4,
+              "text": "138",
+              "is_header": false,
+              "spans_rows": 1,
+              "spans_cols": 1
+            },
+            {
+              "row": 7,
+              "col": 5,
+              "text": "138",
+              "is_header": false,
+              "spans_rows": 1,
+              "spans_cols": 1
+            },
+            {
+              "row": 7,
+              "col": 6,
+              "text": "133",
+              "is_header": false,
+              "spans_rows": 1,
+              "spans_cols": 1
+            },
+            {
+              "row": 7,
+              "col": 7,
+              "text": "125",
+              "is_header": false,
+              "spans_rows": 1,
+              "spans_cols": 1
+            },
+            {
+              "row": 7,
+              "col": 8,
+              "text": "119",
+              "is_header": false,
+              "spans_rows": 1,
+              "spans_cols": 1
+            },
+            {
+              "row": 7,
+              "col": 9,
+              "text": "112",
+              "is_header": false,
+              "spans_rows": 1,
+              "spans_cols": 1
+            },
+            {
+              "row": 7,
+              "col": 10,
+              "text": "100",
+              "is_header": false,
+              "spans_rows": 1,
+              "spans_cols": 1
+            },
+            {
+              "row": 7,
+              "col": 11,
+              "text": "71",
+              "is_header": false,
+              "spans_rows": 1,
+              "spans_cols": 1
+            },
+            {
+              "row": 7,
+              "col": 12,
+              "text": "47",
+              "is_header": false,
+              "spans_rows": 1,
+              "spans_cols": 1
+            }
+          ],
+          [
+            {
+              "row": 8,
+              "col": 0,
+              "text": "105",
+              "is_header": false,
+              "spans_rows": 1,
+              "spans_cols": 1
+            },
+            {
+              "row": 8,
+              "col": 1,
+              "text": "",
+              "is_header": false,
+              "spans_rows": 1,
+              "spans_cols": 1
+            },
+            {
+              "row": 8,
+              "col": 2,
+              "text": "",
+              "is_header": false,
+              "spans_rows": 1,
+              "spans_cols": 1
+            },
+            {
+              "row": 8,
+              "col": 3,
+              "text": "",
+              "is_header": false,
+              "spans_rows": 1,
+              "spans_cols": 1
+            },
+            {
+              "row": 8,
+              "col": 4,
+              "text": "",
+              "is_header": false,
+              "spans_rows": 1,
+              "spans_cols": 1
+            },
+            {
+              "row": 8,
+              "col": 5,
+              "text": "",
+              "is_header": false,
+              "spans_rows": 1,
+              "spans_cols": 1
+            },
+            {
+              "row": 8,
+              "col": 6,
+              "text": "",
+              "is_header": false,
+              "spans_rows": 1,
+              "spans_cols": 1
+            },
+            {
+              "row": 8,
+              "col": 7,
+              "text": "",
+              "is_header": false,
+              "spans_rows": 1,
+              "spans_cols": 1
+            },
+            {
+              "row": 8,
+              "col": 8,
+              "text": "",
+              "is_header": false,
+              "spans_rows": 1,
+              "spans_cols": 1
+            },
+            {
+              "row": 8,
+              "col": 9,
+              "text": "",
+              "is_header": false,
+              "spans_rows": 1,
+              "spans_cols": 1
+            },
+            {
+              "row": 8,
+              "col": 10,
+              "text": "",
+              "is_header": false,
+              "spans_rows": 1,
+              "spans_cols": 1
+            },
+            {
+              "row": 8,
+              "col": 11,
+              "text": "",
+              "is_header": false,
+              "spans_rows": 1,
+              "spans_cols": 1
+            },
+            {
+              "row": 8,
+              "col": 12,
+              "text": "",
+              "is_header": false,
+              "spans_rows": 1,
+              "spans_cols": 1
+            }
+          ],
+          [
+            {
+              "row": 9,
+              "col": 0,
+              "text": "SM-",
+              "is_header": false,
+              "spans_rows": 1,
+              "spans_cols": 1
+            },
+            {
+              "row": 9,
+              "col": 1,
+              "text": "Type",
+              "is_header": false,
+              "spans_rows": 1,
+              "spans_cols": 1
+            },
+            {
+              "row": 9,
+              "col": 2,
+              "text": "Plate",
+              "is_header": false,
+              "spans_rows": 1,
+              "spans_cols": 1
+            },
+            {
+              "row": 9,
+              "col": 3,
+              "text": "137",
+              "is_header": false,
+              "spans_rows": 1,
+              "spans_cols": 1
+            },
+            {
+              "row": 9,
+              "col": 4,
+              "text": "127",
+              "is_header": false,
+              "spans_rows": 1,
+              "spans_cols": 1
+            },
+            {
+              "row": 9,
+              "col": 5,
+              "text": "119",
+              "is_header": false,
+              "spans_rows": 1,
+              "spans_cols": 1
+            },
+            {
+              "row": 9,
+              "col": 6,
+              "text": "113",
+              "is_header": false,
+              "spans_rows": 1,
+              "spans_cols": 1
+            },
+            {
+              "row": 9,
+              "col": 7,
+              "text": "108",
+              "is_header": false,
+              "spans_rows": 1,
+              "spans_cols": 1
+            },
+            {
+              "row": 9,
+              "col": 8,
+              "text": "103",
+              "is_header": false,
+              "spans_rows": 1,
+              "spans_cols": 1
+            },
+            {
+              "row": 9,
+              "col": 9,
+              "text": "100",
+              "is_header": false,
+              "spans_rows": 1,
+              "spans_cols": 1
+            },
+            {
+              "row": 9,
+              "col": 10,
+              "text": "97",
+              "is_header": false,
+              "spans_rows": 1,
+              "spans_cols": 1
+            },
+            {
+              "row": 9,
+              "col": 11,
+              "text": "95",
+              "is_header": false,
+              "spans_rows": 1,
+              "spans_cols": 1
+            },
+            {
+              "row": 9,
+              "col": 12,
+              "text": "93",
+              "is_header": false,
+              "spans_rows": 1,
+              "spans_cols": 1
+            }
+          ],
+          [
+            {
+              "row": 10,
+              "col": 0,
+              "text": "240",
+              "is_header": false,
+              "spans_rows": 1,
+              "spans_cols": 1
+            },
+            {
+              "row": 10,
+              "col": 1,
+              "text": "304",
+              "is_header": false,
+              "spans_rows": 1,
+              "spans_cols": 1
+            },
+            {
+              "row": 10,
+              "col": 2,
+              "text": "",
+              "is_header": false,
+              "spans_rows": 1,
+              "spans_cols": 1
+            },
+            {
+              "row": 10,
+              "col": 3,
+              "text": "",
+              "is_header": false,
+              "spans_rows": 1,
+              "spans_cols": 1
+            },
+            {
+              "row": 10,
+              "col": 4,
+              "text": "",
+              "is_header": false,
+              "spans_rows": 1,
+              "spans_cols": 1
+            },
+            {
+              "row": 10,
+              "col": 5,
+              "text": "",
+              "is_header": false,
+              "spans_rows": 1,
+              "spans_cols": 1
+            },
+            {
+              "row": 10,
+              "col": 6,
+              "text": "",
+              "is_header": false,
+              "spans_rows": 1,
+              "spans_cols": 1
+            },
+            {
+              "row": 10,
+              "col": 7,
+              "text": "",
+              "is_header": false,
+              "spans_rows": 1,
+              "spans_cols": 1
+            },
+            {
+              "row": 10,
+              "col": 8,
+              "text": "",
+              "is_header": false,
+              "spans_rows": 1,
+              "spans_cols": 1
+            },
+            {
+              "row": 10,
+              "col": 9,
+              "text": "",
+              "is_header": false,
+              "spans_rows": 1,
+              "spans_cols": 1
+            },
+            {
+              "row": 10,
+              "col": 10,
+              "text": "",
+              "is_header": false,
+              "spans_rows": 1,
+              "spans_cols": 1
+            },
+            {
+              "row": 10,
+              "col": 11,
+              "text": "",
+              "is_header": false,
+              "spans_rows": 1,
+              "spans_cols": 1
+            },
+            {
+              "row": 10,
+              "col": 12,
+              "text": "",
+              "is_header": false,
+              "spans_rows": 1,
+              "spans_cols": 1
+            }
+          ],
+          [
+            {
+              "row": 11,
+              "col": 0,
+              "text": "SM-",
+              "is_header": false,
+              "spans_rows": 1,
+              "spans_cols": 1
+            },
+            {
+              "row": 11,
+              "col": 1,
+              "text": "Type",
+              "is_header": false,
+              "spans_rows": 1,
+              "spans_cols": 1
+            },
+            {
+              "row": 11,
+              "col": 2,
+              "text": "Plate",
+              "is_header": false,
+              "spans_rows": 1,
+              "spans_cols": 1
+            },
+            {
+              "row": 11,
+              "col": 3,
+              "text": "137",
+              "is_header": false,
+              "spans_rows": 1,
+              "spans_cols": 1
+            },
+            {
+              "row": 11,
+              "col": 4,
+              "text": "137",
+              "is_header": false,
+              "spans_rows": 1,
+              "spans_cols": 1
+            },
+            {
+              "row": 11,
+              "col": 5,
+              "text": "130",
+              "is_header": false,
+              "spans_rows": 1,
+              "spans_cols": 1
+            },
+            {
+              "row": 11,
+              "col": 6,
+              "text": "123",
+              "is_header": false,
+              "spans_rows": 1,
+              "spans_cols": 1
+            },
+            {
+              "row": 11,
+              "col": 7,
+              "text": "117",
+              "is_header": false,
+              "spans_rows": 1,
+              "spans_cols": 1
+            },
+            {
+              "row": 11,
+              "col": 8,
+              "text": "112",
+              "is_header": false,
+              "spans_rows": 1,
+              "spans_cols": 1
+            },
+            {
+              "row": 11,
+              "col": 9,
+              "text": "108",
+              "is_header": false,
+              "spans_rows": 1,
+              "spans_cols": 1
+            },
+            {
+              "row": 11,
+              "col": 10,
+              "text": "105",
+              "is_header": false,
+              "spans_rows": 1,
+              "spans_cols": 1
+            },
+            {
+              "row": 11,
+              "col": 11,
+              "text": "103",
+              "is_header": false,
+              "spans_rows": 1,
+              "spans_cols": 1
+            },
+            {
+              "row": 11,
+              "col": 12,
+              "text": "101",
+              "is_header": false,
+              "spans_rows": 1,
+              "spans_cols": 1
+            }
+          ],
+          [
+            {
+              "row": 12,
+              "col": 0,
+              "text": "240",
+              "is_header": false,
+              "spans_rows": 1,
+              "spans_cols": 1
+            },
+            {
+              "row": 12,
+              "col": 1,
+              "text": "316",
+              "is_header": false,
+              "spans_rows": 1,
+              "spans_cols": 1
+            },
+            {
+              "row": 12,
+              "col": 2,
+              "text": "",
+              "is_header": false,
+              "spans_rows": 1,
+              "spans_cols": 1
+            },
+            {
+              "row": 12,
+              "col": 3,
+              "text": "",
+              "is_header": false,
+              "spans_rows": 1,
+              "spans_cols": 1
+            },
+            {
+              "row": 12,
+              "col": 4,
+              "text": "",
+              "is_header": false,
+              "spans_rows": 1,
+              "spans_cols": 1
+            },
+            {
+              "row": 12,
+              "col": 5,
+              "text": "",
+              "is_header": false,
+              "spans_rows": 1,
+              "spans_cols": 1
+            },
+            {
+              "row": 12,
+              "col": 6,
+              "text": "",
+              "is_header": false,
+              "spans_rows": 1,
+              "spans_cols": 1
+            },
+            {
+              "row": 12,
+              "col": 7,
+              "text": "",
+              "is_header": false,
+              "spans_rows": 1,
+              "spans_cols": 1
+            },
+            {
+              "row": 12,
+              "col": 8,
+              "text": "",
+              "is_header": false,
+              "spans_rows": 1,
+              "spans_cols": 1
+            },
+            {
+              "row": 12,
+              "col": 9,
+              "text": "",
+              "is_header": false,
+              "spans_rows": 1,
+              "spans_cols": 1
+            },
+            {
+              "row": 12,
+              "col": 10,
+              "text": "",
+              "is_header": false,
+              "spans_rows": 1,
+              "spans_cols": 1
+            },
+            {
+              "row": 12,
+              "col": 11,
+              "text": "",
+              "is_header": false,
+              "spans_rows": 1,
+              "spans_cols": 1
+            },
+            {
+              "row": 12,
+              "col": 12,
+              "text": "",
+              "is_header": false,
+              "spans_rows": 1,
+              "spans_cols": 1
+            }
+          ]
+        ],
+        "source_page": 3,
+        "source_paragraph": "M-1"
+      },
+      "formula": null,
+      "metadata": {}
+    },
+    {
+      "element_id": "sec-m-23",
+      "element_type": "section",
+      "paragraph_ref": "M-23",
+      "title": "**M-23 Material Restrictions**",
+      "content": "- (a) SM-516 Gr 70 shall not be used at design temperatures exceeding 500°C. \n\n- (b) SM-106 Gr B shall not be used at design temperatures exceeding 500°C and is not permitted for cyclic service above 400°C without additional analysis. ",
+      "page_number": 4,
+      "parent_id": null,
+      "cross_references": [],
+      "table": null,
+      "formula": null,
+      "metadata": {}
+    },
+    {
+      "element_id": "sec-appendix-worked-example-informative",
+      "element_type": "section",
+      "paragraph_ref": null,
+      "title": "**Appendix — Worked Example (Informative)**",
+      "content": "For a cylindrical shell with P = 1.5 MPa, inside diameter 1800 mm, design temperature 350°C, material SM-516 Gr 70, Type 1 joint with full RT, and 3.0 mm corrosion allowance, the minimum required thickness per A-27(c)(1) is computed using S = 114 MPa (Table M-1) and E = 1.00 (Table B- 12). After adding corrosion allowance and rounding to the next standard plate, the design thickness is selected. \n\n3 ",
+      "page_number": 4,
+      "parent_id": null,
+      "cross_references": [
+        {
+          "source_id": "sec-appendix-worked-example-informative",
+          "target_id": "tbl-m-1",
+          "reference_text": "Table M-1",
+          "reference_type": "requires"
+        },
+        {
+          "source_id": "sec-appendix-worked-example-informative",
+          "target_id": "fml-a-27-f0",
+          "reference_text": "A-27",
+          "reference_type": "references"
+        }
+      ],
+      "table": null,
+      "formula": null,
+      "metadata": {}
+    }
+  ],
+  "latency_ms": 398.3047500369139,
+  "cost_usd": null,
+  "pdf_mtime": 1777119299.3672104
+}

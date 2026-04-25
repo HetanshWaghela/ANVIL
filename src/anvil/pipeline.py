@@ -8,7 +8,7 @@ from pathlib import Path
 from anvil.evaluation.ablation import ABLATIONS, PipelineAblation
 from anvil.generation.calculation_engine import CalculationEngine, CitationBuilder
 from anvil.generation.generator import AnvilGenerator
-from anvil.generation.llm_backend import FakeLLMBackend, LLMBackend
+from anvil.generation.llm_backend import LLMBackend, get_default_backend
 from anvil.knowledge.graph_builder import build_graph
 from anvil.knowledge.graph_store import GraphStore
 from anvil.parsing.markdown_parser import parse_markdown_standard
@@ -40,7 +40,11 @@ def build_pipeline(
 
     Defaults:
         - `standard_path` → data/synthetic/standard.md
-        - `backend`       → FakeLLMBackend (deterministic, no network)
+        - `backend`       → resolved by `get_default_backend()` —
+                            honors `ANVIL_LLM_BACKEND` env var; falls
+                            back to FakeLLMBackend with a loud WARNING
+                            so prod deploys that forgot to set the env
+                            see it immediately.
         - `embedder`      → selected by ANVIL_EMBEDDER env var (default: hash)
         - `ablation`      → "baseline" (full hybrid + pinned + gates ON)
 
@@ -86,7 +90,7 @@ def build_pipeline(
     )
     generator = AnvilGenerator(
         retriever=retriever,
-        backend=backend or FakeLLMBackend(),
+        backend=backend if backend is not None else get_default_backend(),
         calc_engine=calc_engine,
         # Same parsed elements as the citation builder — gives the
         # citation enforcer the ability to validate canonical-ref

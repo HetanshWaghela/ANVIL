@@ -265,3 +265,46 @@ constant declaration for `_REQUIRED_REFS_FOR_CALC`, a renamed
 **Rationale.** `--strict` is a load-bearing safety net for a
 compliance-grade codebase. Loosening it would have hidden the very
 class of bugs the project exists to surface.
+
+---
+
+## ADR-011 · NIM catalog refresh 2026-04-25
+
+**Context.** When the live NIM key was wired in, `anvil nim-check`
+revealed two stale models in the locked `NIM_MODELS` catalog:
+
+* `deepseek-ai/deepseek-v3.1` — `410 Gone` (EOL'd on 2026-04-15 per
+  the response body).
+* `nvidia/llama-3.1-nemotron-70b-instruct` — `404 Not Found` (the
+  function id rotated out of the hosted free-tier catalog).
+
+**Options considered.**
+
+1. Keep the stale entries and document them as "expected to fail" —
+   keeps git history clean, but lies to every reviewer running
+   `anvil nim-check`.
+2. Refresh the catalog using live probes against `/v1/models`,
+   picking three currently-hosted models that span three different
+   model families.
+
+**Chosen.** Option 2. Live-probed seven candidates; picked the three
+with low latency:
+
+* `meta/llama-3.3-70b-instruct` (kept) — Meta family, strong general
+  instruction-follower. Probe ~0.3 s.
+* `nvidia/llama-3.3-nemotron-super-49b-v1.5` (replaces nemotron-70b) —
+  current NVIDIA-RLHF line, reasoning-capable, same RLHF lineage as
+  the original. Probe ~0.6 s.
+* `openai/gpt-oss-120b` (replaces deepseek-v3.1) — OpenAI's
+  open-weight 120b on NIM. Lowest probe latency of the candidates and
+  gives the table cross-family coverage (Meta / NVIDIA / OpenAI)
+  rather than three flavors of one family. Probe ~0.3 s.
+
+**Rationale.** The drift-detection wiring (`anvil nim-check --list`)
+caught both stale entries within minutes of the first real probe —
+exactly the failure mode that motivated building the drift detector
+in the first place. The refresh is recorded here, in the catalog
+docstring, in `.env.example`, in `docs/nim_integration.md`, and in
+the locked test in `tests/unit/test_nim_health.py` so a reviewer can
+trace the swap end-to-end. The live probe + drift report run takes
+< 5 s and is the recommended check before each ablation matrix.

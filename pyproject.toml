@@ -20,6 +20,7 @@ dependencies = [
     "openai>=1.50",
     "bm25s>=0.2.0",
     "numpy>=1.26",
+    "pdfplumber>=0.11",
 ]
 
 [project.optional-dependencies]
@@ -82,10 +83,12 @@ mypy_path = "src"
 [[tool.mypy.overrides]]
 module = [
     "pymupdf4llm.*",
+    "pymupdf.*",
     "sqlite_vec.*",
     "bm25s.*",
     "instructor.*",
     "sentence_transformers.*",
     "networkx.*",
+    "pdfplumber.*",
 ]
 ignore_missing_imports = true

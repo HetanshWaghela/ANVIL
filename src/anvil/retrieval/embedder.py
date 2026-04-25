@@ -3,7 +3,7 @@
 Two implementations are provided:
 
 1. `SentenceTransformerEmbedder` — the production backend. Requires a one-time
-   model download (~22MB for MiniLM).
+   model download (~130MB for BAAI/bge-small-en-v1.5 by default).
 2. `DeterministicHashEmbedder` — a hash-based embedder with no dependencies.
    Used in tests and in environments without model downloads available. Its
    embeddings are deterministic and roughly lexically-sensitive (token hashing
@@ -13,6 +13,8 @@ Two implementations are provided:
 Select between them via the `ANVIL_EMBEDDER` env variable
 (`sentence_transformer` | `hash`). The default is `hash` for reproducibility
 in CI — production code should set `ANVIL_EMBEDDER=sentence_transformer`.
+The sentence-transformer model and cache directory are configured with
+`ANVIL_ST_MODEL` and `ANVIL_ST_CACHE_DIR`, matching `.env.example`.
 """
 
 from __future__ import annotations
@@ -136,9 +138,17 @@ def get_default_embedder() -> Embedder:
     log = get_logger(__name__)
     choice = os.environ.get("ANVIL_EMBEDDER", "hash").lower().strip()
     if choice == "sentence_transformer":
-        model_name = os.environ.get("ANVIL_EMBEDDER_MODEL", "all-MiniLM-L6-v2")
+        model_name = os.environ.get(
+            "ANVIL_ST_MODEL",
+            os.environ.get("ANVIL_EMBEDDER_MODEL", "BAAI/bge-small-en-v1.5"),
+        )
+        cache_dir = os.environ.get("ANVIL_ST_CACHE_DIR")
+        cache_folder = os.path.expanduser(cache_dir) if cache_dir else None
         log.info("embedder.selected", embedder="sentence_transformer", model=model_name)
-        return SentenceTransformerEmbedder(model_name=model_name)  # pragma: no cover
+        return SentenceTransformerEmbedder(
+            model_name=model_name,
+            cache_folder=cache_folder,
+        )  # pragma: no cover
     if choice != "hash":
         raise RetrievalError(
             f"Unknown ANVIL_EMBEDDER={choice!r}. Supported: hash, sentence_transformer."

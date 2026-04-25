@@ -44,6 +44,7 @@ from typing import Any
 
 from structlog.contextvars import bind_contextvars, unbind_contextvars
 
+from anvil.evaluation.agent_runner import AgentRunSummary
 from anvil.evaluation.manifest import RunManifest, build_manifest, make_run_id
 from anvil.evaluation.report_writer import write_report
 from anvil.evaluation.runner import RunSummary
@@ -86,7 +87,7 @@ class RunLogger:
         self.cfg = cfg
         self.run_dir = cfg.output_root / cfg.run_id
         self._examples: list[GoldenExample] = []
-        self._summary: RunSummary | None = None
+        self._summary: RunSummary | AgentRunSummary | None = None
         self._manifest: RunManifest | None = None
         # File handles opened lazily on first record_*() call so tests
         # that never write raw data don't leave empty files behind.
@@ -142,8 +143,14 @@ class RunLogger:
         self._examples = list(examples)
         log.info("run.dataset_attached", n_examples=len(self._examples))
 
-    def write_summary(self, summary: RunSummary) -> None:
-        """Hand the summary to the logger; finalize will pick it up."""
+    def write_summary(self, summary: RunSummary | AgentRunSummary) -> None:
+        """Hand the summary to the logger; finalize will pick it up.
+
+        Accepts both `RunSummary` (fixed pipeline) and `AgentRunSummary`
+        (M6 agent loop). The logger only reads `.aggregate`,
+        `.pass_rate`, and `.per_example`, all of which are structurally
+        identical between the two — so persistence is uniform.
+        """
         self._summary = summary
 
     def record_example(

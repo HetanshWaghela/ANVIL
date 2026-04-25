@@ -211,6 +211,17 @@ def test_nvidia_nim_backend_reasoning_extra_body(monkeypatch) -> None:
     assert ctk.get("reasoning_effort") == "high"
 
 
+def test_nvidia_nim_backend_timeout_env(monkeypatch) -> None:
+    monkeypatch.setenv("ANVIL_LLM_BACKEND", "nvidia_nim")
+    monkeypatch.setenv("NVIDIA_API_KEY", "nvapi-test-not-real")
+    monkeypatch.setenv("ANVIL_LLM_TIMEOUT_S", "45")
+
+    backend = get_default_backend()
+
+    assert isinstance(backend, OpenAICompatibleBackend)
+    assert backend.timeout_s == 45.0
+
+
 # ---------------------------------------------------------------------------
 # Embedder selection: unknown values must raise.
 # ---------------------------------------------------------------------------

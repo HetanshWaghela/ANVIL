@@ -30,9 +30,9 @@ design-space corners:
 
 | ID | Why we picked it | Reasoning mode |
 | :--- | :--- | :---: |
-| `meta/llama-3.3-70b-instruct` | Strong general instruction-follower; eval baseline. The default for `_nvidia_nim_backend()`. | — |
-| `deepseek-ai/deepseek-v3.1` | Reasoning-mode capable via NIM's `chat_template_kwargs.thinking`. Stress-tests our reasoning-passthrough plumbing. | ✓ |
-| `nvidia/llama-3.1-nemotron-70b-instruct` | NVIDIA's own RLHF-tuned Llama; NIM-native baseline. | — |
+| `meta/llama-3.3-70b-instruct` | Meta-family general instruction-follower; eval baseline. Default for `_nvidia_nim_backend()`. Live-probe latency ~0.3 s. | — |
+| `nvidia/llama-3.3-nemotron-super-49b-v1.5` | NVIDIA-RLHF tuned with thinking-mode; stress-tests our `chat_template_kwargs.thinking` passthrough. Live-probe latency ~0.6 s. | ✓ |
+| `openai/gpt-oss-120b` | OpenAI's open-weight 120b on NIM; ensures the table compares across **three different model families** (Meta / NVIDIA / OpenAI), not three flavors of one. Live-probe latency ~0.3 s. | — |
 
 The catalog rotates over time. If a model is deprecated by NIM, the
 locked test still passes (the catalog is an in-repo dict) but

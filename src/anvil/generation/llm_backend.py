@@ -30,6 +30,7 @@ from anvil.schemas.generation import (
     AnvilResponse,
     CalculationStep,
     Citation,
+    LLMAnvilResponse,
     ResponseConfidence,
     StepKey,
 )
@@ -228,8 +229,8 @@ class InstructorBackend:
                 retrieved_context_ids=[c.element_id for c in retrieved_chunks],
             )
         client = self._get_client()
-        response: AnvilResponse = await client.create(
-            response_model=AnvilResponse,
+        llm_response: LLMAnvilResponse = await client.create(
+            response_model=LLMAnvilResponse,
             messages=[
                 {"role": "system", "content": system_prompt},
                 {"role": "user", "content": user_prompt},
@@ -237,9 +238,10 @@ class InstructorBackend:
             max_retries=2,
         )
         # Always inject the deterministic calc steps — never trust LLM arithmetic.
-        if calculation_steps:
-            response.calculation_steps = calculation_steps
-        return response
+        return AnvilResponse(
+            **llm_response.model_dump(),
+            calculation_steps=calculation_steps,
+        )
 
 
 class OpenAICompatibleBackend:
@@ -273,6 +275,7 @@ class OpenAICompatibleBackend:
         model: str,
         temperature: float = 0.1,
         max_tokens: int = 4096,
+        timeout_s: float = 120.0,
         extra_body: dict[str, Any] | None = None,
     ) -> None:
         if not base_url:
@@ -292,6 +295,7 @@ class OpenAICompatibleBackend:
         self.model = model
         self.temperature = temperature
         self.max_tokens = max_tokens
+        self.timeout_s = timeout_s
         self.extra_body = extra_body
         self._client: Any = None
 
@@ -312,7 +316,11 @@ class OpenAICompatibleBackend:
                 "instructor package is required for OpenAICompatibleBackend. "
                 "Install with `uv add instructor`."
             ) from exc
-        raw = AsyncOpenAI(base_url=self.base_url, api_key=self.api_key)
+        raw = AsyncOpenAI(
+            base_url=self.base_url,
+            api_key=self.api_key,
+            timeout=self.timeout_s,
+        )
         # JSON mode works across NIM, Together, Fireworks, vLLM, Ollama.
         # Tool-use mode varies per provider; JSON is the lowest common denom.
         self._client = instructor.from_openai(raw, mode=instructor.Mode.JSON)
@@ -338,7 +346,7 @@ class OpenAICompatibleBackend:
         client = self._get_client()
         kwargs: dict[str, Any] = {
             "model": self.model,
-            "response_model": AnvilResponse,
+            "response_model": LLMAnvilResponse,
             "messages": [
                 {"role": "system", "content": system_prompt},
                 {"role": "user", "content": user_prompt},
@@ -350,15 +358,18 @@ class OpenAICompatibleBackend:
         if self.extra_body:
             kwargs["extra_body"] = self.extra_body
         try:
-            response: AnvilResponse = await client.chat.completions.create(**kwargs)
+            llm_response: LLMAnvilResponse = await client.chat.completions.create(
+                **kwargs
+            )
         except Exception as exc:
             raise GenerationError(
                 f"OpenAI-compatible LLM call failed against {self.base_url} "
                 f"(model={self.model}): {exc!r}"
             ) from exc
-        if calculation_steps:
-            response.calculation_steps = calculation_steps
-        return response
+        return AnvilResponse(
+            **llm_response.model_dump(),
+            calculation_steps=calculation_steps,
+        )
 
 
 def _nvidia_nim_backend() -> OpenAICompatibleBackend:
@@ -390,12 +401,14 @@ def _nvidia_nim_backend() -> OpenAICompatibleBackend:
                 "ANVIL_NIM_REASONING_EFFORT", "high"
             ),
         }
+    timeout_s = float(os.environ.get("ANVIL_LLM_TIMEOUT_S", "120"))
     return OpenAICompatibleBackend(
         base_url=os.environ.get(
             "NVIDIA_NIM_BASE_URL", "https://integrate.api.nvidia.com/v1"
         ),
         api_key=api_key,
         model=model,
+        timeout_s=timeout_s,
         extra_body=extra_body or None,
     )
 
@@ -425,7 +438,13 @@ def _openai_compatible_backend() -> OpenAICompatibleBackend:
             f"ANVIL_LLM_BACKEND=openai_compatible requires: {', '.join(missing)}"
         )
     assert base_url and api_key and model  # for the type-checker
-    return OpenAICompatibleBackend(base_url=base_url, api_key=api_key, model=model)
+    timeout_s = float(os.environ.get("ANVIL_LLM_TIMEOUT_S", "120"))
+    return OpenAICompatibleBackend(
+        base_url=base_url,
+        api_key=api_key,
+        model=model,
+        timeout_s=timeout_s,
+    )
 
 
 def get_default_backend() -> LLMBackend:

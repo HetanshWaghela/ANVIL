@@ -72,19 +72,22 @@ async def _evaluate_one(
         os.environ.pop("ANVIL_LLM_BACKEND", None)
     if model:
         os.environ["ANVIL_LLM_MODEL"] = model
+    else:
+        os.environ.pop("ANVIL_LLM_MODEL", None)
 
     pipeline = build_pipeline(ablation="baseline")
+    effective_model = getattr(pipeline.generator.backend, "model", model)
     runner = EvaluationRunner(pipeline.generator)
     dataset_path = ROOT / "tests" / "evaluation" / "golden_dataset.json"
     examples = load_golden_dataset(dataset_path)
 
     run_id = make_run_id(
-        backend=backend, model=model, ablation="baseline", when=when
+        backend=backend, model=effective_model, ablation="baseline", when=when
     )
     cfg = RunLoggerConfig(
         run_id=run_id,
         backend=backend,
-        model=model,
+        model=effective_model,
         ablation="baseline",
         dataset_path=dataset_path,
         output_root=output_root,
@@ -94,8 +97,9 @@ async def _evaluate_one(
         rl.attach_examples(examples)
         summary = await runner.run(examples)
         rl.write_summary(summary)
-        for ex in examples:
-            outcome = await pipeline.generator.generate(ex.query, top_k=10)
+        # Use cached outcomes from the runner — re-invoking the generator
+        # here would double the NIM call count for every example.
+        for ex, outcome in zip(examples, summary.outcomes, strict=True):
             rl.record_example(
                 ex.id, outcome.response, retrieved=outcome.retrieved_chunks
             )

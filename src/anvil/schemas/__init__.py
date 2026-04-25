@@ -21,6 +21,7 @@ from anvil.schemas.generation import (
     CalculationStep,
     Citation,
     InputValue,
+    LLMAnvilResponse,
     ResponseConfidence,
     StepKey,
 )
@@ -51,6 +52,7 @@ __all__ = [
     "GraphNode",
     "HybridScores",
     "InputValue",
+    "LLMAnvilResponse",
     "MetricScore",
     "NodeType",
     "ParsedFormula",

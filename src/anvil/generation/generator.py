@@ -5,7 +5,7 @@ from __future__ import annotations
 import re
 from dataclasses import dataclass
 
-from anvil import CalculationError
+from anvil import CalculationError, GenerationError
 from anvil.generation.calculation_engine import (
     CalculationEngine,
     CalculationInputs,
@@ -207,14 +207,44 @@ class AnvilGenerator:
         calc_summary = _summarize_calculation(calc_result) if calc_result else None
         system, user = build_context_prompt(query, chunks, calculation_summary=calc_summary)
 
-        # 5) LLM call
-        response = await self.backend.generate(
-            system_prompt=system,
-            user_prompt=user,
-            query=query,
-            retrieved_chunks=chunks,
-            calculation_steps=calc_steps,
-        )
+        # 5) LLM call.
+        #
+        # If the backend fails to produce a schema-valid response (e.g.
+        # the model emits a `null` citation that fails Pydantic
+        # validation, or instructor exhausts retries), we synthesize a
+        # refusal-shaped response rather than crashing the whole eval
+        # run. Recording the failure in `refusal_reason` preserves the
+        # provenance — the manifest + per_example.json carry the exact
+        # error text — while letting the other 29 examples in a 30-row
+        # eval continue. This is a deliberate fail-soft: the citation
+        # invariant ("every claim is grounded") is still honored
+        # because the response says "I cannot answer", not because we
+        # silently strip the bad citation.
+        try:
+            response = await self.backend.generate(
+                system_prompt=system,
+                user_prompt=user,
+                query=query,
+                retrieved_chunks=chunks,
+                calculation_steps=calc_steps,
+            )
+        except GenerationError as exc:
+            log.warning(
+                "generate.backend_error_soft_refusal",
+                error=repr(exc),
+                query_preview=query[:80],
+            )
+            response = await self.backend.generate(
+                system_prompt=system,
+                user_prompt=user,
+                query=query,
+                retrieved_chunks=chunks,
+                calculation_steps=[],
+                refusal_reason=(
+                    f"LLM backend produced an invalid structured response "
+                    f"and exhausted retries: {exc}"
+                ),
+            )
 
         # 6) Citation validation. Pass the parsed-element index so
         #    canonical-ref citations (pinned-data Table M-1, B-12, A-27)

@@ -1,0 +1,1473 @@
+{
+  "system": "pymupdf4llm",
+  "pdf_path": "data/parser_benchmark/pdfs/nasa_sp8007.pdf",
+  "page_count": 60,
+  "elements": [
+    {
+      "element_id": "sec-space-vehicle-design-criteria-structures",
+      "element_type": "section",
+      "paragraph_ref": null,
+      "title": "SPACE VEHICLE DESIGN CRITERIA (STRUCTURES)",
+      "content": "",
+      "page_number": 1,
+      "parent_id": null,
+      "cross_references": [],
+      "table": null,
+      "formula": null,
+      "metadata": {}
+    },
+    {
+      "element_id": "sec-buckling-of",
+      "element_type": "section",
+      "paragraph_ref": null,
+      "title": "BUCKLING OF",
+      "content": "# THIN-WALLED CIRCULAR CYLINDERS \n\nNATIONAL AERONAUTICS AND SPACE ADMINISTRATION \n\nFor sale by the Clearinghouse for Federal Scientific and Technical Information Springfield, Virginia 22151 — Price $3.00 \n\n| ",
+      "page_number": 1,
+      "parent_id": null,
+      "cross_references": [],
+      "table": null,
+      "formula": null,
+      "metadata": {}
+    },
+    {
+      "element_id": "sec-foreword",
+      "element_type": "section",
+      "paragraph_ref": null,
+      "title": "FOREWORD",
+      "content": "NASA experience has indicated a need for uniform criteria for the design of space vehicles. Accordingly, criteria are being developed in the following areas of technology: ",
+      "page_number": 1,
+      "parent_id": null,
+      "cross_references": [],
+      "table": null,
+      "formula": null,
+      "metadata": {}
+    },
+    {
+      "element_id": "sec-environment",
+      "element_type": "section",
+      "paragraph_ref": null,
+      "title": "Environment",
+      "content": "Structures Guidance and Control ",
+      "page_number": 1,
+      "parent_id": null,
+      "cross_references": [],
+      "table": null,
+      "formula": null,
+      "metadata": {}
+    },
+    {
+      "element_id": "sec-chemical-propulsion",
+      "element_type": "section",
+      "paragraph_ref": null,
+      "title": "Chemical Propulsion.",
+      "content": ". \n\nIndividual components of this work will be issued as separate monographs as soon as - they are completed. A list of all previously issued monographs in this series can be found on the last page of this document. \n\nThese monographs are to be regarded as guides to design and not as NASA requirements, except as may be specified in formal project specifications. It is expected, however, that the criteria sections of these documents, revised as experience may indicate to be desirable, eventually will become uniform design requirements for NASA space vehicles. This monograph was prepared under the cognizance of the Langley Research Center. The Task Manager was A. L. Braslow. The authors were V. 1. Weingarten and P. Seide of the University of Southern California and J. P. Peterson of NASA Langley Research Center. A number of other individuals assisted in developing the material and reviewing the drafts. In particular, the significant contributions made by E. H. Baker of North American Rockwell Corporation, C.D. Babcock, Jr., of California Institute of Technology, R.F.Crawford of Astro Research Corporation, J.B.Glassco of McDonnell Douglas Corporation, A. Kaplan of TRW Systems, M. H. Kural of Lockheed Missiles & Space Company, and J. Mayers of Stanford University, are hereby acknowledged. \n\n~ \n\nComments concerning the technical content of these monographs will be welcomed by the National Aeronautics and Space Administration, Office of Advanced Research and Technology (Code RVA), Washington, D.C. 20546. \n\nAugust 1968 \n\niii ",
+      "page_number": 1,
+      "parent_id": null,
+      "cross_references": [],
+      "table": null,
+      "formula": null,
+      "metadata": {}
+    },
+    {
+      "element_id": "sec-contents",
+      "element_type": "section",
+      "paragraph_ref": null,
+      "title": "CONTENTS",
+      "content": "2. STATEOFTHEART ..................--2 3.) General .. 00... . ce eee eee eee eee 8 3.2 Guidesfor Compliance ................. 3 \n\n4. RECOMMENDED PRACTICES ............... 3 4.1 Scope... ... eeee e **e** e eee ee 8 4,2 Isotropic Unstiffened Cylinders............ 4 4.2.1 Axial Compression ............... 4 4.2.2 Bending ...............2.200-. 7 4.2.3 External Pressure ................ 8 4.2.4 Torsion ................2-....11 4.2.5 Combined Loads ................13 4.2.5.1 Circular Cylinders in Axial Compression and Bending ...13 \n\n4.2.5.2 Circular Cylinders in Axial Compression and External Pressure ...........2-----13 \n\n4.2.5.3 Circular Cylinders in Axial Compression and Torsion .... 14 \n\n4.2.5.4 Internally Pressurized Circular Cylinders in Axial Compression .............. 14 \n\n4.2.5.5 Internally Pressurized Circular Cylinders in Bending ........ 15 \n\n4.2.5.6 Internally Pressurized Cylinders in Axial Compression & Bending 16 \n\n4. RECOMMENDED PRACTICES ............... \n\n   - 4.3. Orthotropic Cylinders .................. 16 4.3.1 Axial Compression ............... 16 4.3.2 Bending .............-..2----.19 4.3.3 External Pressure ................ 19 4.3.4 Torsion .............---------21 \n\nVv \n\n||4.3.5|Combined Bending and Axial||\n|---|---|---|---|\n|||Compression ...............-...|21|\n||4.3.6|Elastic Constants ...............,|22|\n|||4.3.6.1<br>Stiffened Multilayered||\n|||Orthotropic Cylinders<br>......|22|\n|||4.3.6.2<br>Isotropic Cylinders with||\n|||Stiffeners and Rings........|25|\n|||4.3.6.3<br>Ring-Stiffened Corrugated||\n|||Cylinders ...............|26|\n|||4.3.6.4<br>Waffle-Stiffened Cylinders<br>...|26|\n|||4.3.6.5<br>Special Considerations<br>......|26|\n|4.4|Isotropic Sandwich Cylinders .............||27|\n||4.4.1|Axial Compression ...............|28|\n||4.4.2|Bending ......................|32|\n||4.4.3|Lateral Pressure... ..............|32|\n||4.4.4|Torsion<br>......................|33|\n|4.5|Cylinders with an ElasticCore<br>............||35|\n||4.5.1.|Axial Compression ...............|35|\n||4.5.2|External Pressure ................|36|\n||4.5.3.|Torsion<br>................2.....|39|\n||4.5.4|Combined Axial Compression and||\n|||Lateral Pressure.................|40|\n|4.6|Design<br>ofRings......................||41|\n\n\n\n, \n\nNASA SPACE VEHICLE DESIGN CRITERIA MONOGRAPHS ISSUED TO DATE ............ 49 \n\nvi ",
+      "page_number": 2,
+      "parent_id": null,
+      "cross_references": [],
+      "table": null,
+      "formula": null,
+      "metadata": {}
+    },
+    {
+      "element_id": "tbl-tbl-0",
+      "element_type": "table",
+      "paragraph_ref": null,
+      "title": "Table TBL-0",
+      "content": "||4.3.5|Combined Bending and Axial||\n|---|---|---|---|\n|||Compression ...............-...|21|\n||4.3.6|Elastic Constants ...............,|22|\n|||4.3.6.1<br>Stiffened Multilayered||\n|||Orthotropic Cylinders<br>......|22|\n|||4.3.6.2<br>Isotropic Cylinders with||\n|||Stiffeners and Rings........|25|\n|||4.3.6.3<br>Ring-Stiffened Corrugated||\n|||Cylinders ...............|26|\n|||4.3.6.4<br>Waffle-Stiffened Cylinders<br>...|26|\n|||4.3.6.5<br>Special Considerations<br>......|26|\n|4.4|Isotropic Sandwich Cylinders .............||27|\n||4.4.1|Axial Compression ...............|28|\n||4.4.2|Bending ......................|32|\n||4.4.3|Lateral Pressure... ..............|32|\n||4.4.4|Torsion<br>......................|33|\n|4.5|Cylinders with an ElasticCore<br>............||35|\n||4.5.1.|Axial Compression ...............|35|\n||4.5.2|External Pressure ................|36|\n||4.5.3.|Torsion<br>................2.....|39|\n||4.5.4|Combined Axial Compression and||\n|||Lateral Pressure.................|40|\n|4.6|Design<br>ofRings......................||41|",
+      "page_number": 2,
+      "parent_id": "sec-contents",
+      "cross_references": [],
+      "table": {
+        "table_id": "TBL-0",
+        "caption": null,
+        "headers": [
+          "",
+          "4.3.5",
+          "Combined Bending and Axial",
+          ""
+        ],
+        "rows": [
+          [
+            {
+              "row": 0,
+              "col": 0,
+              "text": "",
+              "is_header": false,
+              "spans_rows": 1,
+              "spans_cols": 1
+            },
+            {
+              "row": 0,
+              "col": 1,
+              "text": "",
+              "is_header": false,
+              "spans_rows": 1,
+              "spans_cols": 1
+            },
+            {
+              "row": 0,
+              "col": 2,
+              "text": "Compression ...............-...",
+              "is_header": false,
+              "spans_rows": 1,
+              "spans_cols": 1
+            },
+            {
+              "row": 0,
+              "col": 3,
+              "text": "21",
+              "is_header": false,
+              "spans_rows": 1,
+              "spans_cols": 1
+            }
+          ],
+          [
+            {
+              "row": 1,
+              "col": 0,
+              "text": "",
+              "is_header": false,
+              "spans_rows": 1,
+              "spans_cols": 1
+            },
+            {
+              "row": 1,
+              "col": 1,
+              "text": "4.3.6",
+              "is_header": false,
+              "spans_rows": 1,
+              "spans_cols": 1
+            },
+            {
+              "row": 1,
+              "col": 2,
+              "text": "Elastic Constants ...............,",
+              "is_header": false,
+              "spans_rows": 1,
+              "spans_cols": 1
+            },
+            {
+              "row": 1,
+              "col": 3,
+              "text": "22",
+              "is_header": false,
+              "spans_rows": 1,
+              "spans_cols": 1
+            }
+          ],
+          [
+            {
+              "row": 2,
+              "col": 0,
+              "text": "",
+              "is_header": false,
+              "spans_rows": 1,
+              "spans_cols": 1
+            },
+            {
+              "row": 2,
+              "col": 1,
+              "text": "",
+              "is_header": false,
+              "spans_rows": 1,
+              "spans_cols": 1
+            },
+            {
+              "row": 2,
+              "col": 2,
+              "text": "4.3.6.1<br>Stiffened Multilayered",
+              "is_header": false,
+              "spans_rows": 1,
+              "spans_cols": 1
+            },
+            {
+              "row": 2,
+              "col": 3,
+              "text": "",
+              "is_header": false,
+              "spans_rows": 1,
+              "spans_cols": 1
+            }
+          ],
+          [
+            {
+              "row": 3,
+              "col": 0,
+              "text": "",
+              "is_header": false,
+              "spans_rows": 1,
+              "spans_cols": 1
+            },
+            {
+              "row": 3,
+              "col": 1,
+              "text": "",
+              "is_header": false,
+              "spans_rows": 1,
+              "spans_cols": 1
+            },
+            {
+              "row": 3,
+              "col": 2,
+              "text": "Orthotropic Cylinders<br>......",
+              "is_header": false,
+              "spans_rows": 1,
+              "spans_cols": 1
+            },
+            {
+              "row": 3,
+              "col": 3,
+              "text": "22",
+              "is_header": false,
+              "spans_rows": 1,
+              "spans_cols": 1
+            }
+          ],
+          [
+            {
+              "row": 4,
+              "col": 0,
+              "text": "",
+              "is_header": false,
+              "spans_rows": 1,
+              "spans_cols": 1
+            },
+            {
+              "row": 4,
+              "col": 1,
+              "text": "",
+              "is_header": false,
+              "spans_rows": 1,
+              "spans_cols": 1
+            },
+            {
+              "row": 4,
+              "col": 2,
+              "text": "4.3.6.2<br>Isotropic Cylinders with",
+              "is_header": false,
+              "spans_rows": 1,
+              "spans_cols": 1
+            },
+            {
+              "row": 4,
+              "col": 3,
+              "text": "",
+              "is_header": false,
+              "spans_rows": 1,
+              "spans_cols": 1
+            }
+          ],
+          [
+            {
+              "row": 5,
+              "col": 0,
+              "text": "",
+              "is_header": false,
+              "spans_rows": 1,
+              "spans_cols": 1
+            },
+            {
+              "row": 5,
+              "col": 1,
+              "text": "",
+              "is_header": false,
+              "spans_rows": 1,
+              "spans_cols": 1
+            },
+            {
+              "row": 5,
+              "col": 2,
+              "text": "Stiffeners and Rings........",
+              "is_header": false,
+              "spans_rows": 1,
+              "spans_cols": 1
+            },
+            {
+              "row": 5,
+              "col": 3,
+              "text": "25",
+              "is_header": false,
+              "spans_rows": 1,
+              "spans_cols": 1
+            }
+          ],
+          [
+            {
+              "row": 6,
+              "col": 0,
+              "text": "",
+              "is_header": false,
+              "spans_rows": 1,
+              "spans_cols": 1
+            },
+            {
+              "row": 6,
+              "col": 1,
+              "text": "",
+              "is_header": false,
+              "spans_rows": 1,
+              "spans_cols": 1
+            },
+            {
+              "row": 6,
+              "col": 2,
+              "text": "4.3.6.3<br>Ring-Stiffened Corrugated",
+              "is_header": false,
+              "spans_rows": 1,
+              "spans_cols": 1
+            },
+            {
+              "row": 6,
+              "col": 3,
+              "text": "",
+              "is_header": false,
+              "spans_rows": 1,
+              "spans_cols": 1
+            }
+          ],
+          [
+            {
+              "row": 7,
+              "col": 0,
+              "text": "",
+              "is_header": false,
+              "spans_rows": 1,
+              "spans_cols": 1
+            },
+            {
+              "row": 7,
+              "col": 1,
+              "text": "",
+              "is_header": false,
+              "spans_rows": 1,
+              "spans_cols": 1
+            },
+            {
+              "row": 7,
+              "col": 2,
+              "text": "Cylinders ...............",
+              "is_header": false,
+              "spans_rows": 1,
+              "spans_cols": 1
+            },
+            {
+              "row": 7,
+              "col": 3,
+              "text": "26",
+              "is_header": false,
+              "spans_rows": 1,
+              "spans_cols": 1
+            }
+          ],
+          [
+            {
+              "row": 8,
+              "col": 0,
+              "text": "",
+              "is_header": false,
+              "spans_rows": 1,
+              "spans_cols": 1
+            },
+            {
+              "row": 8,
+              "col": 1,
+              "text": "",
+              "is_header": false,
+              "spans_rows": 1,
+              "spans_cols": 1
+            },
+            {
+              "row": 8,
+              "col": 2,
+              "text": "4.3.6.4<br>Waffle-Stiffened Cylinders<br>...",
+              "is_header": false,
+              "spans_rows": 1,
+              "spans_cols": 1
+            },
+            {
+              "row": 8,
+              "col": 3,
+              "text": "26",
+              "is_header": false,
+              "spans_rows": 1,
+              "spans_cols": 1
+            }
+          ],
+          [
+            {
+              "row": 9,
+              "col": 0,
+              "text": "",
+              "is_header": false,
+              "spans_rows": 1,
+              "spans_cols": 1
+            },
+            {
+              "row": 9,
+              "col": 1,
+              "text": "",
+              "is_header": false,
+              "spans_rows": 1,
+              "spans_cols": 1
+            },
+            {
+              "row": 9,
+              "col": 2,
+              "text": "4.3.6.5<br>Special Considerations<br>......",
+              "is_header": false,
+              "spans_rows": 1,
+              "spans_cols": 1
+            },
+            {
+              "row": 9,
+              "col": 3,
+              "text": "26",
+              "is_header": false,
+              "spans_rows": 1,
+              "spans_cols": 1
+            }
+          ],
+          [
+            {
+              "row": 10,
+              "col": 0,
+              "text": "4.4",
+              "is_header": false,
+              "spans_rows": 1,
+              "spans_cols": 1
+            },
+            {
+              "row": 10,
+              "col": 1,
+              "text": "Isotropic Sandwich Cylinders .............",
+              "is_header": false,
+              "spans_rows": 1,
+              "spans_cols": 1
+            },
+            {
+              "row": 10,
+              "col": 2,
+              "text": "",
+              "is_header": false,
+              "spans_rows": 1,
+              "spans_cols": 1
+            },
+            {
+              "row": 10,
+              "col": 3,
+              "text": "27",
+              "is_header": false,
+              "spans_rows": 1,
+              "spans_cols": 1
+            }
+          ],
+          [
+            {
+              "row": 11,
+              "col": 0,
+              "text": "",
+              "is_header": false,
+              "spans_rows": 1,
+              "spans_cols": 1
+            },
+            {
+              "row": 11,
+              "col": 1,
+              "text": "4.4.1",
+              "is_header": false,
+              "spans_rows": 1,
+              "spans_cols": 1
+            },
+            {
+              "row": 11,
+              "col": 2,
+              "text": "Axial Compression ...............",
+              "is_header": false,
+              "spans_rows": 1,
+              "spans_cols": 1
+            },
+            {
+              "row": 11,
+              "col": 3,
+              "text": "28",
+              "is_header": false,
+              "spans_rows": 1,
+              "spans_cols": 1
+            }
+          ],
+          [
+            {
+              "row": 12,
+              "col": 0,
+              "text": "",
+              "is_header": false,
+              "spans_rows": 1,
+              "spans_cols": 1
+            },
+            {
+              "row": 12,
+              "col": 1,
+              "text": "4.4.2",
+              "is_header": false,
+              "spans_rows": 1,
+              "spans_cols": 1
+            },
+            {
+              "row": 12,
+              "col": 2,
+              "text": "Bending ......................",
+              "is_header": false,
+              "spans_rows": 1,
+              "spans_cols": 1
+            },
+            {
+              "row": 12,
+              "col": 3,
+              "text": "32",
+              "is_header": false,
+              "spans_rows": 1,
+              "spans_cols": 1
+            }
+          ],
+          [
+            {
+              "row": 13,
+              "col": 0,
+              "text": "",
+              "is_header": false,
+              "spans_rows": 1,
+              "spans_cols": 1
+            },
+            {
+              "row": 13,
+              "col": 1,
+              "text": "4.4.3",
+              "is_header": false,
+              "spans_rows": 1,
+              "spans_cols": 1
+            },
+            {
+              "row": 13,
+              "col": 2,
+              "text": "Lateral Pressure... ..............",
+              "is_header": false,
+              "spans_rows": 1,
+              "spans_cols": 1
+            },
+            {
+              "row": 13,
+              "col": 3,
+              "text": "32",
+              "is_header": false,
+              "spans_rows": 1,
+              "spans_cols": 1
+            }
+          ],
+          [
+            {
+              "row": 14,
+              "col": 0,
+              "text": "",
+              "is_header": false,
+              "spans_rows": 1,
+              "spans_cols": 1
+            },
+            {
+              "row": 14,
+              "col": 1,
+              "text": "4.4.4",
+              "is_header": false,
+              "spans_rows": 1,
+              "spans_cols": 1
+            },
+            {
+              "row": 14,
+              "col": 2,
+              "text": "Torsion<br>......................",
+              "is_header": false,
+              "spans_rows": 1,
+              "spans_cols": 1
+            },
+            {
+              "row": 14,
+              "col": 3,
+              "text": "33",
+              "is_header": false,
+              "spans_rows": 1,
+              "spans_cols": 1
+            }
+          ],
+          [
+            {
+              "row": 15,
+              "col": 0,
+              "text": "4.5",
+              "is_header": false,
+              "spans_rows": 1,
+              "spans_cols": 1
+            },
+            {
+              "row": 15,
+              "col": 1,
+              "text": "Cylinders with an ElasticCore<br>............",
+              "is_header": false,
+              "spans_rows": 1,
+              "spans_cols": 1
+            },
+            {
+              "row": 15,
+              "col": 2,
+              "text": "",
+              "is_header": false,
+              "spans_rows": 1,
+              "spans_cols": 1
+            },
+            {
+              "row": 15,
+              "col": 3,
+              "text": "35",
+              "is_header": false,
+              "spans_rows": 1,
+              "spans_cols": 1
+            }
+          ],
+          [
+            {
+              "row": 16,
+              "col": 0,
+              "text": "",
+              "is_header": false,
+              "spans_rows": 1,
+              "spans_cols": 1
+            },
+            {
+              "row": 16,
+              "col": 1,
+              "text": "4.5.1.",
+              "is_header": false,
+              "spans_rows": 1,
+              "spans_cols": 1
+            },
+            {
+              "row": 16,
+              "col": 2,
+              "text": "Axial Compression ...............",
+              "is_header": false,
+              "spans_rows": 1,
+              "spans_cols": 1
+            },
+            {
+              "row": 16,
+              "col": 3,
+              "text": "35",
+              "is_header": false,
+              "spans_rows": 1,
+              "spans_cols": 1
+            }
+          ],
+          [
+            {
+              "row": 17,
+              "col": 0,
+              "text": "",
+              "is_header": false,
+              "spans_rows": 1,
+              "spans_cols": 1
+            },
+            {
+              "row": 17,
+              "col": 1,
+              "text": "4.5.2",
+              "is_header": false,
+              "spans_rows": 1,
+              "spans_cols": 1
+            },
+            {
+              "row": 17,
+              "col": 2,
+              "text": "External Pressure ................",
+              "is_header": false,
+              "spans_rows": 1,
+              "spans_cols": 1
+            },
+            {
+              "row": 17,
+              "col": 3,
+              "text": "36",
+              "is_header": false,
+              "spans_rows": 1,
+              "spans_cols": 1
+            }
+          ],
+          [
+            {
+              "row": 18,
+              "col": 0,
+              "text": "",
+              "is_header": false,
+              "spans_rows": 1,
+              "spans_cols": 1
+            },
+            {
+              "row": 18,
+              "col": 1,
+              "text": "4.5.3.",
+              "is_header": false,
+              "spans_rows": 1,
+              "spans_cols": 1
+            },
+            {
+              "row": 18,
+              "col": 2,
+              "text": "Torsion<br>................2.....",
+              "is_header": false,
+              "spans_rows": 1,
+              "spans_cols": 1
+            },
+            {
+              "row": 18,
+              "col": 3,
+              "text": "39",
+              "is_header": false,
+              "spans_rows": 1,
+              "spans_cols": 1
+            }
+          ],
+          [
+            {
+              "row": 19,
+              "col": 0,
+              "text": "",
+              "is_header": false,
+              "spans_rows": 1,
+              "spans_cols": 1
+            },
+            {
+              "row": 19,
+              "col": 1,
+              "text": "4.5.4",
+              "is_header": false,
+              "spans_rows": 1,
+              "spans_cols": 1
+            },
+            {
+              "row": 19,
+              "col": 2,
+              "text": "Combined Axial Compression and",
+              "is_header": false,
+              "spans_rows": 1,
+              "spans_cols": 1
+            },
+            {
+              "row": 19,
+              "col": 3,
+              "text": "",
+              "is_header": false,
+              "spans_rows": 1,
+              "spans_cols": 1
+            }
+          ],
+          [
+            {
+              "row": 20,
+              "col": 0,
+              "text": "",
+              "is_header": false,
+              "spans_rows": 1,
+              "spans_cols": 1
+            },
+            {
+              "row": 20,
+              "col": 1,
+              "text": "",
+              "is_header": false,
+              "spans_rows": 1,
+              "spans_cols": 1
+            },
+            {
+              "row": 20,
+              "col": 2,
+              "text": "Lateral Pressure.................",
+              "is_header": false,
+              "spans_rows": 1,
+              "spans_cols": 1
+            },
+            {
+              "row": 20,
+              "col": 3,
+              "text": "40",
+              "is_header": false,
+              "spans_rows": 1,
+              "spans_cols": 1
+            }
+          ],
+          [
+            {
+              "row": 21,
+              "col": 0,
+              "text": "4.6",
+              "is_header": false,
+              "spans_rows": 1,
+              "spans_cols": 1
+            },
+            {
+              "row": 21,
+              "col": 1,
+              "text": "Design<br>ofRings......................",
+              "is_header": false,
+              "spans_rows": 1,
+              "spans_cols": 1
+            },
+            {
+              "row": 21,
+              "col": 2,
+              "text": "",
+              "is_header": false,
+              "spans_rows": 1,
+              "spans_cols": 1
+            },
+            {
+              "row": 21,
+              "col": 3,
+              "text": "41",
+              "is_header": false,
+              "spans_rows": 1,
+              "spans_cols": 1
+            }
+          ]
+        ],
+        "source_page": 2,
+        "source_paragraph": "sec-contents"
+      },
+      "formula": null,
+      "metadata": {}
+    },
+    {
+      "element_id": "sec-symbols",
+      "element_type": "section",
+      "paragraph_ref": null,
+      "title": "SYMBOLS",
+      "content": "- Ag, Ar stiffener and ring area, respectively B, extensional stiffness of isotropic sandwich wall b stiffener spacing be effective width of skin between stiffeners Cy,Cy Cyy Kxy coupling constants for orthotropic cylinders c coefficient of fixity in Euler column formula \n\nD Et° wall flexural stiffness per unit width, ————— 121 — p?) \n\n- Dg transverse shear-stiffness parameter for isotropic sandwich wall, Gyz h2 h— 1 5 (t, + t,) \n\n- Dx,Dy bending stiffness per unit width of wall in x- and y-direction, respectively, D, = Dy = D for isotropic cylinder \n\n- Dyy modified twisting stiffness of wall; Dyy = 2D for isotropic cylinder \n\n- D, flexural stiffness of isotropic sandwich wall, _Esth2 2(1 — yp?) ",
+      "page_number": 3,
+      "parent_id": null,
+      "cross_references": [],
+      "table": null,
+      "formula": null,
+      "metadata": {}
+    },
+    {
+      "element_id": "sec-d-ring-spacing",
+      "element_type": "section",
+      "paragraph_ref": null,
+      "title": "d ring spacing",
+      "content": "- E Young’s modulus Ee Young’s modulus of elastic core Er reduced modulus Es Young’s modulus of face sheet of sandwich E,.Es Young’s modulus of rings and stiffeners, respectively Esec secant modulus for uniaxial stress-strain curve Etan tangent modulus for uniaxial stress-strain curve Ex,Ey Young’s modulus of orthotropic material in x- and y-direction, respectively \n\nvil \n\nEx Ey .Exy \n\n**==> picture [296 x 47] intentionally omitted <==**\n\n**----- Start of picture text -----**<br>\nextensional stiffness of wall in x- and y-direction, respectively;<br>Ey = Ey = 2 , Exy = a for isotropic cylinder<br>**----- End of picture text -----**<br>",
+      "page_number": 3,
+      "parent_id": null,
+      "cross_references": [],
+      "table": null,
+      "formula": null,
+      "metadata": {}
+    },
+    {
+      "element_id": "sec-ky",
+      "element_type": "section",
+      "paragraph_ref": null,
+      "title": "ky",
+      "content": "Young’s modulus of sandwich core in direction perpendicular to face sheet of sandwich \n\nG shear modulus G,,Gy shear modulus of stiffeners and rings, respectively Gxy inplane shear modulus of orthotropic material Gyy shear stiffness of orthotropic or sandwich wall in x-y plane; Gxy =Gt for isotropic cylinder Gx7,Gyz shear modulus of core of sandwich wall in x-z and y-z planes, respectively ",
+      "page_number": 4,
+      "parent_id": null,
+      "cross_references": [],
+      "table": null,
+      "formula": null,
+      "metadata": {}
+    },
+    {
+      "element_id": "sec-gx7-gyz",
+      "element_type": "section",
+      "paragraph_ref": null,
+      "title": "Gx7,Gyz",
+      "content": "- h depth of sandwich wall measured between centroids of two face sheets ",
+      "page_number": 4,
+      "parent_id": null,
+      "cross_references": [],
+      "table": null,
+      "formula": null,
+      "metadata": {}
+    },
+    {
+      "element_id": "sec-t",
+      "element_type": "section",
+      "paragraph_ref": null,
+      "title": "T",
+      "content": "moment of inertia per unit width of corrugated cylinder \n\n1 moment of inertia of rings and stiffeners, respectively, about their centroid \n\n- JpJs kp \n\nKpc \n\nky \n\n- ky \n\n- kxy \n\nbeam torsion constant of rings and stiffeners, respectively buckling coefficient of cylinder subject to hydrostatic pressure, pr 2?/n?D buckling coefficient of cylinder with an elastic core subject to lateral pressure, pr?/D \n\n- buckling coefficient of cylinder subject to axial compression, Nx 8? /2? D or Ny&?/2?D, \n\n- buckling coefficient of cylinder subject to lateral pressure, Nyk? /n?D or Ny&?/7?D, \n\n- buckling coefficient of cylinder subjected to torsion, Nyy? /m? D or Nyy? /m?D, \n\ng length of cylinder \n\nM bending moment on cylinder Mopress bending moment at collapse of a pressurized cylinder Mp=0 bending moment at collapse of a nonpressurized cylinder Mt twisting moment on cylinder m number of buckle half waves in the axial direction \n\n2yE oh \n\n- Nx \n\naxial load per unit width of circumference for cylinder subjected to axial compression \n\nviii \n\nNy \n\n- Ny circumferential load per unit width of circumference for cylinder subjected to lateral pressure \n\n- Nxy shear load per unit width of circumference for cylinder subjected to torsion \n\n- n number of buckle waves in the circumferential direction P axial load on cylinder Poress axial load on pressurized cylinder at buckling Pyo=0 axial load on nonpressurized cylinder at buckling p pressure, usually critical pressure R shear flexibility coefficient, mb 2?Dq \n\n- Rp ratio of bending moment on cylinder subjected to more than one type of loading to the allowable bending moment for the cylinder when subjected only to bending \n\n- Re ratio of axial load in cylinder subjected to more than one type of loading to the allowable axial load for the cylinder when subjected only to axial compression \n\n- Rp ratio of external pressure on cylinder subjected to more than one type of loading to the allowable external pressure for the cylinder when subjected only to external pressure \n\n- Ry ratio of torsional moment on cylinder subjected to more than one type of loading to the allowable torsional moment for the cylinder when subjected only to torsion \n\n- r radius of cylinder Ss cell size of honeycomb core (see eq. 92) t skin thickness of isotropic cylinder; thickness of corrugated cylinder t effective thickness of corrugated cylinder, area per unit width of circumference \n\n- te face thickness of sandwich cylinder having equal thickness faces tk skin thickness of kth layer of layered cylinder t,,t, facing-sheet thicknesses for sandwich construction having faces of unequal thickness \n\n- X,Y,Z coordinates in the axial, circumferential, and radial directions, respectively \n\n- Z curvature parameter; ay 1 — yp? for isotropic cylinder, re {\\—p? for isotropic sandwich cylinder \n\nix \n\nZk \n\ndistance of center of kth layer of layered cylinder from reference surface (positive outward) \n\n- ZgZyp distance of centroid of stiffeners and_ rings, respectively, from reference surface (positive when stiffeners or rings are on outside) ",
+      "page_number": 4,
+      "parent_id": null,
+      "cross_references": [],
+      "table": null,
+      "formula": null,
+      "metadata": {}
+    },
+    {
+      "element_id": "sec-b-buckle-aspect-ratio-trm",
+      "element_type": "section",
+      "paragraph_ref": null,
+      "title": "B buckle aspect ratio (~~Trm",
+      "content": "- Y correlation factor to account for difference between classical theory and predicted instability loads \n\n- A distance of reference surface from inner surface of layered wall Ay increase in buckling correlation factor due to internal pressure 5 ratio of core density of honeycomb sandwich plate to density of face sheet of sandwich plate \n\n- 6k distance of centroid of kth layer of layered cylinder from inner surface \n\n- n plasticity reduction factor u Poisson’s ratio Me Poisson’s ratio of core material Uxoby Poisson’s ratios associated with stretching of an orthotropic material in x- and y-directions, respectively \n\n- op critical axial stress for a cylinder with an elastic core Oy axial stress By circumferential stress T shear stress Ter torsional buckling stress of an unfilled cylinder Txy shear stress in the x-y plane \n\nx ",
+      "page_number": 6,
+      "parent_id": null,
+      "cross_references": [],
+      "table": null,
+      "formula": null,
+      "metadata": {}
+    },
+    {
+      "element_id": "sec-buckling-of-thin-walled-circular-cylinders",
+      "element_type": "section",
+      "paragraph_ref": null,
+      "title": "BUCKLING OF THIN-WALLED CIRCULAR CYLINDERS",
+      "content": "",
+      "page_number": 6,
+      "parent_id": null,
+      "cross_references": [],
+      "table": null,
+      "formula": null,
+      "metadata": {}
+    },
+    {
+      "element_id": "sec-1-introduction",
+      "element_type": "section",
+      "paragraph_ref": null,
+      "title": "1. INTRODUCTION",
+      "content": "Structural components are said to be unstable under static loading when infinitesimal load increases or other small disturbances will induce the structure to change from one equilibrium configuration to another of a different character. For some structures and loadings the two configurations may differ slightly and large changes of shape develop gradually with an increase of load. In this case, the initial buckling load merely indicates when a change in the character of the deformations will occur. Generally, a more significant load is the ultimate load of the structure which may be reached either when the material fails plastically or when the structure collapses. In other instances the two equilibrium configurations differ greatly and the transition from one to the other is extremely rapid. The structure usually loses its capacity to sustain further load increases or it undergoes large deformations that render it unsafe for continued use. \n\nThe primary design problem is the prevention of the buckling that leads to undesirable configurations — in particular, collapse. The magnitude of the critical static load of a structure generally depends on its geometric proportions, the manner in which it is stiffened and in which it is supported, the bending and extensional stiffnesses of its various components, or other reasonably well-defined characteristics. For thin-walled shell structures, less certain characteristics, such as small deviations of the structure from its nominal unloaded shape, may also have quite important effects on the load at which buckling will occur. Other factors that affect buckling, such as cutouts, nonuniform stiffnesses, and variation of loading with time,are not considered in this monograph. \n\nThis monograph indicates current practices for predicting buckling of uniform stiffened and unstiffened circular cylindrical shells under various types of static loading, and suggests the procedures that yield estimates of static buckling loads considered to be conservative. The buckling of truncated conical shells and shells of double curvature will be treated in separate monographs. \n\nEstimation of design loads for buckling involves the use of the ultimate design factor. Considerations involved in selecting the numerical value of this factor will be presented in another monograph. ",
+      "page_number": 6,
+      "parent_id": null,
+      "cross_references": [],
+      "table": null,
+      "formula": null,
+      "metadata": {}
+    },
+    {
+      "element_id": "sec-2-state-of-the-art",
+      "element_type": "section",
+      "paragraph_ref": null,
+      "title": "2. STATE OF THE ART",
+      "content": "A relatively detailed understanding of the theory of buckling of circular cylindrical shells has been made possible by the use of electronic digital computers. Such understanding has been immeasurably aided by more rigorous formulations of the theory and by reliance on actual investigation, rather than on intuition. In particular, the large body of information available for flat plates is now known not to be strictly applicable to circular cylindrical shells, for which a separate body of information is being generated. Most of the available information on buckling of circular cylindrical shells is restricted to unstiffened shells of uniform thickness or to stiffened shells with uniform stiffness and properties, subjected to axisymmetric loading states which have certain simple longitudinal distributions, generally uniform. While problems involving surface loadings and thickness or stiffness variations that are axisymmetric but nonuniform longitudinally have been solved, detailed investigations of the effects of various parameters have not been made. Available information is quite inadequate for the analysis of loadings that are nonuniform circumferentially. Problems of this type can be treated by digital computer programs. A program for shells with uniform wall stiffnesses under axisymmetric loading is given in reference | and one for shells with axisymmetric geometric properties but asymmetric loadings in reference 2, Application of theory to the design of actual cylindrical shells is complicated by apparent discrepancies between theory and experiment. For shells in which longitudinal compression of the cylinder wall predominates, the discrepancies can be quite large. For shells in which shear or circumferential compression predominates, the discrepancies are generally less severe but still large enough to require experimental programs to establish design data. The causes of such discrepancies are generally understood. The primary source of error is the dependence of the buckling load of cylindrical shells on small deviations from the nominal circular cylindrical shape of the structure. Because the unloaded shape of test specimens usually has not been stringently controlled, most test results for nominally identical specimens have large scatter and fall below the theoretical values. \n\nAnother source of discrepancy is the dependence of buckling loads of cylindrical shells on edge values of longitudinal and circumferential displacements or forces. Because tangential edge conditions have not usually been precisely controlled in buckling tests, some of the scatter of test results can be attributed also to this source. Current methods of establishing design data tend to treat both initial imperfections and edge conditions as random effects. Results from all available tests are lumped without regard to specimen construction or methods of testing, and are analyzed to yield lower bound or statistical correction factors to be applied to simplified versions of the theoretical \n\n2 \n\nresults. This technique has proved satisfactory to date for design purposes. To put improved procedures to immediate use, however, the designer is advised to be alert to new developments in shell-stability analysis. The recommendations will be modified as more theoretical and test data become available. ",
+      "page_number": 6,
+      "parent_id": null,
+      "cross_references": [],
+      "table": null,
+      "formula": null,
+      "metadata": {}
+    },
+    {
+      "element_id": "sec-3-criteria",
+      "element_type": "section",
+      "paragraph_ref": null,
+      "title": "3. CRITERIA",
+      "content": "",
+      "page_number": 7,
+      "parent_id": null,
+      "cross_references": [],
+      "table": null,
+      "formula": null,
+      "metadata": {}
+    },
+    {
+      "element_id": "sec-3-1-general",
+      "element_type": "section",
+      "paragraph_ref": null,
+      "title": "3.1 General",
+      "content": "Structural components consisting of thin, curved isotropic or composite sheet, with or without stiffening, shall be so designed that (1) buckling resulting in collapse of the structural component will not occur from the application of design loads, and (2) buckling deformation resulting from limit loads will not be so large as to impair the function of the structural components or nearby components, nor so large as to produce undesirable changes in loading. 3.2 Guides for Compliance Design loads for buckling are considered to be any combination of ground or flight loads, including loads resulting from temperature changes, that cause compressive inplane stresses (multiplied by the ultimate design factor) and any load or load combination tending to alleviate buckling (not multiplied by the ultimate design factor). For example, external pressure loads or torsional loads should be increased by the design factor, but internal pressure loads should not. \n\nSuitably devised tests are required of representative structures under conditions simulating the design loads when minimum weight is a dominant factor or when cutouts, elastic end supports, or other special problems occur in the design. ",
+      "page_number": 7,
+      "parent_id": null,
+      "cross_references": [],
+      "table": null,
+      "formula": null,
+      "metadata": {}
+    },
+    {
+      "element_id": "sec-4-recommended-practices",
+      "element_type": "section",
+      "paragraph_ref": null,
+      "title": "4. RECOMMENDED PRACTICES",
+      "content": ". ",
+      "page_number": 7,
+      "parent_id": null,
+      "cross_references": [],
+      "table": null,
+      "formula": null,
+      "metadata": {}
+    },
+    {
+      "element_id": "sec-4-1-scope",
+      "element_type": "section",
+      "paragraph_ref": null,
+      "title": "4.1 Scope",
+      "content": "Within the limitations imposed by the state of the art, acceptable procedures for the estimation of critical loads on circular cylindrical shells are described in this section. The important problems are indicated and the source of the procedures and their limitations are discussed. Where the recommended procedure is complex and is suitably defined in all its detail in a readily available reference, it is merely outlined. Where practicable, a summary of the procedure is given. \n\n3 \n\n_ ",
+      "page_number": 7,
+      "parent_id": null,
+      "cross_references": [],
+      "table": null,
+      "formula": null,
+      "metadata": {}
+    },
+    {
+      "element_id": "sec-4-2-lsotropic-unstiffened-cylinders",
+      "element_type": "section",
+      "paragraph_ref": null,
+      "title": "4.2 \\lsotropic Unstiffened Cylinders",
+      "content": "Unstiffened isotropic circular cylinders subjected to various conditions of loading are considered in this section. In the theoretical analysis of cylinders it is usually necessary to take account of deformations of the cylinder prior to buckling and of end conditions associated with displacements, both tangential and normal to the middie surface. The differences between rigorous solutions for various end support conditions, however, are obscured by the effects of initial imperfections. It is therefore customary to use simplified theoretical calculations modified to fit available test data. ",
+      "page_number": 7,
+      "parent_id": null,
+      "cross_references": [],
+      "table": null,
+      "formula": null,
+      "metadata": {}
+    },
+    {
+      "element_id": "sec-4-2-1-axial-compression",
+      "element_type": "section",
+      "paragraph_ref": null,
+      "title": "4.2.1 Axial Compression",
+      "content": "Buckling and collapse coincide for the isotropic circular cylinder in axial compression. From reference 3, an approximate buckling equation for supported cylinders under axial compression is \n\n**==> picture [227 x 27] intentionally omitted <==**\n\nwhere \n\n**==> picture [286 x 33] intentionally omitted <==**\n\nand the factor y? has been inserted in the second term to correct the disparity between theory and experiment. Minimization of the equation with respect to m and @ results in the variation of kx with yZ shown in figure 1. For moderately long cylinders (vz > 2\") ; the buckling coefficient may be expressed approximately by the equation ky = 4v3 yZ (3) T \n\nEquation (3) can be rewritten in a more familiar and useful form as the equation for axial stress: \n\n**==> picture [282 x 29] intentionally omitted <==**\n\n**==> picture [236 x 18] intentionally omitted <==**\n\n4 \n\n**==> picture [408 x 261] intentionally omitted <==**\n\n**----- Start of picture text -----**<br>\n10° ee ee<br>fo; ai eeeHSaee cnn)aei eeePy  acne| |tt<br>2PP EE y, L<br>oe ELLE TePe<br>xaetieesiees|| Pt ; | Tf es A ||<br>AU<br>PLL ansiaeni<br>x<br>=Fra] 10 8 ee j tteefT TTT  eee/| Hp tt<br>6‘ o Spij[| Ty HEi Pit| mae<br>1 Ce 4+ | 4 TTPUE a oo<br>2 4 6 8 2 4 6 8 2 4 6 8 2 4 6 8 2 4 6 8&8<br>1g! 1 10 107 10° 107<br>yz<br>**----- End of picture text -----**<br>\n\n\nFigure 1 \n\nBuckling coefficients for simply supported isotropic circular cylinders subjected to axial compression \n\nThe theoretical value of the factor y? in equation (2) is equal to unity in reference 3. A more rigorous analysis (ref. 4) indicates that lower theoretical values should be used for all types of support and that the shape of the curve is not correct in the low yZ range. On the basis of various experimental data (ref. 5), however, it is recommended that figure | be used with the factor y taken as \n\n**==> picture [252 x 14] intentionally omitted <==**\n\nwhere \n\n**==> picture [281 x 23] intentionally omitted <==**\n\nEquation (5) is shown graphically in figure 2 and provides a good lower bound for most test data. Figure 2 should be used with caution for cylinders with length-radius ratios greater than about 5 since the correlation has not been verified by experiment in this range. \n\nR) \n\n**==> picture [409 x 256] intentionally omitted <==**\n\n**----- Start of picture text -----**<br>\nweege<br>i<br>o 0.7 P TN<br>2SPPR<br>Sop03 NRbwLT<br>ps eeee<br>. TE<br>st TTTT<br>Q<br>2 4 6 & 2 4 6 8 1.5<br>10 10? 10°<br>r/t<br>**----- End of picture text -----**<br>\n\n\nFigure 2 \n\nCorrelation factors for isotropic circular cylinders subjected to axial compression \n\nWhen geometry and material properties are such that the computed buckling stresses are in the plastic range, the value E in equations (3) and (4) should be replaced by the value nE where \n\n**==> picture [241 x 25] intentionally omitted <==**\n\nEquation (7) is an approximation of the plasticity factors given in references 6 and 7, and applies to moderately long cylinders. For extremely short cylinders (Z > 0), the appropriate plasticity factor as given by reference 8 is: \n\n**==> picture [224 x 26] intentionally omitted <==**\n\nFor cylinders with a length between those for which equations (7) and (8) apply, a plasticity factor is not available. Presumably, a linear interpolation with Z between the factors given by equations (7) and (8) would provide satisfactory results. Such a factor would be a function of cylinder geometry, as well as of the usual material stress-strain curve. \n\n6 \n\n42.2 Bending \n\nBuckling and collapse coincide for isotropic, unpressurized circular cylinders in bending. The procedures given for isotropic cylinders in axial compression may be used also to obtain the critical maximum stress for isotropic cylinders in bending, except that a correlation factor based on bending tests should be used in place of the factor given by equation (5) for cylinders in axial compression. The correlation factor for the cylinder in bending is taken on the basis of reference 9 as \n\n**==> picture [262 x 14] intentionally omitted <==**\n\nwhere \n\n**==> picture [230 x 23] intentionally omitted <==**\n\n**==> picture [411 x 398] intentionally omitted <==**\n\n**----- Start of picture text -----**<br>\nEquation (9) is presented graphically in figure 3. This equation should be used with<br>caution for + > 1500 because experimental data are not available in this range.<br>Although the theoretical critical stress for axial compression and that for bending are<br>the same, the correlation factor for bending is greater than that for compression. This<br>wd TE<br>ae ee<br>os aee<br>eceof |RRL<br>ee[=] eeee<br>ee eeee<br>ps esOO<br>os ee OO<br>VEE0 EE<br>2 4 6 8 2 4 6 8 1.5<br>10! 10? 10°<br>r/t<br>Figure 3<br>Correlation factors for isotropic circular cylinders subjected<br>to bending<br>**----- End of picture text -----**<br>\n\n\n7 \n\nis primarily because the buckling of a cylinder in compression can be triggered by any imperfection on the shell surface, whereas in bending, buckling is generally initiated in the region of the greatest compressive stress. ",
+      "page_number": 7,
+      "parent_id": null,
+      "cross_references": [],
+      "table": null,
+      "formula": null,
+      "metadata": {}
+    },
+    {
+      "element_id": "sec-4-2-3-external-pressure",
+      "element_type": "section",
+      "paragraph_ref": null,
+      "title": "4.2.3 External Pressure",
+      "content": "The term “lateral pressure” designates an external pressure which acts only on the curved walls of the cylinder and not on the ends. The load in the cylinder wall is given by \n\n**==> picture [246 x 13] intentionally omitted <==**\n\nThe term “hydrostatic pressure” designates an external pressure which acts on both the curved walls and the ends of the cylinder. The cylinder wall loads are given by \n\n**==> picture [247 x 58] intentionally omitted <==**\n\nExcept for unusually short cylinders, the critical pressures for the two types of loads are not significantly different. \n\nAn approximate buckling equation for supported cylinders loaded by lateral pressure is given by reference 3 as \n\n**==> picture [408 x 157] intentionally omitted <==**\n\nThe minimum values of ky for lateral pressure and kp for hydrostatic pressure are obtained by allowing the buckle aspect ratio B to vary continuously and are shown in figure 4. The straight-line portion of the main curve (yZ > 100) is given by the equation (from ref. 3): \n\n8 \n\nky = 1.04 VyZ \n\n(15) \n\nor the critical pressure is given by \n\n**==> picture [91 x 46] intentionally omitted <==**\n\n**----- Start of picture text -----**<br>\n0.855 E<br>oe\")t (2)r<br>**----- End of picture text -----**<br>\n\n\nFor p = 0.3, the pressure is given by \n\n**==> picture [256 x 49] intentionally omitted <==**\n\n**----- Start of picture text -----**<br>\np = 0.926 Evy (17)<br>()t r<br>**----- End of picture text -----**<br>\n\n\n**==> picture [411 x 259] intentionally omitted <==**\n\n**----- Start of picture text -----**<br>\n10°<br>3 J es sO ee ee ee ae<br>pg a a OOee _<br>vLt Piet Lf!Vi<br>Aw Za<br>; PTE ey a OA<br>ra 2 AiYY<br>§>C @.fse5 eerree etee e eae eTeeTHeeeWATT]ee oTanTT<br>e LLL<br>10!<br>3 [rot]<br>a Cees6ap a_} [| i ft ae [er] eaeSoeeee eeSSeee<br>: ane a eel<br>'<br>2 4 6 8 2 4 6 8 2 4 6 8 2 4 6 8 2 4 6 8<br>1 10 10? 10° 10° 10°<br>yz<br>**----- End of picture text -----**<br>\n\n\nFigure 4 \n\nBuckling coefficients for simply supported isotropic circular cylinders subjected to external pressure \n\n9 \n\nThe family of curves at high values of yZ in figure 4, which is dependent upon the radius-thickness ratio of the cylinder, and which corresponds to buckling of the cylinder into an oval shape, is given by reference 10 as \n\nor \n\n**==> picture [254 x 88] intentionally omitted <==**\n\nThe theoretical value of y given in reference 3 is equal to unity. Other analyses (refs. 4 and 11) indicate that restraint of the edge against longitudinal movement and/or rotation can increase the theoretical buckling pressure by as much as 50%. Experimental data for cylinders which buckle with more than two circumferential waves [ yZ < 11.8 ¢f) ad -?)] show considerable scatter about the theoretical values given by equation (14) with y equal to unity. See reference 12. Some of this scatter is because the actual end restraint of test specimens is usually not considered in detail in the analysis of the test data. Scatter may also occur when isolated buckles appear in cylinders with large + or small £ before a pressure is reached at which a buckle pattern appears around the entire shell circumference. The definition of buckling for these cases is a matter of individual judgment and may vary in different tests by different investigators. Because some tests fall as much as 25% below the theoretical results, a correlation factor of \n\n**==> picture [225 x 13] intentionally omitted <==**\n\nis recommended for use with equations (15), (16), and (17). \n\nFor long cylinders that buckle into an oval shape, there is less discrepancy between theory and experiment (ref. 13), and a correlation factor of \n\n**==> picture [218 x 15] intentionally omitted <==**\n\nis recommended for use with equations (18) and (19). \n\nFor unusually short cylinders under lateral pressure (yZ < 5), the plasticity factor for long, simply supported plates in axial compression may be used. It is obtained from reference 8 as \n\n**==> picture [303 x 36] intentionally omitted <==**\n\n10 \n\nFor 100 < yZ < 11.8 (t) 2 (1 ~ 2), the approximate plasticity factor is obtained from equation (12) of reference 13 as \n\n**==> picture [303 x 40] intentionally omitted <==**\n\nand for yZ > 11.8 (f) 2 (1 —p*), the approximate plasticity factor is obtained from equation (59) of reference 7 as \n\n**==> picture [275 x 28] intentionally omitted <==**\n\nNo plasticity factor is available for the range 5 < Y Z < 100; satisfactory results may. however, be achieved by linear interpolation with the parameter Z between the values ofn given by equations (22) and (23). \n\nPlasticity factors for the biaxial stress state of hydrostatic pressure are unavailable. For lack of better information, the plasticity factors given by equations (22) and (24) may be used. ",
+      "page_number": 9,
+      "parent_id": null,
+      "cross_references": [],
+      "table": null,
+      "formula": null,
+      "metadata": {}
+    },
+    {
+      "element_id": "sec-4-2-4-torsion",
+      "element_type": "section",
+      "paragraph_ref": null,
+      "title": "4.2.4 Torsion",
+      "content": "Buckling and collapse torques for unstiffened cylinders in torsion generally coincide. The theoretical buckling coefficient for cylinders in torsion can be obtained from figure 5, which is taken from reference 3. The straight-line portion of the curve is given by the equation \n\n**==> picture [288 x 31] intentionally omitted <==**\n\nand applies for 50 < yZ < 78 (t) (1 — p?). The correlation factor y has been inserted so that the theory may be adjusted to agree with experimental data. Equation (25) can be written \n\n**==> picture [257 x 60] intentionally omitted <==**\n\n**==> picture [9 x 8] intentionally omitted <==**\n\n**==> picture [437 x 318] intentionally omitted <==**\n\n**----- Start of picture text -----**<br>\n10°<br>gh ff TT [Jf TT TT T TT)<br>s-_| | TTP tT Pry Ty aT<br>ee Li4 SIEEU PTPt eo<br>ra EEL L E ae<br>rd 10° ¢ Se e eeOOee ee eee eee<br>:ee; TT e a t ett<br>2 2 oan<br>ee eeeee<br>° pTeee<br>wer: ttttd tot aH<br>ALE TE EET<br>ell<br>2 4 6 8 2 4 6 8 2 4 6 8 2 4 6 8 2 4 6 8<br>1 10 107 10° 104 105<br>a7<br>Figure 5<br>Buckling coefficients for simply supported isotropic circular<br>cylinders subjected to torsion<br>**----- End of picture text -----**<br>\n\n\nFor yZ > 78 Gy a —p’*), the cylinder buckles with two circumferential waves. The buckling coefficient as given by equations (11) to (27) of reference 10 (p. 504) is: \n\nor \n\n**==> picture [283 x 116] intentionally omitted <==**\n\nTo approximate the lower limit of most data (ref. 3), the value \n\n**==> picture [225 x 20] intentionally omitted <==**\n\nis recommended for moderately long cylinders. \n\n12 \n\nPlasticity may be taken into account by applying the plasticity factor from reference 13 in the above equations: \n\n**==> picture [232 x 26] intentionally omitted <==**\n\nThe quantity Ege, is obtained from a uniaxial stress-strain curve at a normal stress equal to twice the critical shear stress. Equation (29) applies to cylinders of all lengths. ",
+      "page_number": 11,
+      "parent_id": null,
+      "cross_references": [],
+      "table": null,
+      "formula": null,
+      "metadata": {}
+    },
+    {
+      "element_id": "sec-4-2-5-combined-loads",
+      "element_type": "section",
+      "paragraph_ref": null,
+      "title": "4.2.5 Combined Loads",
+      "content": "Load combinations usually encountered in practice are treated here. Generally, the recommended practice for handling combinations of two or more load conditions that may cause buckling is that the sum of the various critical load ratios is equal to unity. ",
+      "page_number": 12,
+      "parent_id": null,
+      "cross_references": [],
+      "table": null,
+      "formula": null,
+      "metadata": {}
+    },
+    {
+      "element_id": "sec-4-2-5-1-circular-cylinders-in-axial-compression-and-bending",
+      "element_type": "section",
+      "paragraph_ref": null,
+      "title": "4.2.5.1 Circular Cylinders in Axial Compression and Bending",
+      "content": "The recommended interaction equation for combined compressive load and bending is \n\n**==> picture [226 x 11] intentionally omitted <==**\n\nThe quantities R, and Rp are, respectively, the compressive and bending load or stress ratios. The denominators of the ratios are the allowable loads or stresses given by equations (4) to (6) for cylinders in axial compression and by equations (4) and (9) for cylinders in bending. ",
+      "page_number": 12,
+      "parent_id": null,
+      "cross_references": [],
+      "table": null,
+      "formula": null,
+      "metadata": {}
+    },
+    {
+      "element_id": "sec-4-2-5-2-circular-cylinders",
+      "element_type": "section",
+      "paragraph_ref": null,
+      "title": "4.2.5.2 Circular Cylinders",
+      "content": "",
+      "page_number": 13,
+      "parent_id": null,
+      "cross_references": [],
+      "table": null,
+      "formula": null,
+      "metadata": {}
+    },
+    {
+      "element_id": "sec-in-axial-compression-and-external-pressure",
+      "element_type": "section",
+      "paragraph_ref": null,
+      "title": "in Axial Compression and External Pressure",
+      "content": "The recommended interaction equation for combined compressive load and hydrostatic pressure or lateral pressure is ",
+      "page_number": 13,
+      "parent_id": null,
+      "cross_references": [],
+      "table": null,
+      "formula": null,
+      "metadata": {}
+    },
+    {
+      "element_id": "sec-r-ry",
+      "element_type": "section",
+      "paragraph_ref": null,
+      "title": "R. + Ry = |",
+      "content": "**==> picture [20 x 14] intentionally omitted <==**\n\nThe quantities R. and Rp are, respectively, the compressive and hydrostatic- or lateral-pressure load or stress ratios. The denominators of the ratios are the allowable stresses given by equations (4) to (6) for cylinders in axial compression and by equations (16) and (20) for cylinders subjected to external pressure. \n\n13 ",
+      "page_number": 13,
+      "parent_id": null,
+      "cross_references": [],
+      "table": null,
+      "formula": null,
+      "metadata": {}
+    },
+    {
+      "element_id": "sec-4-2-5-3-circular-cylinders-in-axial-compression-and-torsion",
+      "element_type": "section",
+      "paragraph_ref": null,
+      "title": "4.2.5.3 Circular Cylinders in Axial Compression and Torsion",
+      "content": "For cylindrical shells under torsion and axial compression, the analytical interaction curve is a function of Z, and varies from a parabolic shape at low-Z values to a straight line at high-Z values. The scatter of experimental data suggests the use of a straight-line interaction formula. Therefore, the recommended interaction equation is ",
+      "page_number": 13,
+      "parent_id": null,
+      "cross_references": [],
+      "table": null,
+      "formula": null,
+      "metadata": {}
+    },
+    {
+      "element_id": "sec-re-re-1",
+      "element_type": "section",
+      "paragraph_ref": null,
+      "title": "Re + Re = 1",
+      "content": "(32) \n\nThe quantities Re and Ry are, respectively, the compressive and torsion load or stress ; ratios. The denominators of the ratios are the allowable stresses given by equations (4) to (6) for cylinders in axial compression and by equations (26) and (28) for cylinders in torsion. ",
+      "page_number": 13,
+      "parent_id": null,
+      "cross_references": [],
+      "table": null,
+      "formula": null,
+      "metadata": {}
+    },
+    {
+      "element_id": "sec-4-2-5-4-internally-pressurized-circular-cylinders",
+      "element_type": "section",
+      "paragraph_ref": null,
+      "title": "4.2.5.4 Internally Pressurized Circular Cylinders",
+      "content": "",
+      "page_number": 13,
+      "parent_id": null,
+      "cross_references": [],
+      "table": null,
+      "formula": null,
+      "metadata": {}
+    },
+    {
+      "element_id": "sec-in-axial-compression",
+      "element_type": "section",
+      "paragraph_ref": null,
+      "title": "in Axial Compression",
+      "content": "Buckling and collapse coincide for internally pressurized circular cylinders in axial compression as in the case of the unpressurized cylinder. Pressurization increases the buckling load in the following ways: \n\n1. The total compressive load must be greater than the tensile pressurization load par? before buckling can occur. \n\n2. The destabilizing effect of initial imperfections is reduced. The circumferential tensile stress induced by the pressurization inhibits the diamond buckling pattern, and, at sufficiently high pressurization, the cylinder buckles in the classical axisymmetric mode at approximately the classical buckling stress. Lower bound curves giving the increase in buckling load as a function of pressure, based on results for Mylar cylinders, are given in reference 14 for various radius-to-thickness ratios. Because these curves are unsubstantiated at present for other materials, the more conservative values given in reference 15 are recommended for design use. It is therefore recommended that the total load for buckling, unless substantiated by test, be obtained by the addition of the pressurization load pmr?, the buckling load for the unpressurized cylinder [eqs. (4) and (5)], and an increase in the buckling load caused by pressurization; that is Poress = 2n Et? — yy Ay\\ + par? (33) Vv 3(1 — 2”) \n\nwhere Ay is obtained from figure 6. \n\nFor p = 0.3 \n\n**==> picture [287 x 16] intentionally omitted <==**\n\n14 \n\n**==> picture [412 x 269] intentionally omitted <==**\n\n**----- Start of picture text -----**<br>\n10 4 eesSeeee ee eeers ee eeateee ee[ft<br>1<br>8 NS a ne ae eee<br>i; es ee ee a es ee<br>5 eee [| eee<br>2 eee<br>10\" tie TTae ||<br>: eee eee ee<br>a a ee ee oe | |<br>o LE 2 tt4 6 8 2 4 6 a 2 4 6 8<br>40-2 10°! 1 10<br>p r 42<br>ze ly!<br>**----- End of picture text -----**<br>\n\n\nFigure 6 \n\nIncrease in axial-compressive buckling-stress coefficient of cylinders due to internal pressure. ",
+      "page_number": 13,
+      "parent_id": null,
+      "cross_references": [],
+      "table": null,
+      "formula": null,
+      "metadata": {}
+    },
+    {
+      "element_id": "sec-4-2-5-5-internally-pressurized-circular-cylinders-in-bending",
+      "element_type": "section",
+      "paragraph_ref": null,
+      "title": "4.2.5.5 Internally Pressurized Circular Cylinders in Bending",
+      "content": "For thin-walled cylinders subjected to bending and internal pressure, collapse loads are considerably higher than buckling loads (refs. 16 to 18), with the increase being substantially more than the tension stress induced by the pressurization. For example, for the true membrane cylinder (ref. 19, p. 229), the collapse load (M = par?) is twice the initial buckling load. The theoretical collapse load is, however, unattainable unless large undesirable deformations are present. It is therefore recommended that the collapse moment for pressurized cylinders be obtained by adding the moment-carrying capability of a pressurized membrane cylinder (taken for design purposes as 80% of the theoretical value), the collapse moment for the unpressurized cylinder [eqs. (4) and (9), and an increase in the critical moment caused by pressurization. Then \n\n**==> picture [316 x 28] intentionally omitted <==**\n\nwhere Ay is obtained from figure 6. \n\nFor p = 0.3 \n\n**==> picture [292 x 17] intentionally omitted <==**\n\n15 ",
+      "page_number": 14,
+      "parent_id": null,
+      "cross_references": [],
+      "table": null,
+      "formula": null,
+      "metadata": {}
+    },
+    {
+      "element_id": "sec-42-5-6-internally-pressurized-cylinders-in-axial-compression-and-bending",
+      "element_type": "section",
+      "paragraph_ref": null,
+      "title": "42.5.6 Internally Pressurized Cylinders in Axial Compression and Bending",
+      "content": "For internally pressurized circular cylinders in combined axial compression and bending, equation (30) is recommended for use in combination with equations (33) or (34) and (35) or (36). 4.3 Orthotropic Cylinders The term “orthotropic cylinders” covers a wide variety of cylinders. In its strictest sense, it denotes cylinders made of a single orthotropic material or of orthotropic layers. It also denotes types of stiffened cylinders for which the stiffener spacing is small enough for the cylinder to be approximated by a fictitious sheet whose orthotropic bending and extensional properties include those of the individual stiffening elements averaged out over representative widths or areas. Generally, the directions of the axes of orthotropy are taken to coincide with the longitudinal and circumferential directions of the cylinder. \n\nThe behavior of the various types of orthotropic cylinders may be described bya single theory, the elements of which are equations of equilibrium for the buckled structure, relationships between force and moment resultants, and extensional and bending strains. For cylinders of a single orthotropic material, it is generally permissible to neglect coupling between force resultants and bending strains, and between moment resultants and extensional strains. The theory is then similar to that for isotropic cylinders. For stiffened cylinders or for cylinders having orthotropic layers, however, the neglect of the coupling terms can lead to serious errors. For example, the inclusion of coupling terms yields a significant difference in theoretical results for stiffened cylinder configurations having stiffeners on the inner surface or on the outer surface. The difference vanishes when coupling is omitted. \n\nTheoretical and experimental results for stiffened shells are generally in better agreement than those for unstiffened shells. The possibility of local buckling of the cylinder between stiffening elements should be checked. ",
+      "page_number": 14,
+      "parent_id": null,
+      "cross_references": [],
+      "table": null,
+      "formula": null,
+      "metadata": {}
+    },
+    {
+      "element_id": "sec-4-3-1-axial-compression",
+      "element_type": "section",
+      "paragraph_ref": null,
+      "title": "4.3.1 Axial Compression",
+      "content": "A buckling equation for stiffened orthotropic cylinders in compression (ref. 20) is given by: \n\n**==> picture [296 x 88] intentionally omitted <==**\n\n16 \n\nin which \n\n**==> picture [272 x 28] intentionally omitted <==**\n\n**==> picture [366 x 150] intentionally omitted <==**\n\n**==> picture [408 x 333] intentionally omitted <==**\n\n17 \n\nThe unusually large number of parameters in equation (37) does not permit any definitive numerical results to be shown. For combinations of parameters representative of stiffened shells, calculations indicate that external stiffening, whether stringers or rings, or both, can be more effective than internal stiffening for axial compression. Generally, calculations neglecting stiffener eccentricity yield unconservative values of the buckling load of internally stiffened cylinders and conservative values of the buckling load of externally stiffened cylinders (ref. 23). An extensive investigation of the variation of the buckling load with various stiffener parameters is reported in reference 25. The limited experimental data (refs. 28 to 35) for stiffened shells are in reasonably good agreement with the theoretical results for the range of parameters investigated. \n\nOn the basis of available data, it is recommended that the buckling loads of cylinders with closely spaced, moderately large stiffeners calculated from equation (37) be multiplied by a factor of 0.75. Correlation coefficients covering the transition from unstiffened cylinders to stiffened cylinders with closely spaced stiffeners have not been fully investigated. While theory and experiment (ref. 34) indicate that restraint against edge rotation and longitudinal movement significantly increases the buckling load, not enough is known about the edge restraint of actual cylinders to warrant taking advantage of these effects unless substantiated by tests. \n\nFor layered or unstiffened orthotropic cylindrical shells, the available test data are quite meager (refs. 36 and 37). For configurations where the coupling coefficients Cy, Cy, Cxy> and Kxy can be neglected, it is recommended that the buckling load be calculated from the equation \n\n**==> picture [361 x 111] intentionally omitted <==**\n\nThe correlation factor y is taken to be of the same form as the correlation factor for isotropic cylinders [eq. (5)] with the thickness replaced by the geometric mean of the radii of gyration for the axial and circumferential directions. Thus \n\n**==> picture [263 x 12] intentionally omitted <==**\n\nwhere \n\n18 \n\n**==> picture [250 x 57] intentionally omitted <==**\n\n**----- Start of picture text -----**<br>\nn<br>o | ESr 2 (46)<br>= va |<br>4/ ==DxDy<br>Eyky<br>**----- End of picture text -----**<br>",
+      "page_number": 15,
+      "parent_id": null,
+      "cross_references": [],
+      "table": null,
+      "formula": null,
+      "metadata": {}
+    },
+    {
+      "element_id": "sec-43-2-bending",
+      "element_type": "section",
+      "paragraph_ref": null,
+      "title": "43.2 Bending",
+      "content": "Theoretical and experimental results (refs. 24, 29, and 38 to 40) indicate that the critical maximum load per unit circumference of a stiffened cylinder in bending can exceed the critical unit load in axial compression. In the absence of an extensive investigation, it is recommended that the critical maximum load per unit circumference of a cylinder with closely spaced stiffeners be taken as equal to the critical load in axial compression, which is calculated from equation (37) multiplied by a factor of 0.75. \n\nFor layered or unstiffened orthotropic cylinders with negligible coupling coefficients, it is recommended that the maximum unit load be calculated by means of equation (44) with y replaced by \n\n**==> picture [252 x 13] intentionally omitted <==**\n\nwhere \n\n**==> picture [255 x 57] intentionally omitted <==**",
+      "page_number": 16,
+      "parent_id": null,
+      "cross_references": [],
+      "table": null,
+      "formula": null,
+      "metadata": {}
+    },
+    {
+      "element_id": "sec-4-3-3-external-pressure",
+      "element_type": "section",
+      "paragraph_ref": null,
+      "title": "4.3.3. External Pressure",
+      "content": "The counterpart of equation (37) for stiffened orthotropic cylinders under lateral pressure is given by \n\n**==> picture [272 x 91] intentionally omitted <==**\n\n19 \n\nFor hydrostatic pressure, the quantity n? shown in equation (49) is replaced by \n\n**==> picture [73 x 22] intentionally omitted <==**\n\nIn the case of lateral pressure, m is equal to unity while n must be varied to yield a minimum value of the critical pressure, but is not less than 2. In the case of hydrostatic pressure, the value of m should be varied as well as n. For long cylinders, equation (49) is replaced by \n\n**==> picture [256 x 47] intentionally omitted <==**\n\nIf the coupling coefficients Cx, Cy, Cxys and Kyy can be neglected, the critical buckling pressure can be approximated by (ref. 22): \n\n**==> picture [292 x 56] intentionally omitted <==**\n\nfor \n\n**==> picture [271 x 50] intentionally omitted <==**\n\nEquation (49) has been investigated primarily for isotropic cylinders with ring stiffeners (refs. 41 to 43). For closely spaced ring stiffening, references 41 and 42 show that the effectiveness of inside or outside rings depends on the shell and ring geometries. Generally, for shells with values of Z less than 100, outside rings are more effective than inside rings, while for values of Z greater than 500, the reverse is true. As the ring geometry varies, the effectiveness of outside stiffening tends to increase as the stiffness of the rings relative to the shell increases. Somewhat lower buckling pressures are given by the extremely complex but more accurate theory of reference 44, but the differences are not so significant as to warrant its use. \n\nThe experimental results for ring-stiffened cylinders described in reference 45 are in reasonably good agreement with the theoretical results of equation (49). For cylinders of all types, it is recommended that the buckling pressure calculated from equation (49) be multiplied by a factor of 0.75 for use in design, as has been recommended for unstiffened isotropic cylinders of moderate length. \n\n20 \n\n4.3.4 Torsion \n\nThe problem of torsional buckling of orthotropic cylinders has been treated in references 22 and 46, which do not take coupling between bending and extension into account, and in reference 47, which does. If coupling effects are negligible, the critical torque of moderately long cylinders can be estimated from the relationship (ref. 22): \n\n**==> picture [302 x 49] intentionally omitted <==**\n\nfor \n\n**==> picture [270 x 43] intentionally omitted <==**\n\nReference 47, however, shows that coupling effects are quite important for cylinders stiffened by closely spaced rings. For long shells, internal rings are generally more effective than outside rings; for short shells, the reverse is true. In the absence of general formulas or graphs to cover the entire range of parameters that should be considered, the equations of reference 47 should be solved for each specific case considered. \n\nThe test data of reference 48 are in good agreement with theoretical predictions but are insufficient to provide an adequate test of the theory. It is therefore recommended that theoretical critical torques be multiplied by a factor of 0.67 for moderately long cylinders. ",
+      "page_number": 16,
+      "parent_id": null,
+      "cross_references": [],
+      "table": null,
+      "formula": null,
+      "metadata": {}
+    },
+    {
+      "element_id": "sec-4-3-5-combined-bending-and-axial-compression",
+      "element_type": "section",
+      "paragraph_ref": null,
+      "title": "4.3.5 Combined Bending and Axial Compression",
+      "content": "On the basis of theory (refs. 24, 29, and 38) and limited experimental data (refs. 28 and 29), a straight-line interaction curve is recommended for orthotropic cylinders subjected to combined bending and axial compression. The critical combinations of loading are thus given by \n\n**==> picture [66 x 12] intentionally omitted <==**\n\n**==> picture [19 x 12] intentionally omitted <==**\n\n21 \n\n4.3.6 Elastic Constants \n\nThe values of the various elastic constants used in the theory of buckling of orthotropic cylinders are different for different types of construction. ",
+      "page_number": 17,
+      "parent_id": null,
+      "cross_references": [],
+      "table": null,
+      "formula": null,
+      "metadata": {}
+    },
+    {
+      "element_id": "sec-4-3-6-1-stiffened-multilayered-orthotropic-cylinders",
+      "element_type": "section",
+      "paragraph_ref": null,
+      "title": "4.3.6.1 Stiffened Multilayered Orthotropic Cylinders",
+      "content": "Some widely used expressions for this type of cylinder are: \n\n**==> picture [367 x 299] intentionally omitted <==**\n\n**==> picture [366 x 84] intentionally omitted <==**\n\n**==> picture [364 x 197] intentionally omitted <==**\n\n**==> picture [364 x 397] intentionally omitted <==**\n\nwhere the subscript k refers to the material and geometry of the kth layer of an N-layered shell. See figure 7. A proper choice of the reference surface can make at least one of the coupling coefficients vanish. For example, if A is taken as \n\n**==> picture [276 x 68] intentionally omitted <==**\n\nthe coefficient Cxy vanishes and if \n\n**==> picture [260 x 60] intentionally omitted <==**\n\n**----- Start of picture text -----**<br>\nN<br>A = >2X (Gyy) k t, 6, (68)<br>Gyy<br>**----- End of picture text -----**<br>\n\n\nthe coefficient Kxy vanishes. \n\n**==> picture [321 x 188] intentionally omitted <==**\n\n**----- Start of picture text -----**<br>\nZz<br>[~~ qth layer<br>Ge I<br>{ ik<br>ay<br>{<br>5, |<br>reference A<br>| Arbitrarysurface |<br>**----- End of picture text -----**<br>\n\n\nFigure 7 Multilayered orthotropic cylindrical shell geometry \n\n24 ",
+      "page_number": 17,
+      "parent_id": null,
+      "cross_references": [],
+      "table": null,
+      "formula": null,
+      "metadata": {}
+    },
+    {
+      "element_id": "sec-4-3-6-2-isotropic-cylinders-with-stiffeners-and-rings",
+      "element_type": "section",
+      "paragraph_ref": null,
+      "title": "4.3.6.2 Isotropic Cylinders with Stiffeners and Rings",
+      "content": "For a cylinder consisting of a stiffened single isotropic layer and for a reference surface at the center of the layer, equations (56) to (66) reduce to \n\n**==> picture [283 x 85] intentionally omitted <==**\n\n**==> picture [293 x 87] intentionally omitted <==**\n\n**==> picture [291 x 266] intentionally omitted <==**\n\n**==> picture [288 x 17] intentionally omitted <==**\n\n**==> picture [11 x 9] intentionally omitted <==**",
+      "page_number": 18,
+      "parent_id": null,
+      "cross_references": [],
+      "table": null,
+      "formula": null,
+      "metadata": {}
+    },
+    {
+      "element_id": "sec-4-3-6-3-ring-stiffened-corrugated-cylinders",
+      "element_type": "section",
+      "paragraph_ref": null,
+      "title": "4.3.6.3 Ring-Stiffened Corrugated Cylinders",
+      "content": "The following formulas are commonly used to calculate the required stiffnesses of ring-stiffened corrugated cylinders, with the choice of formula depending on the different assumptions which may be made: \n\n**==> picture [293 x 317] intentionally omitted <==**\n\nSlightly different stiffnesses are given in reference 39. ",
+      "page_number": 19,
+      "parent_id": null,
+      "cross_references": [],
+      "table": null,
+      "formula": null,
+      "metadata": {}
+    },
+    {
+      "element_id": "sec-4-3-6-4-waffle-stiffened-cylinders",
+      "element_type": "section",
+      "paragraph_ref": null,
+      "title": "4.3.6.4 Waffle-Stiffened Cylinders",
+      "content": "Stiffnesses for cylinders with waffle-like walls are described in references 49 to 51. ",
+      "page_number": 19,
+      "parent_id": null,
+      "cross_references": [],
+      "table": null,
+      "formula": null,
+      "metadata": {}
+    },
+    {
+      "element_id": "sec-4-3-6-5-special-considerations",
+      "element_type": "section",
+      "paragraph_ref": null,
+      "title": "4.3.6.5 Special Considerations",
+      "content": "In some designs of stiffened cylinders, the skin may buckle before failure of the cylinder. Buckled sheet is less stiff than unbuckled sheet. The decreased stiffness can be calculated by methods similar to those presented in references 31, 40, and 52. \n\n26 ",
+      "page_number": 19,
+      "parent_id": null,
+      "cross_references": [],
+      "table": null,
+      "formula": null,
+      "metadata": {}
+    },
+    {
+      "element_id": "sec-4-4-isotropic-sandwich-cylinders",
+      "element_type": "section",
+      "paragraph_ref": null,
+      "title": "4.4 Isotropic Sandwich Cylinders",
+      "content": "The term “isotropic sandwich” designates a layered construction formed by bonding two thin facings to a thick core. Generally, the thin facings provide nearly all the bending rigidity of the construction. The core separates the facings and transmits shear so that the facings bend about a neutral axis. The core provides the shear rigidity of the sandwich construction. \n\nSandwich construction should be checked for two possible modes of instability failure: (1) general instability failure where the shell fails with core and facings acting together, and (2) local instability failure taking the form of dimpling of the faces or wrinkling of the faces. See figure 8. \n\n**==> picture [412 x 175] intentionally omitted <==**\n\n**----- Start of picture text -----**<br>\n“ Facing<br>ore<br>my Honeycomb<br>ay fromSeparationcore fo Sing<br>Facing<br>ttt tttt Th rite<br>General buckling Dimpling Wrinkling of facings<br>of facings<br>Figure 8<br>Types of failure of sandwich shells<br>**----- End of picture text -----**<br>\n\n\nIf the isotropic sandwich shell has thin facings and the core has relatively little bending stiffness, then for unequal thickness facings, the bending stiffness is given by \n\n**==> picture [260 x 18] intentionally omitted <==**\n\nand for equal thickness facings by \n\n**==> picture [237 x 33] intentionally omitted <==**\n\n**==> picture [12 x 8] intentionally omitted <==**\n\nThe extensional stiffness for unequal thickness facings is given by \n\nand for equal thickness \n\n**==> picture [251 x 64] intentionally omitted <==**\n\nThe transverse shear stiffness for an isotropic core is given by \n\n**==> picture [258 x 44] intentionally omitted <==**\n\nand for equal thickness by \n\n**==> picture [56 x 16] intentionally omitted <==**\n\nThe stiffness of other types of sandwich construction are given in references 53, 54, and 55. ",
+      "page_number": 19,
+      "parent_id": null,
+      "cross_references": [],
+      "table": null,
+      "formula": null,
+      "metadata": {}
+    },
+    {
+      "element_id": "sec-4-4-1-axial-compression",
+      "element_type": "section",
+      "paragraph_ref": null,
+      "title": "4.4.1 Axial Compression",
+      "content": "Investigations of buckling behavior of isotropic sandwich circular cylinders in axial compression are reported in references 21 and 56. Design information from these references is given in figures 9 and 10. \n\nFigure 10 is the more convenient of the two figures to use; it is applicable to all but unusually short cylinders [yZ < m?/ (1 + R)]. Figures 9 and 10 are based on the small-deflection buckling theory and should be used in conjunction with the correlation factor of figure 11 to predict buckling loads. Figure 11 is based on equation (45), given earlier for orthotropic cylinders. For the present application, the parameter ¢ becomes \n\n¢ - 29.8 —Vh 1)91 This procedure is consistent with the procedures given earlier for other types of construction when shearing of the core does not contribute significantly to the buckling deformations; that is, when No/Dg of figure 10 is small. As shearing deformations become more pronounced, the correction resulting from application of the factor y, as prescribed above, decreases and becomes zero in the limiting condition of buckling from a weak core [(No/Dg) > 2). \n\n28 \n\n**==> picture [341 x 262] intentionally omitted <==**\n\n**----- Start of picture text -----**<br>\n107 .<br>eeieee Peaeee<br>ep i fT oor TT TT TT<br>LeaTA<br>50ey EiaTEE| Ye tt EEE|<br>2 5 Se A<br>_ HATA<br>t AAT es<br>a@ ,aaLewaaeT<br>5<br>zceo oePidotptpy<br>eo LEE.pp2 4 6 8 2 4 i6 8 EP2 4 6 8 2 4ph6 8<br>1 10 107 10° 104<br>yz<br>**----- End of picture text -----**<br>\n\n\nFigure 9 \n\nBuckling coefficients for simply supported isotropic sandwich circular cylinders subjected to axial compression Gy7/Gyz = 1.0 \n\n**==> picture [403 x 298] intentionally omitted <==**\n\n**----- Start of picture text -----**<br>\n1.0 _<br>IN<br>—— =5<br>0.6 Gy,<br>é Ne<br>s 0.5<br>sy OD<br>0.3 |<br>0.4 eses<br>|<br>0.2 eeee<br>fp 7) 1 2 3 4 5<br>No/Dg<br>Figure 10<br>Buckling of moderately long, simply supported, isotropic sand-<br>wich circular cylinders subjected to axial compression<br>**----- End of picture text -----**<br>\n\n\n29 \n\n**==> picture [414 x 253] intentionally omitted <==**\n\n**----- Start of picture text -----**<br>\nwT<br>09Pt<br>ogee<br>ao 0.7 _,— —<br>SeDn<br>= ee<br>8 0.5 =<br>a<br>0.3 ><br>,0ESE EEE<br>2 4 6 8 2 4 6 8<br>10 107 10°<br>r/h<br>**----- End of picture text -----**<br>\n\n\nFigure 11 Correlation factors for isotropic sandwich circular cylinders subjected to axial compression \n\nA weight-strength study based on figure 10 and published values for the shear stiffness of honeycomb cores (ref.57) indicate that unusually lightweight cores are more desirable than heavier cores. Until adequate test data are obtained to substantiate this indication, however, designs should be limited to sandwiches with rather heavy cores (6 > 0.03). Sandwich plates with light honeycomb cores are susceptible to additional modes of deformation, and failure may result from intracell buckling, face wrinkling, or an interaction of one or both of these modes with a cylinder-buckling mode. In addition, small buckle-like deformations have been known to occur in actual structures long before the theoretical buckling load is reached. (See, for example, ref. 19, p. 217.) This behavior requires that the structure be capable of resisting internal moments and shears in addition to the directly applied loads. In the case of sandwich cylinders, the moments and shears may cause core buckling or shear failure of the core. \n\nThe only known method of preventing these core failures is to use relatively heavy cores which have considerable strength in crushing and shear. Some guidance as to how heavy the cores should be can perhaps be gleaned from the bending tests that have been made on multiweb beams. The internal structure of these beams is subject to the same types of loads, if not to the same degree, as the cores of loaded sandwich plates. Reference 58 indicates that honeycomb cores with a density ratio 6 = 0.03 should be \n\n30 \n\nadequate to prevent core failure. Large margins against failure in intracell buckling and wrinkling can be obtained with rather heavy cores (6 < 0.03) with little or no weight penalty. Moreover, when heavy cores are used, approximate equations are adequate for predicting failures in the intracell buckling and face wrinkling modes. The following equations may be used for this purpose. For intracell buckling (refs. 55 and 59): \n\n**==> picture [218 x 26] intentionally omitted <==**\n\nwhere S$ is the core cell size expressed as the diameter of the largest inscribed circle and \n\n**==> picture [253 x 22] intentionally omitted <==**\n\nwhere E and Etan are the elastic and tangent moduli of the face-sheet material. If initial dimpling is to be checked, the equation \n\n**==> picture [242 x 25] intentionally omitted <==**\n\nshould be used. The sandwich will still carry load if initial dimpling occurs. Critical wrinkling stresses are predicted by references 19 (p. 341) and 55. \n\n**==> picture [263 x 28] intentionally omitted <==**\n\nwhere E, is the modulus of the core in a direction perpendicular to the core and Gx; is the shear modulus of the core in the x-z plane. If biaxial compressive stresses are applied to the sandwich, then the coefficients of the equations must be reduced by the factor (1+ f?)3 (ref. 60) where \n\n**==> picture [325 x 28] intentionally omitted <==**\n\nWrinkling and intracell buckling equations which consider strength of bond, strength of foundation, and initial waviness of the facings are given in references 55, 61, and 62. \n\nThe plasticity correction factor given by equations (7) and (8) for isotropic cylinders in \" axial compression also may be applied to isotropic sandwich cylinders. The factor is applicable to sandwich cylinders with stiff cores and becomes somewhat conservative as the shear stiffness of the core is decreased (ref. 58). \n\n31 \n\n4.4.2 Bending \n\nThe buckling equations given in Section 4.2.1 for circular cylinders in axial compression may be used for cylinders in bending, provided the correlation factor y is taken from figure 12 instead of from figure 11. Figure 12 is based on equation (47), given earlier for orthotropic cylinders in bending. \n\n**==> picture [407 x 259] intentionally omitted <==**\n\n**----- Start of picture text -----**<br>\not1.0 | | [ [J | Jf 77<br>0.8 a| ee—_|<br>: 0.7 ee fb.<br>i ee<br>© 0.5 ~~ SO<br>a ee<br>0.3<br>es a | ||<br>af | | |tif 7 [[i]<br>of tL<br>9<br>2 4 6 & 2 4 6 8<br>10 10° 10°<br>t/h<br>**----- End of picture text -----**<br>\n\n\nFigure 12 \n\nCorrelation factors for isotropic sandwich circular cylinders subjected to bending ",
+      "page_number": 20,
+      "parent_id": null,
+      "cross_references": [],
+      "table": null,
+      "formula": null,
+      "metadata": {}
+    },
+    {
+      "element_id": "sec-443-lateral-pressure",
+      "element_type": "section",
+      "paragraph_ref": null,
+      "title": "443 Lateral Pressure",
+      "content": "A plot of ky against yZ, constructed from the data given in reference 63, is given in figure 13. The straight-line portion of the curve of figure 13 for a sandwich cylinder with a rigid core (R = 0) is given by the equation \n\n**==> picture [260 x 34] intentionally omitted <==**\n\nThere are no experimental data to substantiate figure 13; experience with isotropic cylinders, however, suggests that a factor y equal to 0.56 is to be used with this figure. \n\n32 \n\n. \n\n**==> picture [409 x 265] intentionally omitted <==**\n\n**----- Start of picture text -----**<br>\n10°<br>et: PTeeePa []<br>te it tet<br>. tit tT aer te<br>peE~ 8 LOU —_—— ear|_ rearSS SS OS SE aT<br>6 ee eee eee<br>ey ee ee ee<br>PT Te<br>Eee8of | [| TUT [op pry tT oT Pity ty<br>set TP<br>Lt UE EAE PE ee<br>wo LL | EU LEE<br>2 4 6 8 2 4 6 8 2 4 6 8 2 4 6 8 2 4 68<br>1 10 10? 10° 104 105<br>Zz<br>**----- End of picture text -----**<br>\n\n\nFigure 13 Buckling coefficients for simply supported isotropic sandwich circular cylinders subjected to lateral pressure G,,/Gyz = 1.0 \n\nHere, as with sandwich cylinders in axial compression or bending, designs should be limited to sandwich cylinders for which the density ratio § is 0.03 or greater, unless the design is substantiated by adequate tests. \n\nThe plasticity factors for isotropic cylinders subjected to external pressure, expressed by equations (22), (23), and (24), may be used for isotropic sandwich cylinders subjected to lateral pressure. ",
+      "page_number": 22,
+      "parent_id": null,
+      "cross_references": [],
+      "table": null,
+      "formula": null,
+      "metadata": {}
+    },
+    {
+      "element_id": "sec-44-4-torsion",
+      "element_type": "section",
+      "paragraph_ref": null,
+      "title": "44.4 Torsion",
+      "content": "Isotropic sandwich cylinders in torsion have not received the same attention as cylinders in compression. Rigid- and weak-core cases are reasonably well defined. While the transition region between rigid and weak cores is not as well defined, it is probably sufficient for design purposes. Information on the transition region is given in references 53 and 63, the latter of which was used to construct the plot of figure 14, which applies to sandwich cylinders with cores exhibiting isotropic shear behavior Gxz/Gyz = 1. The curves of this figure are discontinuous at the value of yZ where the \n\n33 \n\n**==> picture [411 x 313] intentionally omitted <==**\n\n**----- Start of picture text -----**<br>\n10? 7 | 1 | TT fi7_ | Tit [TF] Tw<br>Lt || af | A Lt mai<br>, Pf AAie Ed<br>x 1, PP eriF<br>¢ 6 ee eee eee<br>3 eee 0 0 ee ee<br>e 2FET<br>a Pe PT<br>x<br>ee ee el<br>°2 ' Ss ee ee eee a<br>st. LTTe<br>‘ Som | |<br>10\" 2 4 6 B 2 4 6 8 2 4 6 8 2 4 6 8 2 4 6 8<br>1 10 10° 10° 107 105<br>¥Z<br>Figure 14<br>Buckling coefficients for simply supported isotropic sandwich<br>circular cylinders subjected to torsion Gy7/Gyz = 1.0<br>**----- End of picture text -----**<br>\n\n\nbuckling coefficient kxy becomes equal to 1/R, indicating a change of mode of buckling at that point. Reference 53 does not support this behavior, but it does not cover a sufficiently wide range of geometric proportions to be used in the construction of the figure. In addition, reference 53 indicates that there was some scatter in the calculated results used to construct the charts of that reference. In the ranges where comparisons between the data of references 53 and 63 could be made, only rather small discrepancies were noted. The straight-line portion (yZ > 170) of the curve of figure 14 for a rigid core (R = 0) is given by the equation \n\n**==> picture [263 x 32] intentionally omitted <==**\n\nExperimental data are not available to substantiate figure 14 for most sandwich cylinders. Experience with isotropic cylinders suggests that 0.586 is the factory to be used with the figure. Here, as with sandwich cylinders for which the density ratio of 6 is 0.03 or greater, the same factor should be used unless the design is substantiated by adequate tests. \n\nThe plasticity factor given by equation (29) for isotropic cylinders in torsion may be used also for isotropic sandwich cylinders in torsion. \n\n34 ",
+      "page_number": 23,
+      "parent_id": null,
+      "cross_references": [],
+      "table": null,
+      "formula": null,
+      "metadata": {}
+    },
+    {
+      "element_id": "sec-4-5-cylinders-with-an-elastic-core",
+      "element_type": "section",
+      "paragraph_ref": null,
+      "title": "4.5 Cylinders with an Elastic Core",
+      "content": "The term ‘cylinder with an elastic core” defines a thin cylindrical shell enclosing an elastic material that either can be solid or have a hole in its center. This type of shell closely approximates a propellant-filled missile structure. The propellant is generally of a viscoelastic material and therefore is strain-rate sensitive. The core modulus should be obtained from tension or compression tests of the core material simulating its expected strain rate. \n\nAlthough there are some analytical data for orthotropic shells (ref. 64), design curves are given only for isotropic shells and cores. The inverse problem of a core or cushion on the outside of the cylindrical shell is analyzed in reference 65. Not enough data are available, however, to recommend design curves for this problem. ",
+      "page_number": 23,
+      "parent_id": null,
+      "cross_references": [],
+      "table": null,
+      "formula": null,
+      "metadata": {}
+    },
+    {
+      "element_id": "sec-4-5-1-axial-compression",
+      "element_type": "section",
+      "paragraph_ref": null,
+      "title": "4.5.1 Axial Compression",
+      "content": "The buckling behavior of cylindrical shells with a solid elastic core in axial compression is given in reference 66. Analytical results obtained from this reference are shown graphically in figure 15. For small values of ¢, \n\n**==> picture [232 x 29] intentionally omitted <==**\n\nwhere \n\n**==> picture [267 x 93] intentionally omitted <==**\n\nThis approximation is accurate for ¢, less than 1/2. For larger values of ¢,, say ¢, greater than 3, \n\n**==> picture [237 x 28] intentionally omitted <==**\n\nThe experimental! data tabulated in reference 66 suggest that the value of Y to be used in calculating o, can be taken as that for isotropic cylinders in compression. Then \n\n**==> picture [251 x 12] intentionally omitted <==**\n\n35 \n\n**==> picture [341 x 283] intentionally omitted <==**\n\n**----- Start of picture text -----**<br>\n1 0 SS SS GE ND A SS OS OS<br>68 espes es oS Ses ee oe o e ee es RG eee PornSES<br>a a 8 OO a onmmanee<br>Peg a SN 8<br>a<br>og|<br>fe ee eee |<br>2 SEet<br>- 6 pryTa rye 0 ee e e ee ee<br>{ 4 aeeee<br>< [a]<br> 2- U VATT yn Pe<br>S<br>o | LI<br>SSa<br>6 etootae<br>4 a 2 ee 8 0 ee<br>2 en<br>10eV CLUE2 AHI tt tTETT TUE<br>2 4 6 8 2 4 6 8 2 4 6 8 2 4 6 8<br>107 10! 1 10 107<br>b= V 1211-4?) Ee ryan<br>‘au - wy Fe<br>**----- End of picture text -----**<br>\n\n\nFigure 15 \n\nVariation of compressive buckling stress with core stiffness parameter \n\nwhere \n\n**==> picture [231 x 23] intentionally omitted <==**\n\nThe plasticity correlation factors given by equations (7) and (8) for isotropic cylinders in axial compression may be applied also to the cylinder with an elastic core. ",
+      "page_number": 23,
+      "parent_id": null,
+      "cross_references": [],
+      "table": null,
+      "formula": null,
+      "metadata": {}
+    },
+    {
+      "element_id": "sec-4-5-2-external-pressure",
+      "element_type": "section",
+      "paragraph_ref": null,
+      "title": "4.5.2 External Pressure",
+      "content": "Analytical curves for the lateral pressure case are presented in reference 66. A plot of kpc against = for + = 100, 200, 500, or 1000 is shown graphically in figure 16. The parameter kpc is expressed by \n\n**==> picture [220 x 23] intentionally omitted <==**\n\nThese curves are to be used for finite cylinders loaded by lateral pressures. \n\n36 \n\n**==> picture [399 x 570] intentionally omitted <==**\n\n**----- Start of picture text -----**<br>\n10° oo 10*<br>4 ——aeoroF Tryrit tt  — aHn 4 Pag0fee hott (b) t = 2007see:Hy<br>Loe o-_tTy +14 2eA<br>tHFLT fF LE PT)<br>4 Pt + +H 4 pa Coa<br>onal meee a — aera Dw? ill<br>=[a) 107 | WA 10? TA10° |<br>BS ae Seee<br>— 6 aATEeee ee tH SA EG rol“8 6 [aei tH ae t—}+ +4 ang<br>‘poe Ea<br>nm Gm emmatll oerth<br>o Leer TT, PP ait I<br>0 SS<br>6 ae 2 ROSS<br>4 Fo4 6 PA tt<br>> A= Ht| tH ttFHHi 4 btPo +t HHH<br>, ELEmae PPne ill 2 DEoH il Salilalii<br>2 4 6 8 2 4 6 8 2 4 6 8 2 4 6 8<br>to! 1 10 10! 1 10<br>(my if (mr) /2<br>10° , ===... Sees 109 Ef aee<br>Se ee SSS<br>2—_ Teo aOG<br>AE EAIww 2 wit Banal2 l<br>109 fp}et 10%, Ft1t| nS STL<br>4 4 10° mnBeees<br>po ee ee ee ee ee ee ane<br>10 2 et PTH tT LLL 2pt<br>we Loo Lt<br>& ow ae2 pro Saaniiill &  Ld4 Hert<br>¢ Sas ? Sa<br>4 eee adil Pot 4 a 28ee ti eet<br>; = ae —_ merit ge] TTT PT ty<br>wo  oFbet POT aIafl ;KT6 eee<br>4oD ee [ee] rete<br> —oa io east a =o eth tt<br>», 2f__1|LLL|meeeHy=TTHTHTT T , 2 aOeCaTTlllTTT<br>2 4 6 8 2 4 6 8 2 4 6 8 2 4 6 8<br>10! 1 10 ig! 1 10<br>(mr) /X (mr)/&<br>**----- End of picture text -----**<br>\n\n\nFigure 16 Variation of buckling pressure coefficient with length and modulus ratio (4= 0.3, ue = 0.5) \n\n37 \n\nSome cylinders are long enough for the critical pressure to be independent of length (fig. 16); the single curve shown in figure 17 can then be used. The straight-line portion of the curve can be approximated by the equation \n\nwhere \n\n**==> picture [260 x 98] intentionally omitted <==**\n\nThe few experimental data points available indicate good agreement between analysis and experiment, but one test point falls 4% below theory. Hence, a correlation factor of 0.90 is recommended for use in conjunction with the curves in figures 16 and 17. A reinvestigation of this factor may be warranted as more data become available. \n\nThe plasticity factors given by equations (22) to (24) for isotropic cylinders subjected to external pressure may be used also for cylinders filled with an elastic core. \n\n**==> picture [417 x 279] intentionally omitted <==**\n\n**----- Start of picture text -----**<br>\nA3 a SG OO A OO<br>pg SO OQ OO OO sO OO 0<br>a ee eeeee<br>2PPTE EeVT<br>= PLEee<br>w  402 8 a Oa OR GG Cd Z| OO ON OO<br>olx 6tH a<br>gr ter ti y ti yp paar<br>SS LTTA Ae PE<br>LEE10 EE<br>a a A A > oO NO CO SG<br>5 ee eee eee<br>pe a eeee<br>.EE<br>~LCEEEET THE| Ti Ee ti<br>2 4 6 8 4 6 8 2 4 6 8 2 4 6 8 2 4 68<br>10! 1 10 107 10° 104<br>31—p\") Eo or 3<br>go- P OE (—)<br>~we Et<br>**----- End of picture text -----**<br>\n\n\nFigure 17 Buckling pressure coefficients for long cylinder with a solid core \n\n38 \n\n4.5.3 Torsion \n\nThe buckling behavior of cylindrical shells with an elastic core is analytically described in reference 67 and is shown graphically in figure 18. \n\nFor small values of ¢3,63; <7, the analytical results can be approximated by \n\nwhere \n\n**==> picture [249 x 80] intentionally omitted <==**\n\nand 7, is the torsional buckling stress given by equation (26), with equal to unity. When @, is greater than 10, the analytical results follow the curve \n\n**==> picture [254 x 27] intentionally omitted <==**\n\n**==> picture [410 x 275] intentionally omitted <==**\n\n**----- Start of picture text -----**<br>\n0 9<br>at ff Trp fT ; Eo 2 or Py ee ee ee<br>eg ;8 Hteefy fyeee | 7 -1~025 | =: . 9] rioee<br>», 4ia Eeeetit OO| eeetit | terea eee<br>a- pg8 EFa SC epa GN YO ES P— cc OO OO OO OOot<br>e pt tity fi tiear fit) py Pa<br>ag 8 aeeee [ee] OSee<br>aL) es eee<br>meee M4 ey ,, +H| tt<br>wo? L | r  -tsore SP<br>4 oe SSS<br>: a a ee ee eee<br>o 2 [LE.] Emanttt | Tit tt<br>2 4 6 8 2 4 6 8 2 4 6 8 2 4 6 8 2 4 6 8<br>107 10! 1 10 10? 10°<br>_<br>= EeEo aiyh2 r<br>**----- End of picture text -----**<br>\n\n\nFigure 18 Torsional buckling coefficients for cylinders with an elastic core \n\n39 \n\nExperimental data are not available for this loading condition. The experimental points obtained for cylinders with an elastic core for axial compression and external pressure, however, show better correlation with theory than the corresponding experimental results for the unfilled cylinder. Hence, conservative design curves can be obtained by calculating To, in equations (108) and (110) with the correlation and plasticity factors for isotropic cylinders of equations (28) and (29). ",
+      "page_number": 24,
+      "parent_id": null,
+      "cross_references": [],
+      "table": null,
+      "formula": null,
+      "metadata": {}
+    },
+    {
+      "element_id": "sec-4-5-4-combined-axial-compression-and-lateral-pressure",
+      "element_type": "section",
+      "paragraph_ref": null,
+      "title": "4.5.4 Combined Axial Compression and Lateral Pressure",
+      "content": "Interaction curves for cylinders with an elastic core subjected to combined axial compression and lateral pressure are shown in figure 19. These curves were obtained analytically in reference 66 and indicate that for a sufficiently stiff core, the critical axial compressive status is insensitive to lateral pressure and, similarly, the critical lateral pressure is insensitive to axial compression. Until more experimental data become available, the use of a straight-line interaction curve is recommended for conservative design. \n\n**==> picture [408 x 249] intentionally omitted <==**\n\n**----- Start of picture text -----**<br>\n1.0 = ~— aSy<br>~~ Oo<br>~s a ~~ ~ ><br>c<br>0.8 oo | E/E =2.5Qix  =10 00aN +><br>~ ™~<br>0.6 “ ~ \\<br>E,/E =se x<br>o ir = 00 -~N ~~<br>. 0.4oe Ure OS ~<br>“<br>“ |<br>0.2<br>“<br>“\\<br>‘“<br>\\“<br>) i) 0.2 0.4 0.6 0.8 1.0<br>Rp<br>**----- End of picture text -----**<br>\n\n\nFigure 19 Interaction curves for cylinders (r/t = 300) with an elastic core \n\n40 ",
+      "page_number": 26,
+      "parent_id": null,
+      "cross_references": [],
+      "table": null,
+      "formula": null,
+      "metadata": {}
+    },
+    {
+      "element_id": "sec-4-6-design-of-rings",
+      "element_type": "section",
+      "paragraph_ref": null,
+      "title": "4.6 Design of Rings",
+      "content": "Little information is available on which to base the design of rings for cylinders not intended to be subject to general instability failures. The criterion of reference 68 is frequently cited as applicable to cylinders subjected to bending or compression. Unfortunately, this criterion is empirical and is based on data from test cylinders with proportions of little interest in contemporary design. A few checks made on cylinders in use have indicated that the criterion usually is conservative, but this may not be so in certain cases. See references 29 and 69. \n\nA less direct procedure for designing rings may be used. It consists simply of calculating the failing load of the cylinder in the so-called general-instability mode, which involves failure of the rings, as well as calculation of the failing load of the cylinder for wall failure between rings. Both calculations are made for several ring weights. If such calculations are plotted against ring weight, the weight necessary to force failure in the desired mode can be ascertained. In addition, the amount of error in weight from uncertainties in the calculations can be judged. Presumably, there may be some interaction between failing modes; thus,somewhat heavier rings than those indicated by the calculations should be used. \n\nThis method of designing rings is, of course, applicable to all types of loading and to all types of wall construction. It also has the advantage of giving the designer some feeling for the influence of the various factors which determine ring weight. \n\nA study of references 69 and 70, which present general linear analyses of ring-stiffened isotropic cylinders in torsion and of orthotropic cylinders in compression, indicates that the recommended procedure gives the same result as general theory for all cylinders except those with a single ring dividing the cylinder into two equal bays. \n\n; \n\n41 ",
+      "page_number": 26,
+      "parent_id": null,
+      "cross_references": [],
+      "table": null,
+      "formula": null,
+      "metadata": {}
+    },
+    {
+      "element_id": "sec-references",
+      "element_type": "section",
+      "paragraph_ref": null,
+      "title": "REFERENCES",
+      "content": "1. Almroth, B.O.: Bushnell, D.; and Sobel, L.H.: Buckling of Shells of Revolution with Various Wall Constructions. Vols. I, I], and HI. NASA CR 1049-1051, 1968. \n\n2. Ball, R.E.: A Geometrically Nonlinear Analysis of Arbitrarily Loaded Shells of Revolution. NASA CR 909, 1968. \n\n3. Batdorf,S.B.: A Simplified Method of Elastic Stability Analysis for Thin Cylindrical Shells. NACA Rept. 874, 1947. \n\n4. Almroth,B.O.: Influence of Edge Conditions on the Stability of Axially Compressed Cylindrical Shells. ATAA J., vol. 4, no. 1, Jan. 1966, pp. 134-140. \n\n5S. Weingarten,V.I.; Morgan, E.J.; and Seide, P.: Elastic Stability of Thin-Walled Cylindrical and Conical Shells Under Axial Compression. AIAA J., vol. 3, no. 3, Mar. 1965, pp. 500-505. \n\n6. Krivetsky, A.: Plasticity Coefficients for Plastic Buckling of Plates and Shells. J. Aeron. Sci. (Reader’s Forum), vol. 22, no. 6, June 1955, pp. 432-435. \n\n7. Gerard, G.; and Becker, H.: Handbook of Structural Stability. Part Il, Buckling of Curved Plates and Shells. NACA TN 3783, 1957. \n\n8. Stowell, E.Z.: A Unified Theory of Plastic Buckling of Columns and Plates. NACA Rept. 898, 1948. \n\n9. Seide, P.; Weingarten, V.1.; and Morgan, E.J.: The Development of Design Criteria for Elastic Stability of Thin Shell Structures. STL/TR-60-0000-19425 (AFBMD/TR-61-7), Space Technology Laboratory,Inc. (now TRW Systems), Dec. 31, 1960. \n\n10. Timoshenko, S.; and Gere,J.M.: Theory of Elastic Stability. Second ed.. McGraw-Hill Book Co., Inc., 1961. \n\n11. Sobel, L.H.: Effects of Boundary Conditions on the Stability of Cylinders Subject to Lateral and Axial Pressures. AIAA J., vol. 2, no. 8, Aug. 1964, pp. 1437-1440. \n\n43 \n\n12. Weingarten, V.I.; and Seide, P.: Elastic Stability of Thin-Walled Cylindrical and Conical Shells Under Combined External Pressure and Axial Compression. AIAA J., vol. 3, no. 5, May 1965, pp. 913-920. \n\n13. Gerard, G.: Handbook of Structural Stability. Supplement to Part III — Buckling of Curved Plates and Shells. NASA TN D-163, 1959. \n\n14. Weingarten,V.I.; Morgan, E.J.; and Seide, P.: Elastic Stability of Thin-Walled Cylindrical and Conical Shells Under Combined Internal Pressure and Axial Compression. AIAA J., vol. 3, no. 6, June 1965, p. 1118. \n\n15. Harris, L.A., et al.: The Stability of Thin-Walled Unstiffened Circular Cylinders Under Axial Compression Including the Effects of Internal Pressure. J. Aeron. Sci., vol. 24, no. 8, Aug. 1957, pp. 587-596. \n\n16. Leonard, R.W., et al.: Analysis of Inflated Reentry and Space Structures. Proc. Recovery of Space Vehicles Symposium, Aug.-Sept. 1960. Institute of the Aeronautical Sciences, New York. \n\n17. Leonard, R.W.; Brooks, G.W.; and McComb, H.G., Jr.: Structural Considerations of Inflatable Reentry Vehicles. NASA TN D457, 1960. \n\n18. Stein,M.; and Hedgepeth,J.M.: Analysis of Partly Wrinkled Membranes. NASA TN D-813, 1961. \n\n19. Anon.: Collected Papers on Instability of Shell Structures, 1962. NASA TN D-1510, 1962. \n\n20. Jones, R.M.: Buckling of Circular Cylindrical Shells with Multiple Orthotropic \n\n. Layers and Eccentric Stiffeners. AIAA J., vol. 6, no. 12, Dec. 1968, pp. 2301-2305. \n\n21. Stein, M.; and Mayers,J.: Compressive Buckling of Simply Supported Curved Plates and Cylinders of Sandwich Construction. NACA TN 2601, 1952. \n\n22. Becker, H.; and Gerard, G.: Elastic Stability of Orthotropic Shells. J.Aeron. Sci., vol. 29, no. 5, May 1962, pp. 505-512, 520. \n\n23. Block, D.L.; Card,M.F.; and Mikulas,M.M.,Jr.: Buckling of Eccentrically Stiffened Orthotropic Cylinders. NASA TN D-2960, Aug. 1965. \n\n24. Hedgepeth, J.M.;and Hall, D.B.: Stability of Stiffened Cylinders. AIAA J., vol. 3, no. 12, Dec. 1965, pp. 2275-2286. \n\n44 \n\n25. Singer, J.; Baruch, M.; and Harari, O.: On the Stability of Eccentrically Stiffened Cylindrical Shells Under Axial Compression. International Journal of Solids and Structures, vol. 3, no. 4, July 1967, pp. 445-470. \n\n26. ‘lasi, J.: Effect of Heterogeneity on the Stability of Composite Cylindrical Shells Under Axial Compression. AIAA J., vol. 4, no. 6, June 1966, pp. 1058-1062. \n\n27. Van der Neut, A.: The General Stability of Stiffened Cylindrical Shells Under Axial Compression. Rept. S-314, National Aerospace Research Institute (Amsterdam), 1947. \n\n28. Dickson, J.N.; and Brolliar, R.H.: The General Instability of Ring-Stiffened Corrugated Cylinders Under Axial Compression. NASA TN D-3089, Jan. 1966. \n\n29. Meyer, R.R.: Buckling of Ring-Stiffened Corrugated Cylinders Subjected to Uniform Axial Load and Bending. Rept. DAC-60698, Douglas Aircraft Co., July 1967. \n\n30. Peterson, J.P.; and Dow, M.B.: Compression Tests on Circular Cylinders Stiffened Longitudinally by Closely Spaced Z Section Stringers. NASA Memo 2-12-59L, 1959, \n\n31. Peterson, J.P.; Whitley, R.O.; and Deaton, J.W.: Structural Behavior and Compressive Strength of Circular Cylinders with Longitudinal Stiffening. NASA TN D-1251, 1962. \n\n32. Becker, H.; Gerard,G.: and Winter, R.: Experiments on Axial Compressive General Instability of Monolithic Ring-Stiffened Cylinders. AIAA J., vol I, no. 7, July 1963, pp. 1614-1618. \n\n33. Card, M.F.; and Jones, R.M.: Experimental and Theoretical Results for Buckling of Eccentrically Stiffened Cylinders. NASA TN D-3639, Oct. 1966. \n\n34. Milligan, R.; Gerard,G.; and Lakshinikantham,C.: General Lastibility of Orthotropically Stiffened Cylinders Under Axial Compression. AIAA J., vol. 4, no. 11, Nov. 1966, pp. 1906-1913. \n\n35. Singer, J.: The Influence of Stiffener Geometry and Spacing on the Buckling of Axially Compressed Cylindrical and Conical Shells. Preliminary Preprint Paper, Second IUTAM Symposium on the Theory of Thin Shells, Copenhagen, Sept. 1967. \n\n45 \n\n36. Kaplan, A.; Morgan, E.J.; and Zophres, W.: Some Typical Shell Stability Problems Encountered in the Design of Ballistic Missiles. Collected Papers on Instability of Shell Structures. NASA TN D-1510, Dec. 1962, pp. 21-33. \n\n37. Card, M.F.; and Peterson, J.P.: On the Stability of Orthotropic Cylinders. Collected Papers on Instability of Shell Structures. NASA TN D-1510, Dec. 1962, pp. 297-308. \n\n38. Block, D.L.: Buckling of Eccentrically Stiffened Orthotropic Cylinders Under Pure Bending. NASA TN D-3351, Mar. 1966. \n\n- 39, Peterson, J.P.; and Anderson, J.K.: Bending Tests of Large Diameter Ring-Stiffened Corrugated Cylinders. NASA TN D-3336, Mar. 1966. \n\n40. Card, M.F.: Bending Tests of Large Diameter Stiffened Cylinders Susceptible to General Instability. NASA TN D-2200, Apr. 1964. \n\n41. Bodner, S.R.: General Instability of a Ring-Stiffened Circular Cylindrical Shell Under Hydrostatic Pressure. J. Appl. Mech., vol. 24, no.2, June 1957, pp. 269-277. \n\n42. Baruch, M.; and Singer, J.: Effect of Eccentricity of Stiffeners on the General Instability of Stiffened Cylindrical Shells Under Hydrostatic Pressure. Journal of Mechanical Engineering Science, vol. 5, no. 1, Mar. 1963, pp. 23-27. \n\n43. Singer, J.; Baruch, M.; and Harari,O.: Further Remarks on the Effect of Eccentricity of Stiffeners on the General Instability of Stiffened Cylindrical Shells. Journal of Mechanical Engineering Science, vol.8, no.4, 1966, pp. 363-373. \n\n44. Kendrick, $.: The Buckling Under Extremal Pressure of Circular Cylindrical Shells with Evenly Spaced Equal Strength Circular Ring Frames. Part HI] — Naval Construction Research Establishment. Rept. R-244, Sept. 1953. \n\n45. Galletly,G.D.; Slankard, R.C.; and Wenk,E.,Jr.: General Instability of Ring-Stiffened Cylindrical Shells Subject to Extremal Hydrostatic Pressure — A Comparison of Theory and Experiment. J. Appl. Mech., vol. 25, no. 2, June 1958 pp. 259-266. \n\n46. Simitses,G.J.: Instability of Orthotropic Cylindrical Shells Under Combined Torsion and Hydrostatic Pressure. AIAA J., vol. 5, no. 8, Aug. 1967, pp. 1463-1469. \n\n47. Baruch, M.; Singer, J.; and Well, T.: Effect of Eccentricity of Stiffeners on the General Instability of Cylindrical Shells Under Torsion. Israel Journal of ‘Yechnology, vol. 4, no. 1, 1966, pp. 144-154. \n\n46 \n\n48. Milligan, R.; and Gerard, G.: General Instability of Orthotropically Stiffened Cylinders Under Torsion. AIAA J., vol. 5, no. 11, Nov. 1967, pp. 2071-2073. \n\n- 49, Dow, N.F.; Libove,C.; and Hubka, R.E.: Formulas for the Elastic Constants of Plates With Integral Waffle-Like Stiffening. NACA Rept. 1195, 1954. \n\n50. Crawford, R.F.; and Libove,C.: Shearing Effectiveness of Integral Stiffening. NACA TN 3443, 1955. \n\n51. Meyer, R.R.: Buckling of 45° Eccentric-Stiffened Waffle Cylinders. J. Roy. Aeron. Soc., vol. 71, no. 679, July 1967, pp. 516-520. \n\n52. Peterson, J.P.; and Whitley, R.O.: Local Buckling of Longitudinally Stiffened Curved Plates. NASA TN D-750, Apr. 1961. \n\n53. Anon.: Sandwich Construction for Aircraft. Part If — Materials, Properties, and Design Criteria. ANC-23, Air Force-Navy-Civil Subcommittee on Aircraft Design Criteria, 1955. \n\n54. Libove, C.; and Hubka, R.E.: Elastic Constants for Corrugated Core Sandwich Plates. NACA TN 2289, 1951. \n\n55. Plantema, F.J.: Sandwich Construction, The Bending and Buckling of Sandwich Beams, Plates and Shells. John Wiley & Sons, Inc., 1966. \n\n56. Zahn, J.J.; and Kuenzi, E.W.: Classical Buckling of Cylinders of Sandwich Construction in Axial Compression — Orthotropic Cores. Rept. FPL-O18. Forest Products Laboratories, 1963. \n\n57. Anon.: Composite Construction for Flight Vehicles. Part I — Fabrication, Inspection, Durability, and Repair. MIL-HDBK-23, Part I, Armed Forces Supply Support Center, Oct. 1959. \n\n58. Peterson, J.P.: Weight-Strength Studies on Structures Representative of Fuselage Construction. NACA TN 4114, 1957. \n\n59. Norris, C.: Short-Column Compressive Strength of Sandwich Constructions as Affected by Size of Honeycomb Core Materials. FPL-026, Forest Products Laboratories, Jan. 1964. \n\n60. Konishi D. Y., et al.: Honeycomb Sandwich Structures Manual. Rept. NA58-899, North American Aviation, Inc., Los Angeles Division, July 1968. \n\n- ol. Yusuff, S.: Face Wrinkling and Core Strength in Sandwich Construction. J. Roy. Aeron. Soc., vol. 64, no. 591, Mar. 1960, pp. 164-167. \n\n47 \n\n62. Harris, B.; and Crisman, W.: Face-Wrinkling Mode of Buckling of Sandwich Panels. EM3, ASCE Journal of Engineering, Mechanics Division, June 1965. \n\n63. Kiciman, M.O.; and Konishi, D.Y.: Stability of Honeycomb Sandwich Cylinders. Paper No. 61-AV-36, ASME, 1961. \n\n64. Holston, A.,Jr.: Stability of Inhomogeneous Anisotropic Cylindrical Shells Containing Elastic Cores. AIAA J., vol. 5, no. 6, June 1967, pp. 1135-1138. \n\n65. Brush, D.O.; and Pittner, E.V.: Influence of Cushion Stiffness on the Stability of Cushion-Loaded Cylindrical Shells. AIAA J., vol. 3, no. 2, Feb. 1965, pp. 308-316. \n\n66. Seide, P.: The Stability Under Axial Compression and Lateral Pressure of a Circular-Cylindrical Shell with an Elastic Core. J. Aeron. Sci., vol. 29, no. 7, July 1962, pp. 851-862. \n\n67. Weingarten,V.I.: Stability Under Torsion of Circular Cylinder Shells With an Elastic Core. ARS J., vol. 82, no. 4, Apr. 1962, pp. 637-639. \n\n68. Shanley, F.R.: Weight-Strength Analysis of Aircraft Structures. McGraw-Hill Book Co., Inc., 1952. \n\n69. Block, D.L.: Influence of Ring Stiffeners on Instability of Orthotropic Cylinders in Axial Compression. NASA TN D-2482, 1964. \n\n70. Stein, M.; Sanders, J.L.; and Crate, H.: Critical Stress of Ring-Stiffened Cylinders in Torsion. NACA Rept. 989, 1950. \n\n48 \n\n# NASA SPACE VEHICLE DESIGN CRITERIA MONOGRAPHS ISSUED TO DATE \n\n- SP-8001 (Structures) Buffeting During Launch and Exit, May 1964 \n\n- SP-8002 (Structures) Flight-Loads Measurements During Launch and Exit, December 1964 \n\n- SP-8003 (Structures) Flutter, Buzz, and Divergence, July 1964 \n\n- SP-8004 (Structures) Panel Flutter, May 1965 \n\n- SP-8005 (Environment) Solar Electromagnetic Radiation, June 1965 \n\n- SP-8006 (Structures) Local Steady Aerodynamic Loads During Launch and Exit, May 1965 \n\n- SP-8008 (Structures) Prelaunch Ground Wind Loads, November 1965 \n\n- SP-8009 (Structures) Propellant Slosh Loads, August 1968 \n\n- SP-8010 (Environment) Models of Mars Atmosphere (1967), May 1968 \n\n- SP-8011 (Environment) Models of Venus Atmosphere (1968), December 1968 \n\n- SP-8012 (Structures) Natural Vibration Modal Analysis, September 1968 \n\n- SP-8014 (Structures) Entry Thermal Protection, August 1968 \n\n- SP-8015 (Guidance and Guidance and Navigation for Entry Vehicles, control) | November 1968 \n\nNASA-Langley, 1969 —— 32 \n\n49 ",
+      "page_number": 27,
+      "parent_id": null,
+      "cross_references": [],
+      "table": null,
+      "formula": null,
+      "metadata": {}
+    }
+  ],
+  "latency_ms": 80722.11241599871,
+  "cost_usd": null,
+  "pdf_mtime": 1777119309.5979345
+}

@@ -76,19 +76,19 @@ async def _run() -> int:
     args = _parse_args()
 
     # Wire env so build_pipeline picks up the right backend.
-    if args.backend != "fake":
-        os.environ["ANVIL_LLM_BACKEND"] = args.backend
+    os.environ["ANVIL_LLM_BACKEND"] = args.backend
     if args.model:
         os.environ["ANVIL_LLM_MODEL"] = args.model
 
     pipeline = build_pipeline(ablation=args.ablation)
+    effective_model = getattr(pipeline.generator.backend, "model", args.model)
     runner = EvaluationRunner(pipeline.generator)
     dataset_path = ROOT / "tests" / "evaluation" / "golden_dataset.json"
     examples = load_golden_dataset(dataset_path)
 
     run_id = make_run_id(
         backend=args.backend,
-        model=args.model,
+        model=effective_model,
         ablation=args.ablation,
     )
     from anvil.evaluation.ablation import ABLATIONS as _ABL
@@ -96,7 +96,7 @@ async def _run() -> int:
     cfg = RunLoggerConfig(
         run_id=run_id,
         backend=args.backend,
-        model=args.model,
+        model=effective_model,
         ablation=args.ablation,
         ablation_config=_ABL[args.ablation].to_summary(),
         dataset_path=dataset_path,
@@ -106,11 +106,9 @@ async def _run() -> int:
         rl.attach_examples(examples)
         summary = await runner.run(examples)
         rl.write_summary(summary)
-        # Per-example raw responses (gitignored). Re-runs retrieval to
-        # capture the chunks that fed each generation; cheap on the
-        # synthetic standard.
-        for ex in examples:
-            outcome = await pipeline.generator.generate(ex.query, top_k=10)
+        # Per-example raw responses (gitignored). Use the runner's cached
+        # outcomes; re-invoking generation would double real-LLM calls.
+        for ex, outcome in zip(examples, summary.outcomes, strict=True):
             rl.record_example(
                 ex.id,
                 outcome.response,
@@ -134,7 +132,7 @@ async def _run() -> int:
             {
                 "run_id": run_id,
                 "backend": args.backend,
-                "model": args.model,
+                "model": effective_model,
                 "ablation": args.ablation,
                 "pass_rate": summary.pass_rate,
                 "aggregate": summary.aggregate,

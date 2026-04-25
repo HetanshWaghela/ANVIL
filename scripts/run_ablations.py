@@ -74,8 +74,7 @@ def _parse_args() -> argparse.Namespace:
 
 async def _run() -> int:
     args = _parse_args()
-    if args.backend != "fake":
-        os.environ["ANVIL_LLM_BACKEND"] = args.backend
+    os.environ["ANVIL_LLM_BACKEND"] = args.backend
     if args.model:
         os.environ["ANVIL_LLM_MODEL"] = args.model
 
@@ -101,17 +100,18 @@ async def _run() -> int:
             ablation=ablation_name,
         )
         pipeline = build_pipeline(ablation=ablation_cfg)
+        effective_model = getattr(pipeline.generator.backend, "model", args.model)
         runner = EvaluationRunner(pipeline.generator)
         run_id = make_run_id(
             backend=args.backend,
-            model=args.model,
+            model=effective_model,
             ablation=ablation_name,
             when=when,
         )
         cfg = RunLoggerConfig(
             run_id=run_id,
             backend=args.backend,
-            model=args.model,
+            model=effective_model,
             ablation=ablation_name,
             ablation_config=ablation_cfg.to_summary(),
             dataset_path=dataset_path,
@@ -122,8 +122,7 @@ async def _run() -> int:
             rl.attach_examples(examples)
             summary = await runner.run(examples)
             rl.write_summary(summary)
-            for ex in examples:
-                outcome = await pipeline.generator.generate(ex.query, top_k=10)
+            for ex, outcome in zip(examples, summary.outcomes, strict=True):
                 rl.record_example(
                     ex.id,
                     outcome.response,

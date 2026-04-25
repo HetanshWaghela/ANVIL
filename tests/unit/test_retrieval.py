@@ -39,6 +39,60 @@ def test_deterministic_hash_embedder_normalized() -> None:
     assert abs(norm - 1.0) < 1e-5
 
 
+def test_sentence_transformer_embedder_uses_documented_env_vars(monkeypatch) -> None:
+    from anvil.retrieval import embedder as embedder_mod
+
+    seen: dict[str, str | None] = {}
+
+    class FakeSentenceTransformerEmbedder:
+        dim = 384
+
+        def __init__(self, model_name: str, cache_folder: str | None = None) -> None:
+            seen["model_name"] = model_name
+            seen["cache_folder"] = cache_folder
+
+    monkeypatch.setenv("ANVIL_EMBEDDER", "sentence_transformer")
+    monkeypatch.setenv("ANVIL_ST_MODEL", "BAAI/bge-small-en-v1.5")
+    monkeypatch.setenv("ANVIL_ST_CACHE_DIR", "~/.cache/anvil/st")
+    monkeypatch.setattr(
+        embedder_mod,
+        "SentenceTransformerEmbedder",
+        FakeSentenceTransformerEmbedder,
+    )
+
+    emb = embedder_mod.get_default_embedder()
+
+    assert isinstance(emb, FakeSentenceTransformerEmbedder)
+    assert seen["model_name"] == "BAAI/bge-small-en-v1.5"
+    assert seen["cache_folder"].endswith("/.cache/anvil/st")
+
+
+def test_sentence_transformer_legacy_model_env_is_only_a_fallback(monkeypatch) -> None:
+    from anvil.retrieval import embedder as embedder_mod
+
+    seen: dict[str, str | None] = {}
+
+    class FakeSentenceTransformerEmbedder:
+        dim = 384
+
+        def __init__(self, model_name: str, cache_folder: str | None = None) -> None:
+            seen["model_name"] = model_name
+            seen["cache_folder"] = cache_folder
+
+    monkeypatch.setenv("ANVIL_EMBEDDER", "sentence_transformer")
+    monkeypatch.setenv("ANVIL_EMBEDDER_MODEL", "legacy/model")
+    monkeypatch.setenv("ANVIL_ST_MODEL", "documented/model")
+    monkeypatch.setattr(
+        embedder_mod,
+        "SentenceTransformerEmbedder",
+        FakeSentenceTransformerEmbedder,
+    )
+
+    embedder_mod.get_default_embedder()
+
+    assert seen["model_name"] == "documented/model"
+
+
 def test_retrieval_cylindrical_query_finds_a27_and_b12(pipeline) -> None:
     q = RetrievalQuery(
         text="wall thickness formula for a cylindrical shell with joint efficiency",

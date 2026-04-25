@@ -1,0 +1,49 @@
+{
+  "system": "naive_pdfminer",
+  "pdf_path": "data/parser_benchmark/pdfs/spes1_synthetic.pdf",
+  "page_count": 3,
+  "elements": [
+    {
+      "element_id": "naive-page-1",
+      "element_type": "paragraph",
+      "paragraph_ref": null,
+      "title": null,
+      "content": "Synthetic Pressure Equipment Standard (SPES-1)\nA fictional standard mirroring the ASME BPVC Section VIII Div. 1 structure for use in anvil.\nPart A — General Requirements\nA-23 Maximum Allowable Stress Values\n(a) The maximum allowable stress values for materials used in the construction of pressure\nvessels shall be taken from Part M of this Standard. Specifically, allowable stress values for\ncarbon and low-alloy steels shall be obtained from Table M-1 (see Part M).\n(b) Allowable stress values are tabulated at discrete design temperatures. When a design tem-\nperaturefallsbetweentwotabulatedvalues,linearinterpolationshallbeused,inaccordance\nwith A-23(c).\n(c) Noextrapolationbeyondthetabulatedtemperaturerangeispermitted. Ifthedesigntemper-\nature exceeds the maximum tabulated temperature for a material, that material shall not be\nused.\nA-25 Corrosion\n(a) Acorrosion allowance(CA)shallbeaddedtotheminimum requiredthicknesscalculatedby\nA-27 or A-32.\n(b) Thecorrosionallowanceshallbespecifiedinthedesigndatasheetandshallnotbetakenas\nless than zero.\n(c) Whenback-calculatingtheMaximumAllowableWorkingPressure(MAWP),theeffectivecor-\nroded thickness equals the nominal thickness minus the corrosion allowance.\nA-27 Thickness of Shells Under Internal Pressure\n(a) The minimum required thickness of shells subjected to internal pressure shall not be less\nthan that computed by the following formulas, per A-27(c) and A-27(d).\n(b) TheallowablestressSshallbeobtainedperA-23,andthejointefficiencyEshallbeobtained\nfrom Table B-12 (see B-12).\n(c) Cylindrical Shells.\nA-27(c)(1) — Inside Radius Formula:\nt = (P × R) / (S × E − 0.6 × P)\nwhere:\n• t = minimum required thickness, mm\n• P = design pressure, MPa\n• R = inside radius of the shell course, mm\n• S = maximum allowable stress at design temperature, MPa (see Table M-1)\n1",
+      "page_number": 1,
+      "parent_id": null,
+      "cross_references": [],
+      "table": null,
+      "formula": null,
+      "metadata": {}
+    },
+    {
+      "element_id": "naive-page-2",
+      "element_type": "paragraph",
+      "paragraph_ref": null,
+      "title": null,
+      "content": "• E = joint efficiency (see Table B-12)\nThisformulaapplieswhen: t≤R/2ANDP≤0.385×S×E.Whentheseconditionsarenotsatisfied,\nthe rules of A-27(c)(3) shall be applied (not covered here).\nA-27(c)(2) — Outside Radius Formula:\nt = (P × Ro) / (S × E + 0.4 × P)\nwhere Ro is the outside radius of the shell course. Applicable when P ≤ 0.385 × S × E.\n(d) Spherical Shells.\nA-27(d) — Spherical Shell Formula:\nt = (P × R) / (2 × S × E − 0.2 × P)\nApplicable when t ≤ 0.356 × R AND P ≤ 0.665 × S × E.\nA-32 Formed Heads\nFormed heads (ellipsoidal, torispherical, hemispherical, conical) are covered by this paragraph.\nFor a 2:1 ellipsoidal head:\nt = (P × D) / (2 × S × E − 0.2 × P)\nwhere D is the inside diameter. The joint efficiency E shall be taken from Table B-12 and the\nallowable stress S from Table M-1 per A-23.\nPart B — Welding Requirements\nB-12 Joint Efficiency\n(a) The joint efficiency E used in the thickness formulas of A-27 and A-32 shall be taken from\nTable B-12 as a function of the joint type (Types 1 through 6) and the extent of radiographic\nexamination (Full RT, Spot RT, or None).\n(b) Table B-12 — Joint Efficiency Values:\nJoint Type Description Full RT Spot RT No RT\n1 Double-welded butt, full penetration 1.00 0.85 0.70\n2 Single-welded butt with backing strip 0.90 0.80 0.65\n3 Single-welded butt without backing 0.80 0.70 0.60\n4 Double full-fillet lap 0.75 0.65 0.55\n5 Single full-fillet lap with plug welds 0.70 0.60 0.50\n6 Single full-fillet lap without plug welds 0.65 0.55 0.45\n(c) The radiography level selected shall be consistent with the service conditions and shall be\ndocumented.\n2",
+      "page_number": 2,
+      "parent_id": null,
+      "cross_references": [],
+      "table": null,
+      "formula": null,
+      "metadata": {}
+    },
+    {
+      "element_id": "naive-page-3",
+      "element_type": "paragraph",
+      "paragraph_ref": null,
+      "title": null,
+      "content": "Part M — Material Properties\nM-1 Table M-1 — Allowable Stress Values for Carbon and Low-Alloy Steels\nThefollowingtablegivesmaximumallowablestressvaluesS(MPa)forselectedsyntheticmaterial\nspecificationsattabulateddesigntemperatures. SeeA-23foruse. Formaterialsnotlisted,consult\nPart M supplementary tables.\nProduct\nSpec Grade Form 40°C 100°C 150°C 200°C 250°C 300°C 350°C 400°C 450°C 500°C\nSM- Gr Plate 138 138 138 134 127 121 114 103 73 49\n516 70\nSM- Gr Plate 138 138 138 132 124 118 110 98 69 46\n515 70\nSM- Gr B Pipe 118 118 118 115 108 102 96 86 61 41\n106\nSM- — Forging138 138 138 133 125 119 112 100 71 47\n105\nSM- Type Plate 137 127 119 113 108 103 100 97 95 93\n240 304\nSM- Type Plate 137 137 130 123 117 112 108 105 103 101\n240 316\nM-23 Material Restrictions\n(a) SM-516 Gr 70 shall not be used at design temperatures exceeding 500°C.\n(b) SM-106GrBshallnotbeusedatdesigntemperaturesexceeding500°Candisnotpermitted\nfor cyclic service above 400°C without additional analysis.\nAppendix — Worked Example (Informative)\nFor a cylindrical shell with P = 1.5 MPa, inside diameter 1800 mm, design temperature 350°C,\nmaterial SM-516 Gr 70, Type 1 joint with full RT, and 3.0 mm corrosion allowance, the minimum\nrequiredthicknessperA-27(c)(1)iscomputedusingS=114MPa(TableM-1)andE=1.00(TableB-\n12). Afteraddingcorrosionallowanceandroundingtothenextstandardplate,thedesignthickness\nis selected.\n3",
+      "page_number": 3,
+      "parent_id": null,
+      "cross_references": [],
+      "table": null,
+      "formula": null,
+      "metadata": {}
+    }
+  ],
+  "latency_ms": 105.47841695370153,
+  "cost_usd": null,
+  "pdf_mtime": 1777119299.3672104
+}

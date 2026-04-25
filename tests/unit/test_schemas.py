@@ -10,6 +10,7 @@ from anvil.schemas import (
     CalculationStep,
     Citation,
     InputValue,
+    LLMAnvilResponse,
     ResponseConfidence,
     StepKey,
 )
@@ -93,6 +94,41 @@ def test_valid_refusal_response() -> None:
         refusal_reason="missing context",
     )
     assert resp.refusal_reason == "missing context"
+
+
+def test_llm_response_excludes_untrusted_calculation_steps() -> None:
+    """LLM output may contain garbage calculation_steps; the host ignores them."""
+    llm_resp = LLMAnvilResponse.model_validate(
+        {
+            "query": "q",
+            "answer": "a",
+            "citations": [_cite().model_dump()],
+            "confidence": "high",
+            "calculation_steps": [
+                {
+                    "step_number": 1,
+                    "result_key": "minimum_required_thickness",
+                    "description": "model-invented step",
+                }
+            ],
+        }
+    )
+
+    trusted_step = CalculationStep(
+        step_number=1,
+        result_key=StepKey.MIN_THICKNESS,
+        description="compute thickness",
+        formula="t = (P*R)/(S*E - 0.6*P)",
+        inputs={
+            "P": InputValue(symbol="P", value=1.5, unit="MPa", source="user_input")
+        },
+        result=11.94,
+        unit="mm",
+        citation=_cite(),
+    )
+    resp = AnvilResponse(**llm_resp.model_dump(), calculation_steps=[trusted_step])
+
+    assert resp.calculation_steps == [trusted_step]
 
 
 def test_calculation_step_structure() -> None:

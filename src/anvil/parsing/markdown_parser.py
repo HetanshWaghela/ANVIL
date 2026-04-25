@@ -39,8 +39,21 @@ def _slugify(text: str) -> str:
     return s.strip("-")
 
 
+def _strip_md_formatting(text: str) -> str:
+    """Strip markdown bold/italic markers (**, *, __) from text."""
+    s = text.strip()
+    # Strip bold (**text**) and italic (*text*) markers
+    s = re.sub(r"\*{1,2}([^*]+)\*{1,2}", r"\1", s)
+    # Strip underscore-style bold/italic (__text__, _text_)
+    s = re.sub(r"_{1,2}([^_]+)_{1,2}", r"\1", s)
+    return s.strip()
+
+
 def _extract_paragraph_ref(heading_text: str) -> str | None:
-    m = _PARA_REF_IN_HEADING.match(heading_text.strip())
+    # Strip bold/italic markers so pymupdf4llm headings like
+    # "**A-27 Thickness...**" match the paragraph-ref regex.
+    cleaned = _strip_md_formatting(heading_text)
+    m = _PARA_REF_IN_HEADING.match(cleaned)
     return m.group(1).upper() if m else None
 
 

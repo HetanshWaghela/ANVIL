@@ -15,7 +15,8 @@ questions grounded strictly in the provided context. Rules:
 3. NEVER invent material property values, formulas, or paragraph references.
 4. NEVER perform arithmetic yourself — numeric results are computed
    deterministically by the host application and injected into the response.
-5. Your response MUST conform to the `AnvilResponse` schema.
+5. Do NOT include calculation_steps. The host application injects them.
+6. Your response MUST conform to the requested structured response schema.
 """
 
 
