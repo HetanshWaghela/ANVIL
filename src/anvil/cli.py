@@ -24,8 +24,8 @@ from typing import Any
 
 from anvil.generation.nim_health import (
     DEFAULT_NIM_BASE_URL,
-    NIM_MODELS,
     check_all_nim_models,
+    get_nim_model_catalog,
     list_nim_catalog,
 )
 
@@ -97,12 +97,16 @@ def _nim_check_summary_rich(results: list[Any]) -> None:
 
 
 async def _cmd_nim_check_async(args: argparse.Namespace) -> int:
-    """Probe every model in NIM_MODELS and print a summary.
+    """Probe every selected NIM model and print a summary.
 
     With `--list`, additionally fetch the live `/v1/models` catalog
-    and report any drift between the locked NIM_MODELS catalog and
+    and report any drift between the selected model catalog and
     what NIM is actually serving today.
     """
+    if args.models:
+        import os
+
+        os.environ["ANVIL_NIM_MODELS"] = args.models
     results = await check_all_nim_models(
         api_key=args.api_key,
         base_url=args.base_url,
@@ -116,7 +120,7 @@ async def _cmd_nim_check_async(args: argparse.Namespace) -> int:
             base_url=args.base_url,
             timeout=args.timeout,
         )
-        locked = set(NIM_MODELS)
+        locked = set(get_nim_model_catalog())
         live_set = set(live)
         drift_payload = {
             "locked": sorted(locked),
@@ -156,10 +160,10 @@ async def _cmd_nim_check_async(args: argparse.Namespace) -> int:
 def _add_nim_check_parser(sub: argparse._SubParsersAction[Any]) -> None:
     p = sub.add_parser(
         "nim-check",
-        help="Probe each model in the locked NIM catalog and report status.",
+        help="Probe each model in the selected NIM catalog and report status.",
         description=(
-            "Run a small probe against each NVIDIA NIM model in the locked "
-            "catalog (see NIM_MODELS). Prints a status table; exits non-zero "
+            "Run a small probe against each NVIDIA NIM model in the selected "
+            "catalog. Prints a status table; exits non-zero "
             "if no model is reachable. Reads NVIDIA_API_KEY from env unless "
             "--api-key is given."
         ),
@@ -179,6 +183,14 @@ def _add_nim_check_parser(sub: argparse._SubParsersAction[Any]) -> None:
         type=float,
         default=10.0,
         help="Per-probe timeout in seconds (default 10).",
+    )
+    p.add_argument(
+        "--models",
+        default=None,
+        help=(
+            "Comma-separated model ids to probe. Defaults to ANVIL_NIM_MODELS "
+            "when set, otherwise the built-in production catalog."
+        ),
     )
     p.add_argument(
         "--json",

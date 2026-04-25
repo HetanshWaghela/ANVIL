@@ -108,7 +108,12 @@ class SentenceTransformerEmbedder:
                 "Install with `uv add sentence-transformers`."
             ) from e
         self.model = SentenceTransformer(model_name, cache_folder=cache_folder)
-        self.dim = int(self.model.get_sentence_embedding_dimension())
+        get_dim = getattr(
+            self.model,
+            "get_embedding_dimension",
+            self.model.get_sentence_embedding_dimension,
+        )
+        self.dim = int(get_dim())
 
     def encode(self, texts: list[str]) -> np.ndarray:
         # sentence-transformers is intentionally untyped in mypy config →

@@ -93,15 +93,14 @@ class TestPinnedMetrics:
     def test_pymupdf4llm_table_f1(self, results: list[dict[str, object]]) -> None:
         """pymupdf4llm table recovery on SPES-1 (PDF round-trip).
 
-        Wide tables (M-1 with 13 columns) suffer header misalignment in
-        pymupdf4llm. The remaining gap is documented in the failure-mode
-        catalog (§3.3). Threshold set below measured 0.483.
+        Wide tables (M-1 with 13 columns) require stacked-header and
+        continuation-row repair after pymupdf4llm extraction. Measured: 0.957.
         """
         r = self._find_result(results, "pymupdf4llm", "spes1_synthetic")
         if r is None:
             pytest.skip("No pymupdf4llm result for spes1_synthetic")
         f1 = float(r["table_recovery_f1"])  # type: ignore[arg-type]
-        assert f1 >= 0.40, f"pymupdf4llm table_recovery_f1 = {f1} (expected ≥ 0.40)"
+        assert f1 >= 0.90, f"pymupdf4llm table_recovery_f1 = {f1} (expected ≥ 0.90)"
 
     def test_naive_pdfminer_table_f1_floor(self, results: list[dict[str, object]]) -> None:
         """naive_pdfminer has no table recovery (floor baseline)."""

@@ -31,7 +31,7 @@ from anvil.evaluation.dataset import load_golden_dataset  # noqa: E402
 from anvil.evaluation.manifest import make_run_id  # noqa: E402
 from anvil.evaluation.run_logger import RunLogger, RunLoggerConfig  # noqa: E402
 from anvil.evaluation.runner import EvaluationRunner  # noqa: E402
-from anvil.generation.nim_health import NIM_MODELS  # noqa: E402
+from anvil.generation.nim_health import get_nim_model_catalog  # noqa: E402
 from anvil.logging_config import get_logger  # noqa: E402
 from anvil.pipeline import build_pipeline  # noqa: E402
 
@@ -54,6 +54,14 @@ def _parse_args() -> argparse.Namespace:
         "--write-table",
         type=Path,
         default=Path("docs/headline_results.md"),
+    )
+    p.add_argument(
+        "--models",
+        default=None,
+        help=(
+            "Comma-separated NIM model ids. Defaults to ANVIL_NIM_MODELS "
+            "when set, otherwise the built-in production catalog."
+        ),
     )
     return p.parse_args()
 
@@ -114,6 +122,8 @@ async def _evaluate_one(
 
 async def _run() -> int:
     args = _parse_args()
+    if args.models:
+        os.environ["ANVIL_NIM_MODELS"] = args.models
 
     has_key = bool(os.environ.get("NVIDIA_API_KEY"))
     if not has_key:
@@ -135,7 +145,7 @@ async def _run() -> int:
                 when=when,
             )
         )
-    for model_id in NIM_MODELS:
+    for model_id in get_nim_model_catalog():
         run_dirs.append(
             await _evaluate_one(
                 backend="nvidia_nim",

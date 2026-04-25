@@ -43,7 +43,7 @@ def _parse_args() -> argparse.Namespace:
     )
     p.add_argument(
         "--model",
-        default=os.environ.get("ANVIL_LLM_MODEL"),
+        default=None,
         help="Override ANVIL_LLM_MODEL.",
     )
     from anvil.evaluation.ablation import ABLATIONS
@@ -77,8 +77,13 @@ async def _run() -> int:
 
     # Wire env so build_pipeline picks up the right backend.
     os.environ["ANVIL_LLM_BACKEND"] = args.backend
-    if args.model:
-        os.environ["ANVIL_LLM_MODEL"] = args.model
+    model = args.model or (
+        os.environ.get("ANVIL_LLM_MODEL") if args.backend != "fake" else None
+    )
+    if model:
+        os.environ["ANVIL_LLM_MODEL"] = model
+    else:
+        os.environ.pop("ANVIL_LLM_MODEL", None)
 
     pipeline = build_pipeline(ablation=args.ablation)
     effective_model = getattr(pipeline.generator.backend, "model", args.model)

@@ -257,7 +257,7 @@ class OpenAICompatibleBackend:
         backend = OpenAICompatibleBackend(
             base_url="https://integrate.api.nvidia.com/v1",
             api_key=os.environ["NVIDIA_API_KEY"],
-            model="deepseek-ai/deepseek-v3.1",
+            model="deepseek-ai/deepseek-v4-flash",
         )
 
     Fail-loud behavior:
@@ -402,6 +402,7 @@ def _nvidia_nim_backend() -> OpenAICompatibleBackend:
             ),
         }
     timeout_s = float(os.environ.get("ANVIL_LLM_TIMEOUT_S", "120"))
+    max_tokens = int(os.environ.get("ANVIL_LLM_MAX_TOKENS", "4096"))
     return OpenAICompatibleBackend(
         base_url=os.environ.get(
             "NVIDIA_NIM_BASE_URL", "https://integrate.api.nvidia.com/v1"
@@ -409,6 +410,7 @@ def _nvidia_nim_backend() -> OpenAICompatibleBackend:
         api_key=api_key,
         model=model,
         timeout_s=timeout_s,
+        max_tokens=max_tokens,
         extra_body=extra_body or None,
     )
 
@@ -439,11 +441,13 @@ def _openai_compatible_backend() -> OpenAICompatibleBackend:
         )
     assert base_url and api_key and model  # for the type-checker
     timeout_s = float(os.environ.get("ANVIL_LLM_TIMEOUT_S", "120"))
+    max_tokens = int(os.environ.get("ANVIL_LLM_MAX_TOKENS", "4096"))
     return OpenAICompatibleBackend(
         base_url=base_url,
         api_key=api_key,
         model=model,
         timeout_s=timeout_s,
+        max_tokens=max_tokens,
     )
 
 

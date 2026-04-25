@@ -65,7 +65,7 @@
           {
             "row": 1,
             "col": 2,
-            "text": "Elastic Constants ...............,",
+            "text": "Elastic Constants ..............., 4.3.6.1<br>Stiffened Multilayered",
             "is_header": false,
             "spans_rows": 1,
             "spans_cols": 1
@@ -99,47 +99,13 @@
           {
             "row": 2,
             "col": 2,
-            "text": "4.3.6.1<br>Stiffened Multilayered",
+            "text": "Orthotropic Cylinders<br>...... 4.3.6.2<br>Isotropic Cylinders with",
             "is_header": false,
             "spans_rows": 1,
             "spans_cols": 1
           },
           {
             "row": 2,
-            "col": 3,
-            "text": "",
-            "is_header": false,
-            "spans_rows": 1,
-            "spans_cols": 1
-          }
-        ],
-        [
-          {
-            "row": 3,
-            "col": 0,
-            "text": "",
-            "is_header": false,
-            "spans_rows": 1,
-            "spans_cols": 1
-          },
-          {
-            "row": 3,
-            "col": 1,
-            "text": "",
-            "is_header": false,
-            "spans_rows": 1,
-            "spans_cols": 1
-          },
-          {
-            "row": 3,
-            "col": 2,
-            "text": "Orthotropic Cylinders<br>......",
-            "is_header": false,
-            "spans_rows": 1,
-            "spans_cols": 1
-          },
-          {
-            "row": 3,
             "col": 3,
             "text": "22",
             "is_header": false,
@@ -149,7 +115,7 @@
         ],
         [
           {
-            "row": 4,
+            "row": 3,
             "col": 0,
             "text": "",
             "is_header": false,
@@ -157,7 +123,7 @@
             "spans_cols": 1
           },
           {
-            "row": 4,
+            "row": 3,
             "col": 1,
             "text": "",
             "is_header": false,
@@ -165,49 +131,15 @@
             "spans_cols": 1
           },
           {
-            "row": 4,
+            "row": 3,
             "col": 2,
-            "text": "4.3.6.2<br>Isotropic Cylinders with",
+            "text": "Stiffeners and Rings........ 4.3.6.3<br>Ring-Stiffened Corrugated",
             "is_header": false,
             "spans_rows": 1,
             "spans_cols": 1
           },
           {
-            "row": 4,
-            "col": 3,
-            "text": "",
-            "is_header": false,
-            "spans_rows": 1,
-            "spans_cols": 1
-          }
-        ],
-        [
-          {
-            "row": 5,
-            "col": 0,
-            "text": "",
-            "is_header": false,
-            "spans_rows": 1,
-            "spans_cols": 1
-          },
-          {
-            "row": 5,
-            "col": 1,
-            "text": "",
-            "is_header": false,
-            "spans_rows": 1,
-            "spans_cols": 1
-          },
-          {
-            "row": 5,
-            "col": 2,
-            "text": "Stiffeners and Rings........",
-            "is_header": false,
-            "spans_rows": 1,
-            "spans_cols": 1
-          },
-          {
-            "row": 5,
+            "row": 3,
             "col": 3,
             "text": "25",
             "is_header": false,
@@ -217,7 +149,7 @@
         ],
         [
           {
-            "row": 6,
+            "row": 4,
             "col": 0,
             "text": "",
             "is_header": false,
@@ -225,7 +157,7 @@
             "spans_cols": 1
           },
           {
-            "row": 6,
+            "row": 4,
             "col": 1,
             "text": "",
             "is_header": false,
@@ -233,41 +165,7 @@
             "spans_cols": 1
           },
           {
-            "row": 6,
-            "col": 2,
-            "text": "4.3.6.3<br>Ring-Stiffened Corrugated",
-            "is_header": false,
-            "spans_rows": 1,
-            "spans_cols": 1
-          },
-          {
-            "row": 6,
-            "col": 3,
-            "text": "",
-            "is_header": false,
-            "spans_rows": 1,
-            "spans_cols": 1
-          }
-        ],
-        [
-          {
-            "row": 7,
-            "col": 0,
-            "text": "",
-            "is_header": false,
-            "spans_rows": 1,
-            "spans_cols": 1
-          },
-          {
-            "row": 7,
-            "col": 1,
-            "text": "",
-            "is_header": false,
-            "spans_rows": 1,
-            "spans_cols": 1
-          },
-          {
-            "row": 7,
+            "row": 4,
             "col": 2,
             "text": "Cylinders ...............",
             "is_header": false,
@@ -275,7 +173,7 @@
             "spans_cols": 1
           },
           {
-            "row": 7,
+            "row": 4,
             "col": 3,
             "text": "26",
             "is_header": false,
@@ -285,7 +183,7 @@
         ],
         [
           {
-            "row": 8,
+            "row": 5,
             "col": 0,
             "text": "",
             "is_header": false,
@@ -293,7 +191,7 @@
             "spans_cols": 1
           },
           {
-            "row": 8,
+            "row": 5,
             "col": 1,
             "text": "",
             "is_header": false,
@@ -301,7 +199,7 @@
             "spans_cols": 1
           },
           {
-            "row": 8,
+            "row": 5,
             "col": 2,
             "text": "4.3.6.4<br>Waffle-Stiffened Cylinders<br>...",
             "is_header": false,
@@ -309,7 +207,7 @@
             "spans_cols": 1
           },
           {
-            "row": 8,
+            "row": 5,
             "col": 3,
             "text": "26",
             "is_header": false,
@@ -319,7 +217,7 @@
         ],
         [
           {
-            "row": 9,
+            "row": 6,
             "col": 0,
             "text": "",
             "is_header": false,
@@ -327,7 +225,7 @@
             "spans_cols": 1
           },
           {
-            "row": 9,
+            "row": 6,
             "col": 1,
             "text": "",
             "is_header": false,
@@ -335,7 +233,7 @@
             "spans_cols": 1
           },
           {
-            "row": 9,
+            "row": 6,
             "col": 2,
             "text": "4.3.6.5<br>Special Considerations<br>......",
             "is_header": false,
@@ -343,7 +241,7 @@
             "spans_cols": 1
           },
           {
-            "row": 9,
+            "row": 6,
             "col": 3,
             "text": "26",
             "is_header": false,
@@ -353,7 +251,7 @@
         ],
         [
           {
-            "row": 10,
+            "row": 7,
             "col": 0,
             "text": "4.4",
             "is_header": false,
@@ -361,7 +259,7 @@
             "spans_cols": 1
           },
           {
-            "row": 10,
+            "row": 7,
             "col": 1,
             "text": "Isotropic Sandwich Cylinders .............",
             "is_header": false,
@@ -369,7 +267,7 @@
             "spans_cols": 1
           },
           {
-            "row": 10,
+            "row": 7,
             "col": 2,
             "text": "",
             "is_header": false,
@@ -377,7 +275,7 @@
             "spans_cols": 1
           },
           {
-            "row": 10,
+            "row": 7,
             "col": 3,
             "text": "27",
             "is_header": false,
@@ -387,7 +285,7 @@
         ],
         [
           {
-            "row": 11,
+            "row": 8,
             "col": 0,
             "text": "",
             "is_header": false,
@@ -395,7 +293,7 @@
             "spans_cols": 1
           },
           {
-            "row": 11,
+            "row": 8,
             "col": 1,
             "text": "4.4.1",
             "is_header": false,
@@ -403,7 +301,7 @@
             "spans_cols": 1
           },
           {
-            "row": 11,
+            "row": 8,
             "col": 2,
             "text": "Axial Compression ...............",
             "is_header": false,
@@ -411,7 +309,7 @@
             "spans_cols": 1
           },
           {
-            "row": 11,
+            "row": 8,
             "col": 3,
             "text": "28",
             "is_header": false,
@@ -421,7 +319,7 @@
         ],
         [
           {
-            "row": 12,
+            "row": 9,
             "col": 0,
             "text": "",
             "is_header": false,
@@ -429,7 +327,7 @@
             "spans_cols": 1
           },
           {
-            "row": 12,
+            "row": 9,
             "col": 1,
             "text": "4.4.2",
             "is_header": false,
@@ -437,7 +335,7 @@
             "spans_cols": 1
           },
           {
-            "row": 12,
+            "row": 9,
             "col": 2,
             "text": "Bending ......................",
             "is_header": false,
@@ -445,7 +343,7 @@
             "spans_cols": 1
           },
           {
-            "row": 12,
+            "row": 9,
             "col": 3,
             "text": "32",
             "is_header": false,
@@ -455,7 +353,7 @@
         ],
         [
           {
-            "row": 13,
+            "row": 10,
             "col": 0,
             "text": "",
             "is_header": false,
@@ -463,7 +361,7 @@
             "spans_cols": 1
           },
           {
-            "row": 13,
+            "row": 10,
             "col": 1,
             "text": "4.4.3",
             "is_header": false,
@@ -471,7 +369,7 @@
             "spans_cols": 1
           },
           {
-            "row": 13,
+            "row": 10,
             "col": 2,
             "text": "Lateral Pressure... ..............",
             "is_header": false,
@@ -479,7 +377,7 @@
             "spans_cols": 1
           },
           {
-            "row": 13,
+            "row": 10,
             "col": 3,
             "text": "32",
             "is_header": false,
@@ -489,7 +387,7 @@
         ],
         [
           {
-            "row": 14,
+            "row": 11,
             "col": 0,
             "text": "",
             "is_header": false,
@@ -497,7 +395,7 @@
             "spans_cols": 1
           },
           {
-            "row": 14,
+            "row": 11,
             "col": 1,
             "text": "4.4.4",
             "is_header": false,
@@ -505,7 +403,7 @@
             "spans_cols": 1
           },
           {
-            "row": 14,
+            "row": 11,
             "col": 2,
             "text": "Torsion<br>......................",
             "is_header": false,
@@ -513,7 +411,7 @@
             "spans_cols": 1
           },
           {
-            "row": 14,
+            "row": 11,
             "col": 3,
             "text": "33",
             "is_header": false,
@@ -523,7 +421,7 @@
         ],
         [
           {
-            "row": 15,
+            "row": 12,
             "col": 0,
             "text": "4.5",
             "is_header": false,
@@ -531,7 +429,7 @@
             "spans_cols": 1
           },
           {
-            "row": 15,
+            "row": 12,
             "col": 1,
             "text": "Cylinders with an ElasticCore<br>............",
             "is_header": false,
@@ -539,7 +437,7 @@
             "spans_cols": 1
           },
           {
-            "row": 15,
+            "row": 12,
             "col": 2,
             "text": "",
             "is_header": false,
@@ -547,7 +445,7 @@
             "spans_cols": 1
           },
           {
-            "row": 15,
+            "row": 12,
             "col": 3,
             "text": "35",
             "is_header": false,
@@ -557,7 +455,7 @@
         ],
         [
           {
-            "row": 16,
+            "row": 13,
             "col": 0,
             "text": "",
             "is_header": false,
@@ -565,7 +463,7 @@
             "spans_cols": 1
           },
           {
-            "row": 16,
+            "row": 13,
             "col": 1,
             "text": "4.5.1.",
             "is_header": false,
@@ -573,7 +471,7 @@
             "spans_cols": 1
           },
           {
-            "row": 16,
+            "row": 13,
             "col": 2,
             "text": "Axial Compression ...............",
             "is_header": false,
@@ -581,7 +479,7 @@
             "spans_cols": 1
           },
           {
-            "row": 16,
+            "row": 13,
             "col": 3,
             "text": "35",
             "is_header": false,
@@ -591,7 +489,7 @@
         ],
         [
           {
-            "row": 17,
+            "row": 14,
             "col": 0,
             "text": "",
             "is_header": false,
@@ -599,7 +497,7 @@
             "spans_cols": 1
           },
           {
-            "row": 17,
+            "row": 14,
             "col": 1,
             "text": "4.5.2",
             "is_header": false,
@@ -607,7 +505,7 @@
             "spans_cols": 1
           },
           {
-            "row": 17,
+            "row": 14,
             "col": 2,
             "text": "External Pressure ................",
             "is_header": false,
@@ -615,7 +513,7 @@
             "spans_cols": 1
           },
           {
-            "row": 17,
+            "row": 14,
             "col": 3,
             "text": "36",
             "is_header": false,
@@ -625,7 +523,7 @@
         ],
         [
           {
-            "row": 18,
+            "row": 15,
             "col": 0,
             "text": "",
             "is_header": false,
@@ -633,7 +531,7 @@
             "spans_cols": 1
           },
           {
-            "row": 18,
+            "row": 15,
             "col": 1,
             "text": "4.5.3.",
             "is_header": false,
@@ -641,7 +539,7 @@
             "spans_cols": 1
           },
           {
-            "row": 18,
+            "row": 15,
             "col": 2,
             "text": "Torsion<br>................2.....",
             "is_header": false,
@@ -649,7 +547,7 @@
             "spans_cols": 1
           },
           {
-            "row": 18,
+            "row": 15,
             "col": 3,
             "text": "39",
             "is_header": false,
@@ -659,7 +557,7 @@
         ],
         [
           {
-            "row": 19,
+            "row": 16,
             "col": 0,
             "text": "",
             "is_header": false,
@@ -667,7 +565,7 @@
             "spans_cols": 1
           },
           {
-            "row": 19,
+            "row": 16,
             "col": 1,
             "text": "4.5.4",
             "is_header": false,
@@ -675,7 +573,7 @@
             "spans_cols": 1
           },
           {
-            "row": 19,
+            "row": 16,
             "col": 2,
             "text": "Combined Axial Compression and",
             "is_header": false,
@@ -683,7 +581,7 @@
             "spans_cols": 1
           },
           {
-            "row": 19,
+            "row": 16,
             "col": 3,
             "text": "",
             "is_header": false,
@@ -693,7 +591,7 @@
         ],
         [
           {
-            "row": 20,
+            "row": 17,
             "col": 0,
             "text": "",
             "is_header": false,
@@ -701,7 +599,7 @@
             "spans_cols": 1
           },
           {
-            "row": 20,
+            "row": 17,
             "col": 1,
             "text": "",
             "is_header": false,
@@ -709,7 +607,7 @@
             "spans_cols": 1
           },
           {
-            "row": 20,
+            "row": 17,
             "col": 2,
             "text": "Lateral Pressure.................",
             "is_header": false,
@@ -717,7 +615,7 @@
             "spans_cols": 1
           },
           {
-            "row": 20,
+            "row": 17,
             "col": 3,
             "text": "40",
             "is_header": false,
@@ -727,7 +625,7 @@
         ],
         [
           {
-            "row": 21,
+            "row": 18,
             "col": 0,
             "text": "4.6",
             "is_header": false,
@@ -735,7 +633,7 @@
             "spans_cols": 1
           },
           {
-            "row": 21,
+            "row": 18,
             "col": 1,
             "text": "Design<br>ofRings......................",
             "is_header": false,
@@ -743,7 +641,7 @@
             "spans_cols": 1
           },
           {
-            "row": 21,
+            "row": 18,
             "col": 2,
             "text": "",
             "is_header": false,
@@ -751,7 +649,7 @@
             "spans_cols": 1
           },
           {
-            "row": 21,
+            "row": 18,
             "col": 3,
             "text": "41",
             "is_header": false,
@@ -767,59 +665,59 @@
   "formulas": [],
   "paragraph_refs": [],
   "section_headings": [
-    "4.2.4 Torsion",
-    "Gx7,Gyz",
-    "Chemical Propulsion.",
-    "4.5 Cylinders with an Elastic Core",
-    "SYMBOLS",
-    "4.2.5.2 Circular Cylinders",
-    "R. + Ry = |",
-    "4.2.5.4 Internally Pressurized Circular Cylinders",
-    "4.3.6.2 Isotropic Cylinders with Stiffeners and Rings",
-    "T",
-    "44.4 Torsion",
-    "4. RECOMMENDED PRACTICES",
-    "1. INTRODUCTION",
-    "4.2.5.1 Circular Cylinders in Axial Compression and Bending",
-    "3.1 General",
-    "4.3.6.1 Stiffened Multilayered Orthotropic Cylinders",
-    "3. CRITERIA",
-    "4.2.5.3 Circular Cylinders in Axial Compression and Torsion",
-    "4.3.6.5 Special Considerations",
-    "FOREWORD",
-    "d ring spacing",
-    "4.5.4 Combined Axial Compression and Lateral Pressure",
-    "Environment",
-    "CONTENTS",
-    "Table TBL-0",
-    "Re + Re = 1",
-    "42.5.6 Internally Pressurized Cylinders in Axial Compression and Bending",
-    "4.3.5 Combined Bending and Axial Compression",
-    "4.3.3. External Pressure",
-    "4.4 Isotropic Sandwich Cylinders",
-    "REFERENCES",
-    "in Axial Compression",
-    "in Axial Compression and External Pressure",
-    "4.2.1 Axial Compression",
-    "4.3.6.3 Ring-Stiffened Corrugated Cylinders",
-    "4.2.5 Combined Loads",
-    "B buckle aspect ratio (~~Trm",
-    "BUCKLING OF THIN-WALLED CIRCULAR CYLINDERS",
-    "4.5.2 External Pressure",
-    "2. STATE OF THE ART",
-    "4.2.3 External Pressure",
-    "43.2 Bending",
-    "4.4.1 Axial Compression",
-    "4.5.1 Axial Compression",
-    "ky",
-    "BUCKLING OF",
-    "4.3.6.4 Waffle-Stiffened Cylinders",
-    "4.2.5.5 Internally Pressurized Circular Cylinders in Bending",
-    "4.3.1 Axial Compression",
-    "4.1 Scope",
-    "443 Lateral Pressure",
     "SPACE VEHICLE DESIGN CRITERIA (STRUCTURES)",
+    "4.2.5 Combined Loads",
+    "3.1 General",
+    "R. + Ry = |",
+    "4.3.6.5 Special Considerations",
+    "4.3.5 Combined Bending and Axial Compression",
+    "ky",
+    "3. CRITERIA",
+    "in Axial Compression and External Pressure",
+    "1. INTRODUCTION",
+    "4.3.6.3 Ring-Stiffened Corrugated Cylinders",
+    "BUCKLING OF THIN-WALLED CIRCULAR CYLINDERS",
+    "Gx7,Gyz",
+    "4.5.4 Combined Axial Compression and Lateral Pressure",
+    "43.2 Bending",
+    "4.2.5.2 Circular Cylinders",
+    "d ring spacing",
+    "4.2.5.1 Circular Cylinders in Axial Compression and Bending",
+    "CONTENTS",
+    "4.2.5.5 Internally Pressurized Circular Cylinders in Bending",
+    "4.2.3 External Pressure",
+    "FOREWORD",
+    "4.2.5.3 Circular Cylinders in Axial Compression and Torsion",
+    "4.2.5.4 Internally Pressurized Circular Cylinders",
+    "4.3.3. External Pressure",
+    "4.3.6.1 Stiffened Multilayered Orthotropic Cylinders",
+    "4.6 Design of Rings",
+    "443 Lateral Pressure",
+    "4.5.1 Axial Compression",
+    "4.5.2 External Pressure",
+    "in Axial Compression",
+    "4.2.4 Torsion",
+    "BUCKLING OF",
+    "42.5.6 Internally Pressurized Cylinders in Axial Compression and Bending",
+    "T",
+    "Environment",
+    "Chemical Propulsion.",
+    "B buckle aspect ratio (~~Trm",
+    "4.3.6.2 Isotropic Cylinders with Stiffeners and Rings",
+    "Table TBL-0",
+    "4. RECOMMENDED PRACTICES",
+    "4.5 Cylinders with an Elastic Core",
+    "4.3.6.4 Waffle-Stiffened Cylinders",
+    "REFERENCES",
+    "4.1 Scope",
+    "2. STATE OF THE ART",
+    "4.4.1 Axial Compression",
+    "4.2.1 Axial Compression",
     "4.2 \\lsotropic Unstiffened Cylinders",
-    "4.6 Design of Rings"
+    "Re + Re = 1",
+    "SYMBOLS",
+    "4.3.1 Axial Compression",
+    "44.4 Torsion",
+    "4.4 Isotropic Sandwich Cylinders"
   ]
 }

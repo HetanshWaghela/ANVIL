@@ -190,11 +190,11 @@ def test_nvidia_nim_backend_selection_via_env(monkeypatch) -> None:
     pointed at the NIM base URL without making any network calls."""
     monkeypatch.setenv("ANVIL_LLM_BACKEND", "nvidia_nim")
     monkeypatch.setenv("NVIDIA_API_KEY", "nvapi-test-not-real")
-    monkeypatch.setenv("ANVIL_LLM_MODEL", "deepseek-ai/deepseek-v3.1")
+    monkeypatch.setenv("ANVIL_LLM_MODEL", "qwen/qwen3-next-80b-a3b-instruct")
     backend = get_default_backend()
     assert isinstance(backend, OpenAICompatibleBackend)
     assert backend.base_url == "https://integrate.api.nvidia.com/v1"
-    assert backend.model == "deepseek-ai/deepseek-v3.1"
+    assert backend.model == "qwen/qwen3-next-80b-a3b-instruct"
 
 
 def test_nvidia_nim_backend_reasoning_extra_body(monkeypatch) -> None:
@@ -220,6 +220,17 @@ def test_nvidia_nim_backend_timeout_env(monkeypatch) -> None:
 
     assert isinstance(backend, OpenAICompatibleBackend)
     assert backend.timeout_s == 45.0
+
+
+def test_nvidia_nim_backend_max_tokens_env(monkeypatch) -> None:
+    monkeypatch.setenv("ANVIL_LLM_BACKEND", "nvidia_nim")
+    monkeypatch.setenv("NVIDIA_API_KEY", "nvapi-test-not-real")
+    monkeypatch.setenv("ANVIL_LLM_MAX_TOKENS", "8192")
+
+    backend = get_default_backend()
+
+    assert isinstance(backend, OpenAICompatibleBackend)
+    assert backend.max_tokens == 8192
 
 
 # ---------------------------------------------------------------------------

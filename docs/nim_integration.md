@@ -20,22 +20,34 @@ OpenAI Chat Completions one.
 | **Model id format** | `<provider>/<model-name>`, e.g. `meta/llama-3.3-70b-instruct`. |
 | **Get a key** | [build.nvidia.com](https://build.nvidia.com) → join the NVIDIA Developer Program → "Get API Key". |
 
-## Locked model catalog
+## Production model catalog
 
-ANVIL ships with a 3-model locked catalog in
-`src/anvil/generation/nim_health.py::NIM_MODELS`. Adding a 4th is a
-deliberate edit (a test in `tests/unit/test_nim_health.py` enforces
-the count). The three are deliberately picked from different
-design-space corners:
+ANVIL ships with a 3-model production catalog in
+`src/anvil/generation/nim_health.py::DEFAULT_NIM_MODELS`. For live
+model bake-offs, set `ANVIL_NIM_MODELS` or pass `anvil nim-check
+--models ...`; this keeps provider churn out of source edits while
+still making the evaluated matrix explicit in run manifests.
 
 | ID | Why we picked it | Reasoning mode |
 | :--- | :--- | :---: |
-| `meta/llama-3.3-70b-instruct` | Meta-family general instruction-follower; eval baseline. Default for `_nvidia_nim_backend()`. Live-probe latency ~0.3 s. | — |
-| `nvidia/llama-3.3-nemotron-super-49b-v1.5` | NVIDIA-RLHF tuned with thinking-mode; stress-tests our `chat_template_kwargs.thinking` passthrough. Live-probe latency ~0.6 s. | ✓ |
-| `openai/gpt-oss-120b` | OpenAI's open-weight 120b on NIM; ensures the table compares across **three different model families** (Meta / NVIDIA / OpenAI), not three flavors of one. Live-probe latency ~0.3 s. | — |
+| `meta/llama-3.3-70b-instruct` | Strong general instruction-follower; eval baseline. Default for `_nvidia_nim_backend()`. | — |
+| `qwen/qwen3-next-80b-a3b-instruct` | Fast reachable instruction model for structured compliance evals. Live probe on 2026-04-25 returned in ~0.3 s. | — |
+| `moonshotai/kimi-k2-instruct-0905` | Fast reachable cross-family instruction model. Live probe on 2026-04-25 returned in ~0.5 s. | — |
+
+GPT-OSS 120B and Nemotron Super 49B were removed from the default
+matrix after live ANVIL evals: GPT-OSS barely met threshold and had
+citation / JSON reliability issues; Nemotron was slower and weaker than
+the best row for this task.
+
+DeepSeek V4 candidates are visible in NIM's `/models` response, but
+were not made active defaults on 2026-04-25 because
+`deepseek-ai/deepseek-v4-flash` returned HTTP 502 after ~104 s and
+`deepseek-ai/deepseek-v4-pro` timed out after 180 s. Keep them as an
+explicit `ANVIL_NIM_MODELS` bake-off override until the endpoint serves
+chat completions reliably.
 
 The catalog rotates over time. If a model is deprecated by NIM, the
-locked test still passes (the catalog is an in-repo dict) but
+default-catalog test still passes (the catalog is an in-repo dict) but
 `anvil nim-check` will flag it as `reachable=False`. Use
 `anvil nim-check --list` to compare the locked catalog to the live
 `/v1/models` response and propose a swap.
@@ -114,19 +126,19 @@ extra_body={
 }
 ```
 
-This is harmless on models that don't honor the kwarg (Llama 3.3, the
-default, ignores it). Useful primarily for the DeepSeek catalog row.
+This is harmless on models that don't honor the kwarg. Useful primarily
+for the DeepSeek catalog rows.
 
 ## ANVIL's NIM-specific code surface
 
 | Surface | File | Purpose |
 | :--- | :--- | :--- |
-| `NIM_MODELS` | `src/anvil/generation/nim_health.py` | Locked catalog. |
+| `DEFAULT_NIM_MODELS` / `ANVIL_NIM_MODELS` | `src/anvil/generation/nim_health.py` | Built-in production catalog plus explicit runtime override. |
 | `check_nim_health(model)` | `src/anvil/generation/nim_health.py` | Probe a single model; never raises; redacts the API key on failure. |
 | `check_all_nim_models()` | `src/anvil/generation/nim_health.py` | Sequential probe over the catalog (free tier doesn't tolerate parallel probes). |
 | `list_nim_catalog()` | `src/anvil/generation/nim_health.py` | Live `/v1/models` fetch — used for drift detection. |
 | `_nvidia_nim_backend()` | `src/anvil/generation/llm_backend.py` | Constructs an `OpenAICompatibleBackend` from env. |
-| `anvil nim-check` | `src/anvil/cli.py` | CLI command; supports `--json`, `--list`, `--api-key`, `--base-url`, `--timeout`. |
+| `anvil nim-check` | `src/anvil/cli.py` | CLI command; supports `--json`, `--list`, `--models`, `--api-key`, `--base-url`, `--timeout`. |
 
 ## Operational notes
 
@@ -177,7 +189,7 @@ To exercise the real path locally:
 
 ```bash
 export NVIDIA_API_KEY=nvapi-...
-uv run anvil nim-check                  # 3-row table, all reachable
-uv run anvil nim-check --json --list    # adds catalog_drift block
+uv run anvil nim-check --timeout 60                  # 3-row table
+uv run anvil nim-check --json --list --timeout 60    # adds catalog_drift block
 uv run python scripts/run_nim_headlines.py --include-fake
 ```

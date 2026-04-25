@@ -30,6 +30,7 @@ from anvil.generation.nim_health import (
     NIMHealthCheck,
     check_all_nim_models,
     check_nim_health,
+    get_nim_model_catalog,
     list_nim_catalog,
 )
 
@@ -83,8 +84,8 @@ def test_nim_catalog_has_three_locked_models() -> None:
     assert len(NIM_MODELS) == 3
     expected = {
         "meta/llama-3.3-70b-instruct",
-        "nvidia/llama-3.3-nemotron-super-49b-v1.5",
-        "openai/gpt-oss-120b",
+        "qwen/qwen3-next-80b-a3b-instruct",
+        "moonshotai/kimi-k2-instruct-0905",
     }
     assert set(NIM_MODELS) == expected
     # Every entry must carry the metadata the CLI / health check rely on.
@@ -92,9 +93,27 @@ def test_nim_catalog_has_three_locked_models() -> None:
         assert isinstance(meta["label"], str) and meta["label"], model_id
         assert isinstance(meta["purpose"], str) and meta["purpose"], model_id
         assert isinstance(meta["supports_reasoning"], bool), model_id
-    # At least one model in the catalog supports reasoning passthrough,
-    # so the `ANVIL_NIM_REASONING` env-var path is actually exercised.
-    assert any(m["supports_reasoning"] for m in NIM_MODELS.values())
+    assert "openai/gpt-oss-120b" not in NIM_MODELS
+    assert "nvidia/llama-3.3-nemotron-super-49b-v1.5" not in NIM_MODELS
+
+
+def test_nim_catalog_can_be_overridden_without_code_edits(
+    monkeypatch: pytest.MonkeyPatch,
+) -> None:
+    monkeypatch.setenv(
+        "ANVIL_NIM_MODELS",
+        "meta/llama-3.3-70b-instruct,qwen/qwen3-next-80b-a3b-instruct,custom/model-x",
+    )
+
+    catalog = get_nim_model_catalog()
+
+    assert list(catalog) == [
+        "meta/llama-3.3-70b-instruct",
+        "qwen/qwen3-next-80b-a3b-instruct",
+        "custom/model-x",
+    ]
+    assert catalog["custom/model-x"]["label"] == "model-x"
+    assert catalog["custom/model-x"]["purpose"] == "operator-specified NIM model"
 
 
 # ---------------------------------------------------------------------------
@@ -172,7 +191,7 @@ async def test_check_nim_health_http_429_is_not_an_exception(
     """Free-tier rate-limit responses must surface as a structured error,
     not a raised exception. The CLI exits 1 if NO model is reachable —
     a single 429 must allow the next model to be tried."""
-    model = "deepseek-ai/deepseek-v3.1"
+    model = "deepseek-ai/deepseek-v4-flash"
     respx.post(f"{DEFAULT_NIM_BASE_URL}/chat/completions").mock(
         return_value=httpx.Response(429, text="quota exceeded")
     )
@@ -191,7 +210,7 @@ async def test_check_nim_health_transport_error_caught(
     respx.post(f"{DEFAULT_NIM_BASE_URL}/chat/completions").mock(
         side_effect=httpx.ConnectError("connection refused")
     )
-    result = await check_nim_health("nvidia/llama-3.1-nemotron-70b-instruct")
+    result = await check_nim_health("moonshotai/kimi-k2-instruct-0905")
     assert result.reachable is False
     assert result.error is not None
     assert "ConnectError" in result.error or "connection refused" in result.error
@@ -307,7 +326,7 @@ async def test_list_nim_catalog_returns_model_ids(fake_key: str) -> None:
                 "object": "list",
                 "data": [
                     {"id": "meta/llama-3.3-70b-instruct", "object": "model"},
-                    {"id": "deepseek-ai/deepseek-v3.1", "object": "model"},
+                    {"id": "qwen/qwen3-next-80b-a3b-instruct", "object": "model"},
                     {"id": "some/new-model", "object": "model"},
                 ],
             },
@@ -355,7 +374,7 @@ def test_cli_nim_check_list_reports_drift(
             json={
                 "data": [
                     {"id": "meta/llama-3.3-70b-instruct"},
-                    {"id": "openai/gpt-oss-120b"},
+                    {"id": "qwen/qwen3-next-80b-a3b-instruct"},
                     {"id": "minimaxai/minimax-m2.7"},
                 ],
             },
@@ -366,12 +385,9 @@ def test_cli_nim_check_list_reports_drift(
     parsed = json.loads(capsys.readouterr().out)
     drift = parsed["catalog_drift"]
     assert drift["live_count"] == 3
-    # The Nemotron entry is in our locked catalog but absent from the
+    # The Kimi entry is in our selected catalog but absent from the
     # mocked live list — must surface as drift.
-    assert (
-        "nvidia/llama-3.3-nemotron-super-49b-v1.5"
-        in drift["missing_from_live"]
-    )
+    assert "moonshotai/kimi-k2-instruct-0905" in drift["missing_from_live"]
     assert "minimaxai/minimax-m2.7" in drift["new_in_live"]
 
 
@@ -390,5 +406,3 @@ def test_cli_nim_check_no_key_exits_with_actionable_message(
     assert all(
         "NVIDIA_API_KEY" in (item["error"] or "") for item in parsed["results"]
     )
-
-

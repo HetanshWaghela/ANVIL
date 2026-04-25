@@ -117,6 +117,30 @@ def test_extract_markdown_table_roundtrip() -> None:
     assert tbl.rows[1][1].text == "4"
 
 
+def test_extract_markdown_table_repairs_wrapped_wide_rows() -> None:
+    md = """
+|||Product|Product||||||||||
+|---|---|---|---|---|---|---|---|---|---|---|---|---|
+|Spec|Grade|Form|40C|100C|150C|200C|250C|300C|350C|400C|450C|500C|
+|SM-|Gr|Plate|138|138|138|134|127|121|114|103|73|49|
+|516|70||||||||||||
+|SM-|—|Forging138||138|138|133|125|119|112|100|71|47|
+|105||||||||||||
+"""
+    tbl = extract_markdown_table("M-1", "M-1", 3, md)
+
+    assert tbl is not None
+    assert tbl.headers[:4] == ["Spec", "Grade", "Product Form", "40C"]
+    assert [cell.text for cell in tbl.rows[0][:4]] == ["SM-516", "Gr 70", "Plate", "138"]
+    assert [cell.text for cell in tbl.rows[1][:5]] == [
+        "SM-105",
+        "—",
+        "Forging",
+        "138",
+        "138",
+    ]
+
+
 def test_parse_markdown_inline() -> None:
     md = """# Title
 

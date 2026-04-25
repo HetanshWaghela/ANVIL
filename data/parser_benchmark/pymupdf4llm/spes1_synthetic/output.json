@@ -779,26 +779,26 @@
         "table_id": "M-1",
         "caption": null,
         "headers": [
-          "",
-          "",
-          "Product",
-          "Product",
-          "",
-          "",
-          "",
-          "",
-          "",
-          "",
-          "",
-          "",
-          ""
+          "Spec",
+          "Grade",
+          "Product Form",
+          "40°C",
+          "100°C",
+          "150°C",
+          "200°C",
+          "250°C",
+          "300°C",
+          "350°C",
+          "400°C",
+          "450°C",
+          "500°C"
         ],
         "rows": [
           [
             {
               "row": 0,
               "col": 0,
-              "text": "Spec",
+              "text": "SM-516",
               "is_header": false,
               "spans_rows": 1,
               "spans_cols": 1
@@ -806,119 +806,13 @@
             {
               "row": 0,
               "col": 1,
-              "text": "Grade",
+              "text": "Gr 70",
               "is_header": false,
               "spans_rows": 1,
               "spans_cols": 1
             },
             {
               "row": 0,
-              "col": 2,
-              "text": "Form",
-              "is_header": false,
-              "spans_rows": 1,
-              "spans_cols": 1
-            },
-            {
-              "row": 0,
-              "col": 3,
-              "text": "40°C",
-              "is_header": false,
-              "spans_rows": 1,
-              "spans_cols": 1
-            },
-            {
-              "row": 0,
-              "col": 4,
-              "text": "100°C",
-              "is_header": false,
-              "spans_rows": 1,
-              "spans_cols": 1
-            },
-            {
-              "row": 0,
-              "col": 5,
-              "text": "150°C",
-              "is_header": false,
-              "spans_rows": 1,
-              "spans_cols": 1
-            },
-            {
-              "row": 0,
-              "col": 6,
-              "text": "200°C",
-              "is_header": false,
-              "spans_rows": 1,
-              "spans_cols": 1
-            },
-            {
-              "row": 0,
-              "col": 7,
-              "text": "250°C",
-              "is_header": false,
-              "spans_rows": 1,
-              "spans_cols": 1
-            },
-            {
-              "row": 0,
-              "col": 8,
-              "text": "300°C",
-              "is_header": false,
-              "spans_rows": 1,
-              "spans_cols": 1
-            },
-            {
-              "row": 0,
-              "col": 9,
-              "text": "350°C",
-              "is_header": false,
-              "spans_rows": 1,
-              "spans_cols": 1
-            },
-            {
-              "row": 0,
-              "col": 10,
-              "text": "400°C",
-              "is_header": false,
-              "spans_rows": 1,
-              "spans_cols": 1
-            },
-            {
-              "row": 0,
-              "col": 11,
-              "text": "450°C",
-              "is_header": false,
-              "spans_rows": 1,
-              "spans_cols": 1
-            },
-            {
-              "row": 0,
-              "col": 12,
-              "text": "500°C",
-              "is_header": false,
-              "spans_rows": 1,
-              "spans_cols": 1
-            }
-          ],
-          [
-            {
-              "row": 1,
-              "col": 0,
-              "text": "SM-",
-              "is_header": false,
-              "spans_rows": 1,
-              "spans_cols": 1
-            },
-            {
-              "row": 1,
-              "col": 1,
-              "text": "Gr",
-              "is_header": false,
-              "spans_rows": 1,
-              "spans_cols": 1
-            },
-            {
-              "row": 1,
               "col": 2,
               "text": "Plate",
               "is_header": false,
@@ -926,7 +820,7 @@
               "spans_cols": 1
             },
             {
-              "row": 1,
+              "row": 0,
               "col": 3,
               "text": "138",
               "is_header": false,
@@ -934,7 +828,7 @@
               "spans_cols": 1
             },
             {
-              "row": 1,
+              "row": 0,
               "col": 4,
               "text": "138",
               "is_header": false,
@@ -942,7 +836,7 @@
               "spans_cols": 1
             },
             {
-              "row": 1,
+              "row": 0,
               "col": 5,
               "text": "138",
               "is_header": false,
@@ -950,7 +844,7 @@
               "spans_cols": 1
             },
             {
-              "row": 1,
+              "row": 0,
               "col": 6,
               "text": "134",
               "is_header": false,
@@ -958,7 +852,7 @@
               "spans_cols": 1
             },
             {
-              "row": 1,
+              "row": 0,
               "col": 7,
               "text": "127",
               "is_header": false,
@@ -966,7 +860,7 @@
               "spans_cols": 1
             },
             {
-              "row": 1,
+              "row": 0,
               "col": 8,
               "text": "121",
               "is_header": false,
@@ -974,7 +868,7 @@
               "spans_cols": 1
             },
             {
-              "row": 1,
+              "row": 0,
               "col": 9,
               "text": "114",
               "is_header": false,
@@ -982,7 +876,7 @@
               "spans_cols": 1
             },
             {
-              "row": 1,
+              "row": 0,
               "col": 10,
               "text": "103",
               "is_header": false,
@@ -990,7 +884,7 @@
               "spans_cols": 1
             },
             {
-              "row": 1,
+              "row": 0,
               "col": 11,
               "text": "73",
               "is_header": false,
@@ -998,7 +892,7 @@
               "spans_cols": 1
             },
             {
-              "row": 1,
+              "row": 0,
               "col": 12,
               "text": "49",
               "is_header": false,
@@ -1008,129 +902,23 @@
           ],
           [
             {
-              "row": 2,
+              "row": 1,
               "col": 0,
-              "text": "516",
+              "text": "SM-515",
               "is_header": false,
               "spans_rows": 1,
               "spans_cols": 1
             },
             {
-              "row": 2,
+              "row": 1,
               "col": 1,
-              "text": "70",
+              "text": "Gr 70",
               "is_header": false,
               "spans_rows": 1,
               "spans_cols": 1
             },
             {
-              "row": 2,
-              "col": 2,
-              "text": "",
-              "is_header": false,
-              "spans_rows": 1,
-              "spans_cols": 1
-            },
-            {
-              "row": 2,
-              "col": 3,
-              "text": "",
-              "is_header": false,
-              "spans_rows": 1,
-              "spans_cols": 1
-            },
-            {
-              "row": 2,
-              "col": 4,
-              "text": "",
-              "is_header": false,
-              "spans_rows": 1,
-              "spans_cols": 1
-            },
-            {
-              "row": 2,
-              "col": 5,
-              "text": "",
-              "is_header": false,
-              "spans_rows": 1,
-              "spans_cols": 1
-            },
-            {
-              "row": 2,
-              "col": 6,
-              "text": "",
-              "is_header": false,
-              "spans_rows": 1,
-              "spans_cols": 1
-            },
-            {
-              "row": 2,
-              "col": 7,
-              "text": "",
-              "is_header": false,
-              "spans_rows": 1,
-              "spans_cols": 1
-            },
-            {
-              "row": 2,
-              "col": 8,
-              "text": "",
-              "is_header": false,
-              "spans_rows": 1,
-              "spans_cols": 1
-            },
-            {
-              "row": 2,
-              "col": 9,
-              "text": "",
-              "is_header": false,
-              "spans_rows": 1,
-              "spans_cols": 1
-            },
-            {
-              "row": 2,
-              "col": 10,
-              "text": "",
-              "is_header": false,
-              "spans_rows": 1,
-              "spans_cols": 1
-            },
-            {
-              "row": 2,
-              "col": 11,
-              "text": "",
-              "is_header": false,
-              "spans_rows": 1,
-              "spans_cols": 1
-            },
-            {
-              "row": 2,
-              "col": 12,
-              "text": "",
-              "is_header": false,
-              "spans_rows": 1,
-              "spans_cols": 1
-            }
-          ],
-          [
-            {
-              "row": 3,
-              "col": 0,
-              "text": "SM-",
-              "is_header": false,
-              "spans_rows": 1,
-              "spans_cols": 1
-            },
-            {
-              "row": 3,
-              "col": 1,
-              "text": "Gr",
-              "is_header": false,
-              "spans_rows": 1,
-              "spans_cols": 1
-            },
-            {
-              "row": 3,
+              "row": 1,
               "col": 2,
               "text": "Plate",
               "is_header": false,
@@ -1138,7 +926,7 @@
               "spans_cols": 1
             },
             {
-              "row": 3,
+              "row": 1,
               "col": 3,
               "text": "138",
               "is_header": false,
@@ -1146,7 +934,7 @@
               "spans_cols": 1
             },
             {
-              "row": 3,
+              "row": 1,
               "col": 4,
               "text": "138",
               "is_header": false,
@@ -1154,7 +942,7 @@
               "spans_cols": 1
             },
             {
-              "row": 3,
+              "row": 1,
               "col": 5,
               "text": "138",
               "is_header": false,
@@ -1162,7 +950,7 @@
               "spans_cols": 1
             },
             {
-              "row": 3,
+              "row": 1,
               "col": 6,
               "text": "132",
               "is_header": false,
@@ -1170,7 +958,7 @@
               "spans_cols": 1
             },
             {
-              "row": 3,
+              "row": 1,
               "col": 7,
               "text": "124",
               "is_header": false,
@@ -1178,7 +966,7 @@
               "spans_cols": 1
             },
             {
-              "row": 3,
+              "row": 1,
               "col": 8,
               "text": "118",
               "is_header": false,
@@ -1186,7 +974,7 @@
               "spans_cols": 1
             },
             {
-              "row": 3,
+              "row": 1,
               "col": 9,
               "text": "110",
               "is_header": false,
@@ -1194,7 +982,7 @@
               "spans_cols": 1
             },
             {
-              "row": 3,
+              "row": 1,
               "col": 10,
               "text": "98",
               "is_header": false,
@@ -1202,7 +990,7 @@
               "spans_cols": 1
             },
             {
-              "row": 3,
+              "row": 1,
               "col": 11,
               "text": "69",
               "is_header": false,
@@ -1210,7 +998,7 @@
               "spans_cols": 1
             },
             {
-              "row": 3,
+              "row": 1,
               "col": 12,
               "text": "46",
               "is_header": false,
@@ -1220,121 +1008,15 @@
           ],
           [
             {
-              "row": 4,
+              "row": 2,
               "col": 0,
-              "text": "515",
+              "text": "SM-106",
               "is_header": false,
               "spans_rows": 1,
               "spans_cols": 1
             },
             {
-              "row": 4,
-              "col": 1,
-              "text": "70",
-              "is_header": false,
-              "spans_rows": 1,
-              "spans_cols": 1
-            },
-            {
-              "row": 4,
-              "col": 2,
-              "text": "",
-              "is_header": false,
-              "spans_rows": 1,
-              "spans_cols": 1
-            },
-            {
-              "row": 4,
-              "col": 3,
-              "text": "",
-              "is_header": false,
-              "spans_rows": 1,
-              "spans_cols": 1
-            },
-            {
-              "row": 4,
-              "col": 4,
-              "text": "",
-              "is_header": false,
-              "spans_rows": 1,
-              "spans_cols": 1
-            },
-            {
-              "row": 4,
-              "col": 5,
-              "text": "",
-              "is_header": false,
-              "spans_rows": 1,
-              "spans_cols": 1
-            },
-            {
-              "row": 4,
-              "col": 6,
-              "text": "",
-              "is_header": false,
-              "spans_rows": 1,
-              "spans_cols": 1
-            },
-            {
-              "row": 4,
-              "col": 7,
-              "text": "",
-              "is_header": false,
-              "spans_rows": 1,
-              "spans_cols": 1
-            },
-            {
-              "row": 4,
-              "col": 8,
-              "text": "",
-              "is_header": false,
-              "spans_rows": 1,
-              "spans_cols": 1
-            },
-            {
-              "row": 4,
-              "col": 9,
-              "text": "",
-              "is_header": false,
-              "spans_rows": 1,
-              "spans_cols": 1
-            },
-            {
-              "row": 4,
-              "col": 10,
-              "text": "",
-              "is_header": false,
-              "spans_rows": 1,
-              "spans_cols": 1
-            },
-            {
-              "row": 4,
-              "col": 11,
-              "text": "",
-              "is_header": false,
-              "spans_rows": 1,
-              "spans_cols": 1
-            },
-            {
-              "row": 4,
-              "col": 12,
-              "text": "",
-              "is_header": false,
-              "spans_rows": 1,
-              "spans_cols": 1
-            }
-          ],
-          [
-            {
-              "row": 5,
-              "col": 0,
-              "text": "SM-",
-              "is_header": false,
-              "spans_rows": 1,
-              "spans_cols": 1
-            },
-            {
-              "row": 5,
+              "row": 2,
               "col": 1,
               "text": "Gr B",
               "is_header": false,
@@ -1342,7 +1024,7 @@
               "spans_cols": 1
             },
             {
-              "row": 5,
+              "row": 2,
               "col": 2,
               "text": "Pipe",
               "is_header": false,
@@ -1350,7 +1032,7 @@
               "spans_cols": 1
             },
             {
-              "row": 5,
+              "row": 2,
               "col": 3,
               "text": "118",
               "is_header": false,
@@ -1358,7 +1040,7 @@
               "spans_cols": 1
             },
             {
-              "row": 5,
+              "row": 2,
               "col": 4,
               "text": "118",
               "is_header": false,
@@ -1366,7 +1048,7 @@
               "spans_cols": 1
             },
             {
-              "row": 5,
+              "row": 2,
               "col": 5,
               "text": "118",
               "is_header": false,
@@ -1374,7 +1056,7 @@
               "spans_cols": 1
             },
             {
-              "row": 5,
+              "row": 2,
               "col": 6,
               "text": "115",
               "is_header": false,
@@ -1382,7 +1064,7 @@
               "spans_cols": 1
             },
             {
-              "row": 5,
+              "row": 2,
               "col": 7,
               "text": "108",
               "is_header": false,
@@ -1390,7 +1072,7 @@
               "spans_cols": 1
             },
             {
-              "row": 5,
+              "row": 2,
               "col": 8,
               "text": "102",
               "is_header": false,
@@ -1398,7 +1080,7 @@
               "spans_cols": 1
             },
             {
-              "row": 5,
+              "row": 2,
               "col": 9,
               "text": "96",
               "is_header": false,
@@ -1406,7 +1088,7 @@
               "spans_cols": 1
             },
             {
-              "row": 5,
+              "row": 2,
               "col": 10,
               "text": "86",
               "is_header": false,
@@ -1414,7 +1096,7 @@
               "spans_cols": 1
             },
             {
-              "row": 5,
+              "row": 2,
               "col": 11,
               "text": "61",
               "is_header": false,
@@ -1422,7 +1104,7 @@
               "spans_cols": 1
             },
             {
-              "row": 5,
+              "row": 2,
               "col": 12,
               "text": "41",
               "is_header": false,
@@ -1432,121 +1114,15 @@
           ],
           [
             {
-              "row": 6,
+              "row": 3,
               "col": 0,
-              "text": "106",
+              "text": "SM-105",
               "is_header": false,
               "spans_rows": 1,
               "spans_cols": 1
             },
             {
-              "row": 6,
-              "col": 1,
-              "text": "",
-              "is_header": false,
-              "spans_rows": 1,
-              "spans_cols": 1
-            },
-            {
-              "row": 6,
-              "col": 2,
-              "text": "",
-              "is_header": false,
-              "spans_rows": 1,
-              "spans_cols": 1
-            },
-            {
-              "row": 6,
-              "col": 3,
-              "text": "",
-              "is_header": false,
-              "spans_rows": 1,
-              "spans_cols": 1
-            },
-            {
-              "row": 6,
-              "col": 4,
-              "text": "",
-              "is_header": false,
-              "spans_rows": 1,
-              "spans_cols": 1
-            },
-            {
-              "row": 6,
-              "col": 5,
-              "text": "",
-              "is_header": false,
-              "spans_rows": 1,
-              "spans_cols": 1
-            },
-            {
-              "row": 6,
-              "col": 6,
-              "text": "",
-              "is_header": false,
-              "spans_rows": 1,
-              "spans_cols": 1
-            },
-            {
-              "row": 6,
-              "col": 7,
-              "text": "",
-              "is_header": false,
-              "spans_rows": 1,
-              "spans_cols": 1
-            },
-            {
-              "row": 6,
-              "col": 8,
-              "text": "",
-              "is_header": false,
-              "spans_rows": 1,
-              "spans_cols": 1
-            },
-            {
-              "row": 6,
-              "col": 9,
-              "text": "",
-              "is_header": false,
-              "spans_rows": 1,
-              "spans_cols": 1
-            },
-            {
-              "row": 6,
-              "col": 10,
-              "text": "",
-              "is_header": false,
-              "spans_rows": 1,
-              "spans_cols": 1
-            },
-            {
-              "row": 6,
-              "col": 11,
-              "text": "",
-              "is_header": false,
-              "spans_rows": 1,
-              "spans_cols": 1
-            },
-            {
-              "row": 6,
-              "col": 12,
-              "text": "",
-              "is_header": false,
-              "spans_rows": 1,
-              "spans_cols": 1
-            }
-          ],
-          [
-            {
-              "row": 7,
-              "col": 0,
-              "text": "SM-",
-              "is_header": false,
-              "spans_rows": 1,
-              "spans_cols": 1
-            },
-            {
-              "row": 7,
+              "row": 3,
               "col": 1,
               "text": "—",
               "is_header": false,
@@ -1554,23 +1130,23 @@
               "spans_cols": 1
             },
             {
-              "row": 7,
+              "row": 3,
               "col": 2,
-              "text": "Forging138",
+              "text": "Forging",
               "is_header": false,
               "spans_rows": 1,
               "spans_cols": 1
             },
             {
-              "row": 7,
+              "row": 3,
               "col": 3,
-              "text": "",
+              "text": "138",
               "is_header": false,
               "spans_rows": 1,
               "spans_cols": 1
             },
             {
-              "row": 7,
+              "row": 3,
               "col": 4,
               "text": "138",
               "is_header": false,
@@ -1578,7 +1154,7 @@
               "spans_cols": 1
             },
             {
-              "row": 7,
+              "row": 3,
               "col": 5,
               "text": "138",
               "is_header": false,
@@ -1586,7 +1162,7 @@
               "spans_cols": 1
             },
             {
-              "row": 7,
+              "row": 3,
               "col": 6,
               "text": "133",
               "is_header": false,
@@ -1594,7 +1170,7 @@
               "spans_cols": 1
             },
             {
-              "row": 7,
+              "row": 3,
               "col": 7,
               "text": "125",
               "is_header": false,
@@ -1602,7 +1178,7 @@
               "spans_cols": 1
             },
             {
-              "row": 7,
+              "row": 3,
               "col": 8,
               "text": "119",
               "is_header": false,
@@ -1610,7 +1186,7 @@
               "spans_cols": 1
             },
             {
-              "row": 7,
+              "row": 3,
               "col": 9,
               "text": "112",
               "is_header": false,
@@ -1618,7 +1194,7 @@
               "spans_cols": 1
             },
             {
-              "row": 7,
+              "row": 3,
               "col": 10,
               "text": "100",
               "is_header": false,
@@ -1626,7 +1202,7 @@
               "spans_cols": 1
             },
             {
-              "row": 7,
+              "row": 3,
               "col": 11,
               "text": "71",
               "is_header": false,
@@ -1634,7 +1210,7 @@
               "spans_cols": 1
             },
             {
-              "row": 7,
+              "row": 3,
               "col": 12,
               "text": "47",
               "is_header": false,
@@ -1644,129 +1220,23 @@
           ],
           [
             {
-              "row": 8,
+              "row": 4,
               "col": 0,
-              "text": "105",
+              "text": "SM-240",
               "is_header": false,
               "spans_rows": 1,
               "spans_cols": 1
             },
             {
-              "row": 8,
+              "row": 4,
               "col": 1,
-              "text": "",
+              "text": "Type 304",
               "is_header": false,
               "spans_rows": 1,
               "spans_cols": 1
             },
             {
-              "row": 8,
-              "col": 2,
-              "text": "",
-              "is_header": false,
-              "spans_rows": 1,
-              "spans_cols": 1
-            },
-            {
-              "row": 8,
-              "col": 3,
-              "text": "",
-              "is_header": false,
-              "spans_rows": 1,
-              "spans_cols": 1
-            },
-            {
-              "row": 8,
-              "col": 4,
-              "text": "",
-              "is_header": false,
-              "spans_rows": 1,
-              "spans_cols": 1
-            },
-            {
-              "row": 8,
-              "col": 5,
-              "text": "",
-              "is_header": false,
-              "spans_rows": 1,
-              "spans_cols": 1
-            },
-            {
-              "row": 8,
-              "col": 6,
-              "text": "",
-              "is_header": false,
-              "spans_rows": 1,
-              "spans_cols": 1
-            },
-            {
-              "row": 8,
-              "col": 7,
-              "text": "",
-              "is_header": false,
-              "spans_rows": 1,
-              "spans_cols": 1
-            },
-            {
-              "row": 8,
-              "col": 8,
-              "text": "",
-              "is_header": false,
-              "spans_rows": 1,
-              "spans_cols": 1
-            },
-            {
-              "row": 8,
-              "col": 9,
-              "text": "",
-              "is_header": false,
-              "spans_rows": 1,
-              "spans_cols": 1
-            },
-            {
-              "row": 8,
-              "col": 10,
-              "text": "",
-              "is_header": false,
-              "spans_rows": 1,
-              "spans_cols": 1
-            },
-            {
-              "row": 8,
-              "col": 11,
-              "text": "",
-              "is_header": false,
-              "spans_rows": 1,
-              "spans_cols": 1
-            },
-            {
-              "row": 8,
-              "col": 12,
-              "text": "",
-              "is_header": false,
-              "spans_rows": 1,
-              "spans_cols": 1
-            }
-          ],
-          [
-            {
-              "row": 9,
-              "col": 0,
-              "text": "SM-",
-              "is_header": false,
-              "spans_rows": 1,
-              "spans_cols": 1
-            },
-            {
-              "row": 9,
-              "col": 1,
-              "text": "Type",
-              "is_header": false,
-              "spans_rows": 1,
-              "spans_cols": 1
-            },
-            {
-              "row": 9,
+              "row": 4,
               "col": 2,
               "text": "Plate",
               "is_header": false,
@@ -1774,7 +1244,7 @@
               "spans_cols": 1
             },
             {
-              "row": 9,
+              "row": 4,
               "col": 3,
               "text": "137",
               "is_header": false,
@@ -1782,7 +1252,7 @@
               "spans_cols": 1
             },
             {
-              "row": 9,
+              "row": 4,
               "col": 4,
               "text": "127",
               "is_header": false,
@@ -1790,7 +1260,7 @@
               "spans_cols": 1
             },
             {
-              "row": 9,
+              "row": 4,
               "col": 5,
               "text": "119",
               "is_header": false,
@@ -1798,7 +1268,7 @@
               "spans_cols": 1
             },
             {
-              "row": 9,
+              "row": 4,
               "col": 6,
               "text": "113",
               "is_header": false,
@@ -1806,7 +1276,7 @@
               "spans_cols": 1
             },
             {
-              "row": 9,
+              "row": 4,
               "col": 7,
               "text": "108",
               "is_header": false,
@@ -1814,7 +1284,7 @@
               "spans_cols": 1
             },
             {
-              "row": 9,
+              "row": 4,
               "col": 8,
               "text": "103",
               "is_header": false,
@@ -1822,7 +1292,7 @@
               "spans_cols": 1
             },
             {
-              "row": 9,
+              "row": 4,
               "col": 9,
               "text": "100",
               "is_header": false,
@@ -1830,7 +1300,7 @@
               "spans_cols": 1
             },
             {
-              "row": 9,
+              "row": 4,
               "col": 10,
               "text": "97",
               "is_header": false,
@@ -1838,7 +1308,7 @@
               "spans_cols": 1
             },
             {
-              "row": 9,
+              "row": 4,
               "col": 11,
               "text": "95",
               "is_header": false,
@@ -1846,7 +1316,7 @@
               "spans_cols": 1
             },
             {
-              "row": 9,
+              "row": 4,
               "col": 12,
               "text": "93",
               "is_header": false,
@@ -1856,129 +1326,23 @@
           ],
           [
             {
-              "row": 10,
+              "row": 5,
               "col": 0,
-              "text": "240",
+              "text": "SM-240",
               "is_header": false,
               "spans_rows": 1,
               "spans_cols": 1
             },
             {
-              "row": 10,
+              "row": 5,
               "col": 1,
-              "text": "304",
+              "text": "Type 316",
               "is_header": false,
               "spans_rows": 1,
               "spans_cols": 1
             },
             {
-              "row": 10,
-              "col": 2,
-              "text": "",
-              "is_header": false,
-              "spans_rows": 1,
-              "spans_cols": 1
-            },
-            {
-              "row": 10,
-              "col": 3,
-              "text": "",
-              "is_header": false,
-              "spans_rows": 1,
-              "spans_cols": 1
-            },
-            {
-              "row": 10,
-              "col": 4,
-              "text": "",
-              "is_header": false,
-              "spans_rows": 1,
-              "spans_cols": 1
-            },
-            {
-              "row": 10,
-              "col": 5,
-              "text": "",
-              "is_header": false,
-              "spans_rows": 1,
-              "spans_cols": 1
-            },
-            {
-              "row": 10,
-              "col": 6,
-              "text": "",
-              "is_header": false,
-              "spans_rows": 1,
-              "spans_cols": 1
-            },
-            {
-              "row": 10,
-              "col": 7,
-              "text": "",
-              "is_header": false,
-              "spans_rows": 1,
-              "spans_cols": 1
-            },
-            {
-              "row": 10,
-              "col": 8,
-              "text": "",
-              "is_header": false,
-              "spans_rows": 1,
-              "spans_cols": 1
-            },
-            {
-              "row": 10,
-              "col": 9,
-              "text": "",
-              "is_header": false,
-              "spans_rows": 1,
-              "spans_cols": 1
-            },
-            {
-              "row": 10,
-              "col": 10,
-              "text": "",
-              "is_header": false,
-              "spans_rows": 1,
-              "spans_cols": 1
-            },
-            {
-              "row": 10,
-              "col": 11,
-              "text": "",
-              "is_header": false,
-              "spans_rows": 1,
-              "spans_cols": 1
-            },
-            {
-              "row": 10,
-              "col": 12,
-              "text": "",
-              "is_header": false,
-              "spans_rows": 1,
-              "spans_cols": 1
-            }
-          ],
-          [
-            {
-              "row": 11,
-              "col": 0,
-              "text": "SM-",
-              "is_header": false,
-              "spans_rows": 1,
-              "spans_cols": 1
-            },
-            {
-              "row": 11,
-              "col": 1,
-              "text": "Type",
-              "is_header": false,
-              "spans_rows": 1,
-              "spans_cols": 1
-            },
-            {
-              "row": 11,
+              "row": 5,
               "col": 2,
               "text": "Plate",
               "is_header": false,
@@ -1986,7 +1350,7 @@
               "spans_cols": 1
             },
             {
-              "row": 11,
+              "row": 5,
               "col": 3,
               "text": "137",
               "is_header": false,
@@ -1994,7 +1358,7 @@
               "spans_cols": 1
             },
             {
-              "row": 11,
+              "row": 5,
               "col": 4,
               "text": "137",
               "is_header": false,
@@ -2002,7 +1366,7 @@
               "spans_cols": 1
             },
             {
-              "row": 11,
+              "row": 5,
               "col": 5,
               "text": "130",
               "is_header": false,
@@ -2010,7 +1374,7 @@
               "spans_cols": 1
             },
             {
-              "row": 11,
+              "row": 5,
               "col": 6,
               "text": "123",
               "is_header": false,
@@ -2018,7 +1382,7 @@
               "spans_cols": 1
             },
             {
-              "row": 11,
+              "row": 5,
               "col": 7,
               "text": "117",
               "is_header": false,
@@ -2026,7 +1390,7 @@
               "spans_cols": 1
             },
             {
-              "row": 11,
+              "row": 5,
               "col": 8,
               "text": "112",
               "is_header": false,
@@ -2034,7 +1398,7 @@
               "spans_cols": 1
             },
             {
-              "row": 11,
+              "row": 5,
               "col": 9,
               "text": "108",
               "is_header": false,
@@ -2042,7 +1406,7 @@
               "spans_cols": 1
             },
             {
-              "row": 11,
+              "row": 5,
               "col": 10,
               "text": "105",
               "is_header": false,
@@ -2050,7 +1414,7 @@
               "spans_cols": 1
             },
             {
-              "row": 11,
+              "row": 5,
               "col": 11,
               "text": "103",
               "is_header": false,
@@ -2058,115 +1422,9 @@
               "spans_cols": 1
             },
             {
-              "row": 11,
+              "row": 5,
               "col": 12,
               "text": "101",
-              "is_header": false,
-              "spans_rows": 1,
-              "spans_cols": 1
-            }
-          ],
-          [
-            {
-              "row": 12,
-              "col": 0,
-              "text": "240",
-              "is_header": false,
-              "spans_rows": 1,
-              "spans_cols": 1
-            },
-            {
-              "row": 12,
-              "col": 1,
-              "text": "316",
-              "is_header": false,
-              "spans_rows": 1,
-              "spans_cols": 1
-            },
-            {
-              "row": 12,
-              "col": 2,
-              "text": "",
-              "is_header": false,
-              "spans_rows": 1,
-              "spans_cols": 1
-            },
-            {
-              "row": 12,
-              "col": 3,
-              "text": "",
-              "is_header": false,
-              "spans_rows": 1,
-              "spans_cols": 1
-            },
-            {
-              "row": 12,
-              "col": 4,
-              "text": "",
-              "is_header": false,
-              "spans_rows": 1,
-              "spans_cols": 1
-            },
-            {
-              "row": 12,
-              "col": 5,
-              "text": "",
-              "is_header": false,
-              "spans_rows": 1,
-              "spans_cols": 1
-            },
-            {
-              "row": 12,
-              "col": 6,
-              "text": "",
-              "is_header": false,
-              "spans_rows": 1,
-              "spans_cols": 1
-            },
-            {
-              "row": 12,
-              "col": 7,
-              "text": "",
-              "is_header": false,
-              "spans_rows": 1,
-              "spans_cols": 1
-            },
-            {
-              "row": 12,
-              "col": 8,
-              "text": "",
-              "is_header": false,
-              "spans_rows": 1,
-              "spans_cols": 1
-            },
-            {
-              "row": 12,
-              "col": 9,
-              "text": "",
-              "is_header": false,
-              "spans_rows": 1,
-              "spans_cols": 1
-            },
-            {
-              "row": 12,
-              "col": 10,
-              "text": "",
-              "is_header": false,
-              "spans_rows": 1,
-              "spans_cols": 1
-            },
-            {
-              "row": 12,
-              "col": 11,
-              "text": "",
-              "is_header": false,
-              "spans_rows": 1,
-              "spans_cols": 1
-            },
-            {
-              "row": 12,
-              "col": 12,
-              "text": "",
               "is_header": false,
               "spans_rows": 1,
               "spans_cols": 1
@@ -2219,7 +1477,7 @@
       "metadata": {}
     }
   ],
-  "latency_ms": 398.3047500369139,
+  "latency_ms": 347.99545898567885,
   "cost_usd": null,
   "pdf_mtime": 1777119299.3672104
 }

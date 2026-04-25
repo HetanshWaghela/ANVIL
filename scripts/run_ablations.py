@@ -48,7 +48,7 @@ def _parse_args() -> argparse.Namespace:
         default=os.environ.get("ANVIL_LLM_BACKEND", "fake"),
         choices=["fake", "nvidia_nim", "openai_compatible", "instructor"],
     )
-    p.add_argument("--model", default=os.environ.get("ANVIL_LLM_MODEL"))
+    p.add_argument("--model", default=None)
     p.add_argument(
         "--only",
         nargs="*",
@@ -75,8 +75,13 @@ def _parse_args() -> argparse.Namespace:
 async def _run() -> int:
     args = _parse_args()
     os.environ["ANVIL_LLM_BACKEND"] = args.backend
-    if args.model:
-        os.environ["ANVIL_LLM_MODEL"] = args.model
+    model = args.model or (
+        os.environ.get("ANVIL_LLM_MODEL") if args.backend != "fake" else None
+    )
+    if model:
+        os.environ["ANVIL_LLM_MODEL"] = model
+    else:
+        os.environ.pop("ANVIL_LLM_MODEL", None)
 
     requested = args.only or list(ABLATIONS)
     unknown = sorted(set(requested) - set(ABLATIONS))

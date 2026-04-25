@@ -18,8 +18,10 @@ Design choices:
   ``"OK"``. We don't validate the answer's content, only that *some*
   text came back. NIM models occasionally refuse small probes, so the
   acceptance criterion is `latency_ms is not None and error is None`.
-* Per the locked plan, the catalog is fixed at 3 models. Adding a fourth
-  is a deliberate decision (ADR), not a flag.
+* The default catalog is fixed at three production candidates, but can be
+  overridden with `ANVIL_NIM_MODELS` for live model bake-offs without code
+  edits. The override is explicit and lands in run manifests through
+  `ANVIL_NIM_MODELS`.
 """
 
 from __future__ import annotations
@@ -35,37 +37,38 @@ from anvil.logging_config import get_logger
 log = get_logger(__name__)
 
 
-# Locked NIM model catalog — see plan §0 + ADR-011 (catalog refresh
-# 2026-04-25). Each entry covers a different design-space corner so the
-# eval table reads as a real comparison rather than three flavors of
-# the same family. Live-probed against `integrate.api.nvidia.com/v1`
-# on 2026-04-25 — see `data/runs/` headline runs for measured pass
-# rates per model.
+# Default NIM model catalog — see plan §0 + ADR-011 (catalog refresh
+# 2026-04-25). These are production candidates, not a historical model
+# zoo. Override with `ANVIL_NIM_MODELS=provider/model,provider/model`
+# when running a model sweep against newly published NIM ids.
 #
-# Replacements 2026-04-25:
-#   - `deepseek-ai/deepseek-v3.1` → DEPRECATED (EOL 2026-04-15 per the
-#     `410 Gone` response from NIM).
-#   - `nvidia/llama-3.1-nemotron-70b-instruct` → 404 (rotated out of the
-#     hosted catalog) — replaced with the current `super-49b-v1.5` line
-#     which carries the same NVIDIA-RLHF lineage.
-#   - Added `openai/gpt-oss-120b` for OpenAI-family coverage on NIM.
-NIM_MODELS: dict[str, dict[str, Any]] = {
+# Replacements 2026-04-25 after live eval / health probes:
+#   - Removed `openai/gpt-oss-120b`: barely passed the golden threshold
+#     and produced citation / JSON reliability failures.
+#   - Removed `nvidia/llama-3.3-nemotron-super-49b-v1.5`: slower and
+#     weaker than the strongest NIM row for this task.
+#   - DeepSeek V4 candidates are visible in `/models`, but v4-flash
+#     returned HTTP 502 after ~104 s and v4-pro timed out after 180 s
+#     on 2026-04-25. Keep them as explicit `ANVIL_NIM_MODELS` override
+#     candidates until the hosted endpoint is reliable.
+DEFAULT_NIM_MODELS: dict[str, dict[str, Any]] = {
     "meta/llama-3.3-70b-instruct": {
         "label": "llama-3.3-70b",
         "purpose": "strong general instruction-follower (eval baseline)",
         "supports_reasoning": False,
     },
-    "nvidia/llama-3.3-nemotron-super-49b-v1.5": {
-        "label": "nemotron-super-49b",
-        "purpose": "NVIDIA-tuned reasoning model (thinking-mode stress test)",
-        "supports_reasoning": True,
+    "qwen/qwen3-next-80b-a3b-instruct": {
+        "label": "qwen3-next-instruct",
+        "purpose": "fast reachable instruction model for structured compliance evals",
+        "supports_reasoning": False,
     },
-    "openai/gpt-oss-120b": {
-        "label": "gpt-oss-120b",
-        "purpose": "OpenAI open-weight 120b (GPT-family coverage on NIM)",
+    "moonshotai/kimi-k2-instruct-0905": {
+        "label": "kimi-k2-instruct-0905",
+        "purpose": "fast reachable cross-family instruction model",
         "supports_reasoning": False,
     },
 }
+NIM_MODELS = DEFAULT_NIM_MODELS
 
 DEFAULT_NIM_BASE_URL = "https://integrate.api.nvidia.com/v1"
 PROBE_PROMPT = "Reply with the single word: OK"
@@ -100,6 +103,36 @@ def _redact_key(api_key: str | None) -> str:
     return f"<redacted:{hashlib.sha256(api_key.encode()).hexdigest()[:8]}>"
 
 
+def _infer_model_meta(model: str) -> dict[str, Any]:
+    tail = model.rsplit("/", maxsplit=1)[-1]
+    return {
+        "label": tail,
+        "purpose": "operator-specified NIM model",
+        "supports_reasoning": "deepseek" in model.lower()
+        or "reason" in model.lower()
+        or "nemotron" in model.lower(),
+    }
+
+
+def get_nim_model_catalog() -> dict[str, dict[str, Any]]:
+    """Return the NIM model catalog for this process.
+
+    `ANVIL_NIM_MODELS` accepts a comma-separated list of model ids. Known ids
+    reuse default metadata; unknown ids are allowed with inferred metadata so
+    model bake-offs can happen without patching source code.
+    """
+    raw = os.environ.get("ANVIL_NIM_MODELS", "").strip()
+    if not raw:
+        return dict(DEFAULT_NIM_MODELS)
+    model_ids = [m.strip() for m in raw.split(",") if m.strip()]
+    if not model_ids:
+        return dict(DEFAULT_NIM_MODELS)
+    catalog: dict[str, dict[str, Any]] = {}
+    for model_id in model_ids:
+        catalog[model_id] = DEFAULT_NIM_MODELS.get(model_id, _infer_model_meta(model_id))
+    return catalog
+
+
 async def check_nim_health(
     model: str,
     *,
@@ -108,13 +141,14 @@ async def check_nim_health(
     timeout: float = PROBE_TIMEOUT_S,
 ) -> NIMHealthCheck:
     """Probe a single NIM model. Never raises for transport-level errors."""
-    if model not in NIM_MODELS:
+    catalog = get_nim_model_catalog()
+    if model not in catalog:
         log.warning(
             "nim_health.unknown_model_in_catalog",
             model=model,
-            known=list(NIM_MODELS),
+            known=list(catalog),
         )
-    meta = NIM_MODELS.get(model, {"label": model, "purpose": "(not in locked catalog)"})
+    meta = catalog.get(model, _infer_model_meta(model))
     url = base_url or os.environ.get("NVIDIA_NIM_BASE_URL", DEFAULT_NIM_BASE_URL)
     key = api_key or os.environ.get("NVIDIA_API_KEY")
 
@@ -216,7 +250,7 @@ async def check_all_nim_models(
     probing is slow but unambiguous.
     """
     results: list[NIMHealthCheck] = []
-    for model in NIM_MODELS:
+    for model in get_nim_model_catalog():
         results.append(
             await check_nim_health(
                 model, api_key=api_key, base_url=base_url, timeout=timeout

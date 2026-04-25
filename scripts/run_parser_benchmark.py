@@ -8,12 +8,14 @@ Runs all available parsers against PDFs in data/parser_benchmark/pdfs/,
 computes metrics against ground truth, and writes results to
 data/parser_benchmark/results.json.
 
-Hosted parsers (reducto, azure_di) are skipped if their env vars are missing.
+Reducto is included in the default run and skipped if `REDUCTO_API_KEY`
+is missing. Azure DI remains available but is opt-in via `--systems`.
 Cached outputs are reused if the PDF mtime matches.
 """
 
 from __future__ import annotations
 
+import argparse
 import json
 import os
 import time
@@ -42,6 +44,13 @@ BENCHMARK_DIR = Path("data/parser_benchmark")
 PDF_DIR = BENCHMARK_DIR / "pdfs"
 GT_DIR = BENCHMARK_DIR / "ground_truth"
 RESULTS_PATH = BENCHMARK_DIR / "results.json"
+CACHE_DEPENDENCIES = (
+    Path(__file__),
+    Path("src/anvil/parsing/markdown_parser.py"),
+    Path("src/anvil/parsing/table_extractor.py"),
+    Path("src/anvil/parsing/formula_extractor.py"),
+    Path("src/anvil/evaluation/parser_metrics.py"),
+)
 
 # Mapping of system name → env vars required (empty for local parsers)
 SYSTEM_REQUIREMENTS: dict[str, list[str]] = {
@@ -50,6 +59,7 @@ SYSTEM_REQUIREMENTS: dict[str, list[str]] = {
     "reducto": ["REDUCTO_API_KEY"],
     "azure_di": ["AZURE_DOCUMENT_INTELLIGENCE_KEY", "AZURE_DOCUMENT_INTELLIGENCE_ENDPOINT"],
 }
+DEFAULT_SYSTEMS: tuple[str, ...] = ("pymupdf4llm", "naive_pdfminer", "reducto")
 
 
 # ---------------------------------------------------------------------------
@@ -401,6 +411,23 @@ def _load_cached(system: str, pdf_path: Path) -> ParserOutput | None:
     if abs(cached.pdf_mtime - current_mtime) > 0.01:
         logger.info("cache_stale", system=system, pdf=str(pdf_path))
         return None
+    cache_mtime = cache.stat().st_mtime
+    newer_dependency = next(
+        (
+            dep
+            for dep in CACHE_DEPENDENCIES
+            if dep.exists() and dep.stat().st_mtime > cache_mtime
+        ),
+        None,
+    )
+    if newer_dependency is not None:
+        logger.info(
+            "cache_stale",
+            system=system,
+            pdf=str(pdf_path),
+            dependency=str(newer_dependency),
+        )
+        return None
 
     logger.info("cache_hit", system=system, pdf=str(pdf_path))
     return cached
@@ -414,6 +441,20 @@ def _save_cache(output: ParserOutput) -> None:
     logger.info("cache_saved", system=output.system, cache=str(cache))
 
 
+def _is_stale(path: Path, dependencies: tuple[Path, ...]) -> Path | None:
+    if not path.exists():
+        return path
+    path_mtime = path.stat().st_mtime
+    return next(
+        (
+            dep
+            for dep in dependencies
+            if dep.exists() and dep.stat().st_mtime > path_mtime
+        ),
+        None,
+    )
+
+
 # ---------------------------------------------------------------------------
 # Benchmark runner
 # ---------------------------------------------------------------------------
@@ -425,11 +466,23 @@ def _check_requirements(system: str) -> bool:
     return all(os.environ.get(var) for var in reqs)
 
 
-def run_benchmark() -> list[ParserMetricResult]:
+def _parse_systems(raw: str | None) -> list[str]:
+    if not raw:
+        return list(DEFAULT_SYSTEMS)
+    systems = [s.strip() for s in raw.split(",") if s.strip()]
+    unknown = [s for s in systems if s not in SYSTEM_REQUIREMENTS]
+    if unknown:
+        supported = ", ".join(sorted(SYSTEM_REQUIREMENTS))
+        raise ValueError(f"Unknown parser system(s): {unknown}. Supported: {supported}")
+    return systems
+
+
+def run_benchmark(systems: list[str] | None = None) -> list[ParserMetricResult]:
     """Run the full parser benchmark.
 
     Returns a list of ParserMetricResult for each (system, PDF) pair.
     """
+    selected_systems = systems or list(DEFAULT_SYSTEMS)
     pdfs = sorted(PDF_DIR.glob("*.pdf"))
     if not pdfs:
         logger.warning("no_pdfs_found", dir=str(PDF_DIR))
@@ -443,7 +496,9 @@ def run_benchmark() -> list[ParserMetricResult]:
 
         # Load or generate ground truth
         gt_path = GT_DIR / f"{pdf_path.stem}.json"
-        if gt_path.exists():
+        gt_dependencies = CACHE_DEPENDENCIES + (pdf_path,)
+        gt_stale_dep = _is_stale(gt_path, gt_dependencies)
+        if gt_path.exists() and gt_stale_dep is None:
             gt = GroundTruthAnnotation.model_validate_json(
                 gt_path.read_text(encoding="utf-8")
             )
@@ -456,6 +511,7 @@ def run_benchmark() -> list[ParserMetricResult]:
                 "generating_best_effort_gt",
                 pdf=str(pdf_path),
                 note="Using pymupdf4llm output as approximate ground truth",
+                stale_dependency=str(gt_stale_dep) if gt_stale_dep is not None else None,
             )
             pymupdf_output = _load_cached("pymupdf4llm", pdf_path)
             if pymupdf_output is None:
@@ -484,8 +540,8 @@ def run_benchmark() -> list[ParserMetricResult]:
             gt_path.parent.mkdir(parents=True, exist_ok=True)
             gt_path.write_text(gt.model_dump_json(indent=2), encoding="utf-8")
 
-        # Run each parser
-        for system in SYSTEM_REQUIREMENTS:
+        # Run each selected parser
+        for system in selected_systems:
             if not _check_requirements(system):
                 logger.warning(
                     "parser_skipped",
@@ -608,8 +664,23 @@ def print_results_table(results: list[ParserMetricResult]) -> None:
     console.print(table)
 
 
+def _parse_args() -> argparse.Namespace:
+    parser = argparse.ArgumentParser(description=__doc__)
+    parser.add_argument(
+        "--systems",
+        default=os.environ.get("ANVIL_PARSER_BENCHMARK_SYSTEMS"),
+        help=(
+            "Comma-separated parser systems to run. Defaults to "
+            "pymupdf4llm,naive_pdfminer,reducto. Azure DI is available only "
+            "when explicitly requested."
+        ),
+    )
+    return parser.parse_args()
+
+
 if __name__ == "__main__":
-    results = run_benchmark()
+    args = _parse_args()
+    results = run_benchmark(_parse_systems(args.systems))
     if results:
         print_results_table(results)
     else:
