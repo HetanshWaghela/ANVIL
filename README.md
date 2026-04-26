@@ -407,11 +407,13 @@ Intentionally scoped gaps:
 
 1. DeepSeek V4 Flash and V4 Pro timed out in the targeted 2026-04-26 NIM
    probe, so they were skipped. Reported as such, not papered over.
-2. The most recent committed agent transcripts (`run_id` ending in
-   `06-35-00Z_..._abl-baseline__agent`) predate the retrieval-saturation
-   fix; they remain in `data/runs/` as historical evidence of the
-   pre-fix failure mode. A re-run on the fixed code is the next item in
-   `docs/cost_budget.md`.
+2. The agent loop has been validated post-fix on the full 100-example
+   public benchmark (`run_id` ending in `08-59-57Z_..._abl-baseline__agent`)
+   at `pass_rate=0.640`, +18 absolute points over the pre-fix baseline.
+   The pre-fix transcripts (`06-35-00Z_..._abl-baseline__agent`) remain
+   in `data/runs/` as historical evidence of the loop failure mode and
+   the diagnostic that drove the fix. The fixed pipeline at
+   `pass_rate=0.950` is still the defended production path.
 3. Reducto's adapter works but its SPES-1 formula recovery underperforms
    `pymupdf4llm` (the defended local default — see ADR-014).
 4. A licensed-ASME validation pass is local-only; sanitized aggregate

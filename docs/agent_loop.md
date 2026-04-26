@@ -129,13 +129,29 @@ Integration (`tests/integration/test_agent_eval.py`, 2 tests):
 * `AgentEvaluationRunner` over 3 representative golden examples (calc / lookup / OOD-refusal) — full metric coverage parity with `EvaluationRunner`.
 * Budget exhaustion on real examples → all responses come back as refusals, `finalize_rate=0.0`.
 
+## Latest committed full-run numbers
+
+The post-fix full 100-example agent run (run id
+`2026-04-26T08-59-57Z_nvidia_nim-llama-3.3-70b-instruct_goldenv2-public100_abl-baseline__agent`)
+landed at **pass_rate 0.640**, calculation_correctness 0.789,
+citation_accuracy 0.966, faithfulness 0.790, retrieval_recall 0.962,
+avg tool calls 1.97, finalize_rate 0.740. The pre-fix baseline at the
+same scale was 0.460 / 0.878 / 0.989 / 0.511 / 0.786 / 5.02 / 0.530, so
+the loop fix produced +18 absolute pass-rate points (+39% relative),
+recovered `lookup` from 0/20 → 8/20 and `cross_reference` from 0/20 →
+9/20, and cut average tool calls from 5.02 to 1.97.
+
 ## Limitations
 
-* The cleanest live committed agent result is currently a 3-example calculation smoke run. It passes all metrics and proves the hardened tool contract.
-* Full 30-example comparisons have now been attempted and artifacted, but the original agent rows are dominated by NIM `429 Too Many Requests` decider failures. Treat them as provider-reliability evidence, not a fair measurement of agent reasoning quality.
-* A delayed full agent-only run with `--sleep-between-examples 10` is the best current full artifact: pass rate 0.533, calculation correctness 0.917, citation accuracy 1.000, average 2.20 tool calls, finalize rate 0.400. It still hit late-run 429s.
-* A 10-example fallback over calculation examples completed with partial success: fixed pipeline pass rate 1.000, agent pass rate 0.500, with successful auto-finalization on served examples and repeated 429s on the rest.
-* The fixed deterministic pipeline remains the defended production path for the full golden set.
-* The agent gets no tool-result history compaction — for queries that genuinely need 8 steps, the prompt grows linearly. A summarization step would be needed before extending the budget materially.
-* No full token/cost model yet — `avg_tool_calls` is reported, and the hardened smoke run averages 2 tool calls per calculation query (`retrieve_context` + `calculate`), but dollar/token budgeting remains future work.
-* Hosted NIM rate limits matter. The hardening work specifically reduces repeated decision turns after successful calculation to avoid avoidable 429 failures.
+* The fixed deterministic pipeline remains the defended production path
+  (pass_rate 0.950 vs agent 0.640). The agent is an audited prototype
+  with three deterministic auto-finalize gates and committed transcripts.
+* Hosted NIM rate limits matter. The post-fix run rotated through all
+  three configured keys and hit several 75-second cooldowns; on a
+  quota-friendly day the calculation column should recover toward the
+  fixed-pipeline 1.000.
+* The agent gets no tool-result history compaction — for queries that
+  genuinely need 8 steps, the prompt grows linearly. A summarization
+  step would be needed before extending the budget materially.
+* No full token/cost model yet — `avg_tool_calls` is reported (1.97 in
+  the post-fix run), but dollar/token budgeting remains future work.
