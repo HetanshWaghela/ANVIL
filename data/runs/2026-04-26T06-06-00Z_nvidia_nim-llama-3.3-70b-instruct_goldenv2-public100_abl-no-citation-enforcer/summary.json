@@ -1,0 +1,54 @@
+{
+  "run_id": "2026-04-26T06-06-00Z_nvidia_nim-llama-3.3-70b-instruct_goldenv2-public100_abl-no-citation-enforcer",
+  "manifest": {
+    "run_id": "2026-04-26T06-06-00Z_nvidia_nim-llama-3.3-70b-instruct_goldenv2-public100_abl-no-citation-enforcer",
+    "started_at_utc": "2026-04-26T06:21:15Z",
+    "finished_at_utc": "2026-04-26T06:21:15Z",
+    "backend": "nvidia_nim",
+    "model": "meta/llama-3.3-70b-instruct",
+    "base_url": null,
+    "ablation": "no-citation-enforcer",
+    "ablation_config": {
+      "name": "no-citation-enforcer",
+      "retrieval_mode": "hybrid",
+      "use_pinned_data": true,
+      "use_refusal_gate": true,
+      "use_citation_enforcer": false
+    },
+    "dataset_path": "tests/evaluation/golden_dataset.json",
+    "dataset_hash": "ccc6a1930f6f7ab3627b8c428ea7682449d9c6f843363bc4a3cf17f5c58e472c",
+    "n_examples": 100,
+    "git_sha": "d1a500747d134ec7526f8b0c4de7773ad6ab7414",
+    "git_branch": "main",
+    "git_dirty": true,
+    "python_version": "3.14.4",
+    "platform": "macOS-26.4.1-arm64-arm-64bit-Mach-O",
+    "env": {
+      "ANVIL_EMBEDDER": "sentence_transformer",
+      "ANVIL_LLM_BACKEND": "nvidia_nim",
+      "ANVIL_LLM_MAX_TOKENS": "8192",
+      "ANVIL_LLM_MODEL": "meta/llama-3.3-70b-instruct",
+      "ANVIL_LLM_TIMEOUT_S": "45",
+      "ANVIL_NIM_MODELS": "meta/llama-3.3-70b-instruct,qwen/qwen3-next-80b-a3b-instruct,moonshotai/kimi-k2-instruct-0905",
+      "ANVIL_ST_CACHE_DIR": "/Users/hetanshwaghela/.cache/anvil/sentence-transformers",
+      "ANVIL_ST_MODEL": "BAAI/bge-small-en-v1.5",
+      "NVIDIA_API_KEY": "<redacted:b30b600e>",
+      "NVIDIA_API_KEY_FALLBACKS": "<redacted:f6e288d5>",
+      "REDUCTO_API_KEY": "<redacted:10919bde>"
+    },
+    "notes": null
+  },
+  "aggregate": {
+    "citation_accuracy": 0.9978693181818182,
+    "entity_grounding": 0.9886363636363636,
+    "refusal_calibration": 0.98,
+    "retrieval_recall_at_k": 1.0,
+    "retrieval_precision_at_k": 0.4,
+    "calculation_correctness": 1.0,
+    "structural_completeness": 1.0,
+    "faithfulness": 0.9943181818181818
+  },
+  "pass_rate": 0.97,
+  "n_examples": 100,
+  "n_passed": 97
+}

@@ -279,6 +279,7 @@ class OpenAICompatibleBackend:
         *,
         base_url: str,
         api_key: str | None,
+        api_keys: list[str] | None = None,
         model: str,
         temperature: float = 0.1,
         max_tokens: int = 4096,
@@ -289,7 +290,8 @@ class OpenAICompatibleBackend:
             raise GenerationError("OpenAICompatibleBackend requires a base_url.")
         if not model:
             raise GenerationError("OpenAICompatibleBackend requires a model.")
-        if not api_key:
+        candidate_keys = _dedupe_api_keys(api_keys or ([api_key] if api_key else []))
+        if not candidate_keys:
             raise GenerationError(
                 "OpenAICompatibleBackend requires an api_key. Pass one "
                 "explicitly or set the appropriate env var (e.g. "
@@ -298,7 +300,9 @@ class OpenAICompatibleBackend:
                 "with opaque 401s far from the configuration site."
             )
         self.base_url = base_url
-        self.api_key = api_key
+        self._api_keys = candidate_keys
+        self._api_key_index = 0
+        self.api_key = candidate_keys[self._api_key_index]
         self.model = model
         self.temperature = temperature
         self.max_tokens = max_tokens
@@ -309,8 +313,11 @@ class OpenAICompatibleBackend:
             os.environ.get("ANVIL_LLM_REQUESTS_PER_MINUTE", "35")
         )
         self.max_retries = int(os.environ.get("ANVIL_LLM_MAX_RETRIES", "1"))
+        self.round_robin_keys = os.environ.get(
+            "ANVIL_LLM_ROUND_ROBIN_KEYS", "true"
+        ).lower() in {"1", "true", "yes"}
         self._rate_lock = asyncio.Lock()
-        self._last_request_at: float | None = None
+        self._last_request_at_by_key: dict[int, float] = {}
 
     def _get_client(self) -> Any:  # pragma: no cover - network dependent
         if self._client is not None:
@@ -339,30 +346,59 @@ class OpenAICompatibleBackend:
         self._client = instructor.from_openai(raw, mode=instructor.Mode.JSON)
         return self._client
 
+    def _rotate_api_key(self, *, reason: str) -> bool:
+        """Switch to the next configured API key without logging secrets."""
+        if len(self._api_keys) <= 1:
+            return False
+        self._api_key_index = (self._api_key_index + 1) % len(self._api_keys)
+        self.api_key = self._api_keys[self._api_key_index]
+        self._client = None
+        log.warning(
+            "llm_backend.api_key_rotated",
+            model=self.model,
+            key_index=self._api_key_index + 1,
+            total_keys=len(self._api_keys),
+            reason=reason,
+        )
+        return True
+
+    def _advance_api_key_for_next_request(self) -> None:
+        """Round-robin successful requests across configured keys."""
+        if not self.round_robin_keys or len(self._api_keys) <= 1:
+            return
+        self._api_key_index = (self._api_key_index + 1) % len(self._api_keys)
+        self.api_key = self._api_keys[self._api_key_index]
+        self._client = None
+
     async def throttle(self) -> None:
         """Apply process-local provider pacing before each live request.
 
         NIM free-tier limits are commonly around 35-40 requests/minute. We
-        default to 35 rpm and make it env-configurable so headline runs do not
-        accidentally convert provider throttling into bad benchmark answers.
+        default to 35 rpm per configured key and make it env-configurable so
+        headline runs do not accidentally convert provider throttling into bad
+        benchmark answers.
         """
         if self.requests_per_minute <= 0:
             return
         min_interval_s = 60.0 / self.requests_per_minute
         async with self._rate_lock:
             now = time.monotonic()
-            if self._last_request_at is not None:
-                elapsed = now - self._last_request_at
+            key_index = self._api_key_index
+            last_request_at = self._last_request_at_by_key.get(key_index)
+            if last_request_at is not None:
+                elapsed = now - last_request_at
                 if elapsed < min_interval_s:
                     sleep_s = min_interval_s - elapsed
                     log.info(
                         "llm_backend.throttle",
                         model=self.model,
+                        key_index=key_index + 1,
+                        total_keys=len(self._api_keys),
                         requests_per_minute=self.requests_per_minute,
                         sleep_s=round(sleep_s, 3),
                     )
                     await asyncio.sleep(sleep_s)
-            self._last_request_at = time.monotonic()
+            self._last_request_at_by_key[key_index] = time.monotonic()
 
     @staticmethod
     def _is_retryable_exception(exc: Exception) -> bool:
@@ -380,8 +416,29 @@ class OpenAICompatibleBackend:
             "bad gateway",
             "service unavailable",
             "gateway timeout",
+            "validation errors for llmanvilresponse",
+            "field required",
         )
         return any(marker in msg for marker in retryable_markers)
+
+    def _is_fallback_key_candidate(self, exc: Exception) -> bool:
+        if len(self._api_keys) <= 1:
+            return False
+        msg = repr(exc).lower()
+        fallback_markers = (
+            "401",
+            "unauthorized",
+            "invalid api",
+            "invalid_api_key",
+            "api key",
+            "429",
+            "too many requests",
+            "ratelimit",
+            "rate limit",
+            "readtimeout",
+            "timeout",
+        )
+        return any(marker in msg for marker in fallback_markers)
 
     async def generate(
         self,
@@ -400,8 +457,6 @@ class OpenAICompatibleBackend:
                 refusal_reason=refusal_reason,
                 retrieved_context_ids=[c.element_id for c in retrieved_chunks],
             )
-        await self.throttle()
-        client = self._get_client()
         kwargs: dict[str, Any] = {
             "model": self.model,
             "response_model": LLMAnvilResponse,
@@ -415,29 +470,47 @@ class OpenAICompatibleBackend:
         }
         if self.extra_body:
             kwargs["extra_body"] = self.extra_body
-        try:
-            llm_response: LLMAnvilResponse = await asyncio.wait_for(
-                client.chat.completions.create(**kwargs),
-                timeout=self.timeout_s,
-            )
-        except TimeoutError as exc:
-            raise RetryableGenerationError(
-                f"OpenAI-compatible LLM call timed out after {self.timeout_s:.1f}s "
-                f"against {self.base_url} (model={self.model})"
-            ) from exc
-        except Exception as exc:
-            message = (
-                f"OpenAI-compatible LLM call failed against {self.base_url} "
-                f"(model={self.model}): {exc!r}"
-            )
-            if self._is_retryable_exception(exc):
+        key_attempts = max(1, len(self._api_keys))
+        for key_attempt in range(key_attempts):
+            await self.throttle()
+            client = self._get_client()
+            try:
+                llm_response: LLMAnvilResponse = await asyncio.wait_for(
+                    client.chat.completions.create(**kwargs),
+                    timeout=self.timeout_s,
+                )
+            except TimeoutError as exc:
+                message = (
+                    "OpenAI-compatible LLM call timed out after "
+                    f"{self.timeout_s:.1f}s against {self.base_url} "
+                    f"(model={self.model})"
+                )
+                if key_attempt < key_attempts - 1:
+                    self._rotate_api_key(reason="timeout_try_next_key")
+                    continue
                 raise RetryableGenerationError(message) from exc
-            raise GenerationError(
-                message
-            ) from exc
-        return AnvilResponse(
-            **llm_response.model_dump(),
-            calculation_steps=calculation_steps,
+            except Exception as exc:
+                message = (
+                    f"OpenAI-compatible LLM call failed against {self.base_url} "
+                    f"(model={self.model}): {exc!r}"
+                )
+                retry_with_key_pool = self._is_retryable_exception(
+                    exc
+                ) or self._is_fallback_key_candidate(exc)
+                if retry_with_key_pool:
+                    if key_attempt < key_attempts - 1:
+                        self._rotate_api_key(reason="provider_error_try_next_key")
+                        continue
+                    raise RetryableGenerationError(message) from exc
+                raise GenerationError(message) from exc
+            self._advance_api_key_for_next_request()
+            return AnvilResponse(
+                **llm_response.model_dump(),
+                calculation_steps=calculation_steps,
+            )
+        raise RetryableGenerationError(
+            "OpenAI-compatible LLM call exhausted all configured API keys "
+            f"against {self.base_url} (model={self.model})"
         )
 
 
@@ -459,6 +532,7 @@ def _nvidia_nim_backend() -> OpenAICompatibleBackend:
             "ANVIL_LLM_BACKEND=nvidia_nim requires NVIDIA_API_KEY to be set. "
             "Get one at https://build.nvidia.com. Refusing to proceed."
         )
+    api_keys = _nvidia_api_keys_from_env(api_key)
     model = os.environ.get("ANVIL_LLM_MODEL", default_model)
     # NIM's reasoning-capable models accept `chat_template_kwargs.thinking`
     # and `reasoning_effort` via extra_body. Harmless for models that ignore it.
@@ -481,6 +555,7 @@ def _nvidia_nim_backend() -> OpenAICompatibleBackend:
             "NVIDIA_NIM_BASE_URL", "https://integrate.api.nvidia.com/v1"
         ),
         api_key=api_key,
+        api_keys=api_keys,
         model=model,
         timeout_s=timeout_s,
         max_tokens=max_tokens,
@@ -521,6 +596,40 @@ def _openai_compatible_backend() -> OpenAICompatibleBackend:
         model=model,
         timeout_s=timeout_s,
         max_tokens=max_tokens,
+    )
+
+
+def _split_api_key_env(value: str | None) -> list[str]:
+    if not value:
+        return []
+    normalized = value.replace("\n", ",")
+    return [part.strip() for part in normalized.split(",") if part.strip()]
+
+
+def _dedupe_api_keys(keys: list[str]) -> list[str]:
+    seen: set[str] = set()
+    deduped: list[str] = []
+    for key in keys:
+        stripped = key.strip()
+        if not stripped or stripped in seen:
+            continue
+        seen.add(stripped)
+        deduped.append(stripped)
+    return deduped
+
+
+def _nvidia_api_keys_from_env(primary: str) -> list[str]:
+    """Read primary + fallback NIM keys without exposing them to logs.
+
+    Supported env vars:
+      * `NVIDIA_API_KEY` — primary key, still required.
+      * `NVIDIA_API_KEY_FALLBACKS` — comma/newline separated fallback keys.
+      * `NVIDIA_API_KEYS` — optional full comma/newline separated pool.
+    """
+    return _dedupe_api_keys(
+        [primary]
+        + _split_api_key_env(os.environ.get("NVIDIA_API_KEY_FALLBACKS"))
+        + _split_api_key_env(os.environ.get("NVIDIA_API_KEYS"))
     )
 
 

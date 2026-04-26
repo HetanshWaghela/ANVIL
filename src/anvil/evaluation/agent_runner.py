@@ -29,9 +29,11 @@ decisions.
 from __future__ import annotations
 
 import asyncio
+import json
 import os
 from collections import OrderedDict
 from dataclasses import dataclass, field
+from pathlib import Path
 from typing import Any
 
 from anvil import EvaluationError, RetryableGenerationError
@@ -47,6 +49,7 @@ from anvil.evaluation.metrics import (
 )
 from anvil.generation.agent import AgentOutcome, AnvilAgent
 from anvil.logging_config import get_logger
+from anvil.schemas.agent import AgentTranscript
 from anvil.schemas.document import DocumentElement
 from anvil.schemas.evaluation import EvaluationResult, GoldenExample, MetricScore
 from anvil.schemas.generation import AnvilResponse
@@ -139,11 +142,32 @@ class AgentEvaluationRunner:
             else float(os.environ.get("ANVIL_EVAL_RETRY_COOLDOWN_S", "75"))
         )
 
-    async def run(self, examples: list[GoldenExample]) -> AgentRunSummary:
+    async def run(
+        self,
+        examples: list[GoldenExample],
+        *,
+        checkpoint_path: Path | None = None,
+        resume: bool = False,
+    ) -> AgentRunSummary:
         per_example_by_index: dict[int, EvaluationResult] = {}
         outcomes_by_index: dict[int, AgentOutcome] = {}
+        if checkpoint_path is not None and resume:
+            loaded_results, loaded_outcomes = _load_agent_checkpoint(
+                checkpoint_path,
+                examples,
+            )
+            per_example_by_index.update(loaded_results)
+            outcomes_by_index.update(loaded_outcomes)
+            if loaded_results:
+                log.info(
+                    "agent_runner.resume_loaded",
+                    checkpoint=str(checkpoint_path),
+                    n_completed=len(loaded_results),
+                )
         pending: list[tuple[int, GoldenExample, int]] = [
-            (idx, ex, 1) for idx, ex in enumerate(examples)
+            (idx, ex, 1)
+            for idx, ex in enumerate(examples)
+            if idx not in per_example_by_index
         ]
         while pending:
             deferred: list[tuple[int, GoldenExample, int]] = []
@@ -193,6 +217,13 @@ class AgentEvaluationRunner:
                     passed=passed,
                     **outcome.transcript.to_summary(),
                 )
+                if checkpoint_path is not None:
+                    _write_agent_checkpoint(
+                        checkpoint_path,
+                        examples,
+                        per_example_by_index,
+                        outcomes_by_index,
+                    )
             if deferred:
                 log.info(
                     "agent_runner.retryable_cooldown",
@@ -289,6 +320,78 @@ class AgentEvaluationRunner:
 def transcripts_to_jsonable(outcomes: list[AgentOutcome]) -> list[dict[str, Any]]:
     """Helper for run_logger persistence."""
     return [o.transcript.model_dump(mode="json") for o in outcomes]
+
+
+def _load_agent_checkpoint(
+    checkpoint_path: Path,
+    examples: list[GoldenExample],
+) -> tuple[dict[int, EvaluationResult], dict[int, AgentOutcome]]:
+    if not checkpoint_path.exists():
+        return {}, {}
+    payload = json.loads(checkpoint_path.read_text())
+    if not isinstance(payload, dict):
+        raise EvaluationError(f"{checkpoint_path} did not contain a JSON object")
+    ids = payload.get("example_ids")
+    expected_ids = [ex.id for ex in examples]
+    if ids != expected_ids:
+        raise EvaluationError(
+            f"{checkpoint_path} was created for a different example set; "
+            "refusing to resume and risk mixing agent runs."
+        )
+    completed = payload.get("completed")
+    if not isinstance(completed, list):
+        raise EvaluationError(f"{checkpoint_path} is missing completed examples")
+
+    per_example_by_index: dict[int, EvaluationResult] = {}
+    outcomes_by_index: dict[int, AgentOutcome] = {}
+    for item in completed:
+        if not isinstance(item, dict):
+            raise EvaluationError(f"{checkpoint_path} contains a malformed item")
+        idx = int(item["index"])
+        if idx < 0 or idx >= len(examples):
+            raise EvaluationError(f"{checkpoint_path} contains out-of-range index {idx}")
+        if item.get("example_id") != examples[idx].id:
+            raise EvaluationError(
+                f"{checkpoint_path} example id mismatch at index {idx}"
+            )
+        result = EvaluationResult.model_validate(item["evaluation_result"])
+        response = AnvilResponse.model_validate(item["response"])
+        transcript = AgentTranscript.model_validate(item["transcript"])
+        per_example_by_index[idx] = result
+        outcomes_by_index[idx] = AgentOutcome(
+            response=response,
+            transcript=transcript,
+        )
+    return per_example_by_index, outcomes_by_index
+
+
+def _write_agent_checkpoint(
+    checkpoint_path: Path,
+    examples: list[GoldenExample],
+    per_example_by_index: dict[int, EvaluationResult],
+    outcomes_by_index: dict[int, AgentOutcome],
+) -> None:
+    checkpoint_path.parent.mkdir(parents=True, exist_ok=True)
+    completed = []
+    for idx in sorted(per_example_by_index):
+        outcome = outcomes_by_index[idx]
+        completed.append(
+            {
+                "index": idx,
+                "example_id": examples[idx].id,
+                "evaluation_result": per_example_by_index[idx].model_dump(),
+                "response": outcome.response.model_dump(),
+                "transcript": outcome.transcript.model_dump(mode="json"),
+            }
+        )
+    payload = {
+        "version": 1,
+        "example_ids": [ex.id for ex in examples],
+        "completed": completed,
+    }
+    tmp_path = checkpoint_path.with_suffix(checkpoint_path.suffix + ".tmp")
+    tmp_path.write_text(json.dumps(payload, indent=2, default=str))
+    tmp_path.replace(checkpoint_path)
 
 
 __all__ = [

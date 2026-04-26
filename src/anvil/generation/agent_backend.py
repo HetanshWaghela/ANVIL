@@ -209,48 +209,73 @@ class LLMAgentBackend:
         #     Together) — this is what M5 real-NIM runs use.
         # We dispatch on attribute presence rather than isinstance to
         # keep this file independent of those concrete classes.
-        client = self.backend._get_client()  # type: ignore[attr-defined]
         model = self.model or self.backend.model  # type: ignore[attr-defined]
         msgs = self._build_messages(query, history, tool_manifest)
         throttle = getattr(self.backend, "throttle", None)
-        if throttle is not None:
-            await throttle()
-        try:
-            if hasattr(client, "chat") and hasattr(client.chat, "completions"):
-                decision: AgentDecision = await asyncio.wait_for(
-                    client.chat.completions.create(
-                        model=model,
-                        messages=msgs,
-                        response_model=AgentDecision,
-                        temperature=0.0,
-                        max_retries=getattr(self.backend, "max_retries", 1),
-                    ),
-                    timeout=getattr(self.backend, "timeout_s", 45.0),
-                )
-            else:
-                decision = await asyncio.wait_for(
-                    client.create(
-                        response_model=AgentDecision,
-                        messages=msgs,
-                        temperature=0.0,
-                        max_retries=getattr(self.backend, "max_retries", 1),
-                    ),
-                    timeout=getattr(self.backend, "timeout_s", 45.0),
-                )
-        except TimeoutError as exc:
-            raise RetryableGenerationError(
-                f"Agent decider call timed out after "
-                f"{getattr(self.backend, 'timeout_s', 45.0):.1f}s "
-                f"for model={model}"
-            ) from exc
-        except Exception as exc:
-            is_retryable = getattr(self.backend, "_is_retryable_exception", None)
-            if is_retryable is not None and is_retryable(exc):
+        timeout_s = getattr(self.backend, "timeout_s", 45.0)
+        max_retries = getattr(self.backend, "max_retries", 1)
+        key_attempts = max(1, len(getattr(self.backend, "_api_keys", [None])))
+        rotate_key = getattr(self.backend, "_rotate_api_key", None)
+        is_retryable = getattr(self.backend, "_is_retryable_exception", None)
+        is_fallback_candidate = getattr(
+            self.backend, "_is_fallback_key_candidate", None
+        )
+
+        for key_attempt in range(key_attempts):
+            if throttle is not None:
+                await throttle()
+            client = self.backend._get_client()  # type: ignore[attr-defined]
+            try:
+                if hasattr(client, "chat") and hasattr(client.chat, "completions"):
+                    decision: AgentDecision = await asyncio.wait_for(
+                        client.chat.completions.create(
+                            model=model,
+                            messages=msgs,
+                            response_model=AgentDecision,
+                            temperature=0.0,
+                            max_retries=max_retries,
+                        ),
+                        timeout=timeout_s,
+                    )
+                else:
+                    decision = await asyncio.wait_for(
+                        client.create(
+                            response_model=AgentDecision,
+                            messages=msgs,
+                            temperature=0.0,
+                            max_retries=max_retries,
+                        ),
+                        timeout=timeout_s,
+                    )
+            except TimeoutError as exc:
+                if rotate_key is not None and key_attempt < key_attempts - 1:
+                    rotate_key(reason="agent_timeout_try_next_key")
+                    continue
                 raise RetryableGenerationError(
-                    f"Agent decider call failed for model={model}: {exc!r}"
+                    f"Agent decider call timed out after {timeout_s:.1f}s "
+                    f"for model={model}"
                 ) from exc
-            raise
-        return decision
+            except Exception as exc:
+                retryable = bool(is_retryable is not None and is_retryable(exc))
+                fallback_candidate = bool(
+                    is_fallback_candidate is not None
+                    and is_fallback_candidate(exc)
+                )
+                if retryable or fallback_candidate:
+                    if rotate_key is not None and key_attempt < key_attempts - 1:
+                        rotate_key(reason="agent_provider_error_try_next_key")
+                        continue
+                    raise RetryableGenerationError(
+                        f"Agent decider call failed for model={model}: {exc!r}"
+                    ) from exc
+                raise
+            advance_key = getattr(self.backend, "_advance_api_key_for_next_request", None)
+            if advance_key is not None:
+                advance_key()
+            return decision
+        raise RetryableGenerationError(
+            f"Agent decider call exhausted all configured API keys for model={model}"
+        )
 
     def _build_messages(  # pragma: no cover - tested via integration
         self,

@@ -47,6 +47,15 @@ All metrics produce a score in [0, 1] where higher is better.
 
 ## 2. Results
 
+Latest command used in the 2026-04-26 validation pass:
+
+```bash
+uv run python scripts/run_parser_benchmark.py --systems pymupdf4llm,naive_pdfminer,reducto
+```
+
+Reducto used cached provider outputs during this pass and did not require
+adapter changes.
+
 ### SPES-1 Synthetic Standard (Controlled Baseline)
 
 | System | Table F1 | Formula Fid | Para Recall | Section Recall | Latency ms/pg | $/page |

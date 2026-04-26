@@ -91,6 +91,64 @@ class _RetryableOnceBackend(FakeLLMBackend):
         )
 
 
+class _RetryableAfterFirstBackend(FakeLLMBackend):
+    """Succeeds once, then simulates a persistent provider throttle."""
+
+    def __init__(self) -> None:
+        super().__init__()
+        self.real_calls = 0
+
+    async def generate(  # type: ignore[override]
+        self,
+        *,
+        system_prompt: str,
+        user_prompt: str,
+        query: str,
+        retrieved_chunks: list[RetrievedChunk],
+        calculation_steps: list,  # type: ignore[type-arg]
+        refusal_reason: str | None = None,
+    ) -> AnvilResponse:
+        if refusal_reason is None:
+            self.real_calls += 1
+            if self.real_calls > 1:
+                raise RetryableGenerationError("HTTP 429: Too Many Requests")
+        return await super().generate(
+            system_prompt=system_prompt,
+            user_prompt=user_prompt,
+            query=query,
+            retrieved_chunks=retrieved_chunks,
+            calculation_steps=calculation_steps,
+            refusal_reason=refusal_reason,
+        )
+
+
+class _CountingBackend(FakeLLMBackend):
+    def __init__(self) -> None:
+        super().__init__()
+        self.real_calls = 0
+
+    async def generate(  # type: ignore[override]
+        self,
+        *,
+        system_prompt: str,
+        user_prompt: str,
+        query: str,
+        retrieved_chunks: list[RetrievedChunk],
+        calculation_steps: list,  # type: ignore[type-arg]
+        refusal_reason: str | None = None,
+    ) -> AnvilResponse:
+        if refusal_reason is None:
+            self.real_calls += 1
+        return await super().generate(
+            system_prompt=system_prompt,
+            user_prompt=user_prompt,
+            query=query,
+            retrieved_chunks=retrieved_chunks,
+            calculation_steps=calculation_steps,
+            refusal_reason=refusal_reason,
+        )
+
+
 @pytest.mark.asyncio
 async def test_backend_validation_failure_becomes_soft_refusal() -> None:
     """When the backend raises GenerationError on a non-refusal path,
@@ -182,3 +240,56 @@ async def test_eval_runner_defers_retryable_generation_errors() -> None:
     assert len(summary.outcomes) == 1
     assert summary.outcomes[0].response.confidence != ResponseConfidence.INSUFFICIENT
     assert backend.real_calls == 2
+
+
+@pytest.mark.asyncio
+async def test_eval_runner_resume_skips_checkpointed_examples(tmp_path) -> None:
+    """A resumed live run must not spend API calls on completed examples."""
+    from anvil import EvaluationError
+    from anvil.evaluation.dataset import load_golden_dataset
+    from anvil.evaluation.runner import EvaluationRunner
+    from tests.conftest import GOLDEN_DATASET_JSON
+
+    examples = load_golden_dataset(GOLDEN_DATASET_JSON)[:2]
+    checkpoint = tmp_path / "checkpoint.json"
+    pipe = build_pipeline()
+    first_backend = _RetryableAfterFirstBackend()
+    first_gen = AnvilGenerator(
+        retriever=pipe.retriever,
+        backend=first_backend,
+        calc_engine=pipe.generator.calc_engine,
+        element_index=pipe.generator.element_index,
+    )
+    first_runner = EvaluationRunner(
+        first_gen,
+        retryable_attempts=1,
+        retryable_cooldown_s=0,
+    )
+
+    with pytest.raises(EvaluationError):
+        await first_runner.run(examples, checkpoint_path=checkpoint)
+
+    assert checkpoint.exists()
+    assert first_backend.real_calls == 2
+
+    second_backend = _CountingBackend()
+    second_gen = AnvilGenerator(
+        retriever=pipe.retriever,
+        backend=second_backend,
+        calc_engine=pipe.generator.calc_engine,
+        element_index=pipe.generator.element_index,
+    )
+    second_runner = EvaluationRunner(
+        second_gen,
+        retryable_attempts=1,
+        retryable_cooldown_s=0,
+    )
+    summary = await second_runner.run(
+        examples,
+        checkpoint_path=checkpoint,
+        resume=True,
+    )
+
+    assert len(summary.per_example) == 2
+    assert len(summary.outcomes) == 2
+    assert second_backend.real_calls == 1

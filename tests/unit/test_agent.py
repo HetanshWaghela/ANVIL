@@ -24,9 +24,11 @@ from __future__ import annotations
 
 import pytest
 
+from anvil import RetryableGenerationError
 from anvil.generation.agent import AnvilAgent
 from anvil.generation.agent_backend import (
     AgentDecision,
+    LLMAgentBackend,
     ScriptedAgentBackend,
 )
 from anvil.generation.agent_tools import (
@@ -143,6 +145,35 @@ async def test_happy_path_records_full_transcript(registry: ToolRegistry) -> Non
 
 
 @pytest.mark.asyncio
+async def test_finalize_tool_call_is_intercepted(registry: ToolRegistry) -> None:
+    """Real structured-output providers sometimes emit the advertised
+    finalize operation as a tool call instead of `final.response`.
+    The loop should treat that as termination, not an unknown tool.
+    """
+    final = _stub_response("test", confidence=ResponseConfidence.HIGH)
+    decider = ScriptedAgentBackend(
+        [
+            ToolCall(
+                name="retrieve_context",
+                arguments={"query": "cylindrical shell thickness", "top_k": 3},
+            ),
+            ToolCall(
+                name="finalize",
+                arguments={"response": final.model_dump(mode="json")},
+            ),
+        ]
+    )
+    agent = AnvilAgent(decider=decider, registry=registry, budget=AgentBudget())
+    outcome = await agent.run("What is the cylindrical shell formula?")
+
+    assert outcome.response == final
+    assert outcome.transcript.termination.kind == "finalized"
+    assert outcome.transcript.n_tool_calls == 1
+    assert outcome.transcript.n_tool_errors == 0
+    assert outcome.transcript.final_response == final
+
+
+@pytest.mark.asyncio
 async def test_successful_calculation_auto_finalizes(registry: ToolRegistry) -> None:
     """A successful deterministic calculation should terminate the agent loop
     immediately without requiring an extra LLM finalize turn.
@@ -184,6 +215,75 @@ async def test_successful_calculation_auto_finalizes(registry: ToolRegistry) -> 
     assert outcome.response.calculation_steps
     assert outcome.response.citations
     assert "Minimum required thickness" in outcome.response.answer
+
+
+@pytest.mark.asyncio
+async def test_successful_pinned_lookup_auto_finalizes(registry: ToolRegistry) -> None:
+    decider = ScriptedAgentBackend(
+        [
+            ToolCall(
+                name="pinned_lookup",
+                arguments={
+                    "kind": "allowable_stress",
+                    "key": "SM-516 Gr 70",
+                    "temp_c": 200,
+                },
+            ),
+            ToolCall(name="pinned_lookup", arguments={"kind": "allowable_stress", "key": "SM-516 Gr 70"}),
+        ]
+    )
+    agent = AnvilAgent(decider=decider, registry=registry, budget=AgentBudget())
+    outcome = await agent.run("What is the allowable stress of SM-516 Gr 70 at 200°C?")
+
+    assert outcome.transcript.termination.kind == "finalized"
+    assert "allowable stress" in outcome.response.answer
+    assert "SM-516 Gr 70" in outcome.response.answer
+    assert outcome.response.confidence == ResponseConfidence.HIGH
+    assert outcome.response.citations
+    assert outcome.transcript.n_tool_calls == 1
+
+
+@pytest.mark.asyncio
+async def test_pinned_lookup_does_not_auto_finalize_calculation_query(
+    registry: ToolRegistry,
+) -> None:
+    decider = ScriptedAgentBackend(
+        [
+            ToolCall(
+                name="pinned_lookup",
+                arguments={
+                    "kind": "allowable_stress",
+                    "key": "SM-516 Gr 70",
+                    "temp_c": 200,
+                },
+            ),
+            ToolCall(
+                name="calculate",
+                arguments={
+                    "component": "cylindrical_shell",
+                    "P_mpa": 1.5,
+                    "design_temp_c": 200,
+                    "inside_diameter_mm": 1000,
+                    "material": "SM-516 Gr 70",
+                    "joint_type": "Type 1",
+                    "rt_level": "Full RT",
+                    "corrosion_allowance_mm": 0.0,
+                },
+            ),
+        ]
+    )
+    agent = AnvilAgent(decider=decider, registry=registry, budget=AgentBudget())
+    outcome = await agent.run(
+        "Compute thickness for a cylindrical shell made of SM-516 Gr 70."
+    )
+
+    assert outcome.transcript.termination.kind == "finalized"
+    assert [s.call.name for s in outcome.transcript.steps] == [
+        "pinned_lookup",
+        "retrieve_context",
+        "calculate",
+    ]
+    assert outcome.response.calculation_steps
 
 
 # ---------------------------------------------------------------------------
@@ -439,6 +539,86 @@ def test_agent_decision_requires_exactly_one_branch() -> None:
         AgentDecision()
 
 
+class _FakeAgentCompletions:
+    def __init__(self, backend: _FakeKeyPoolBackend, failures_before_success: int):
+        self.backend = backend
+        self.failures_before_success = failures_before_success
+        self.keys_seen: list[str] = []
+
+    async def create(self, **_: object) -> AgentDecision:
+        self.keys_seen.append(self.backend.api_key)
+        if len(self.keys_seen) <= self.failures_before_success:
+            raise RuntimeError("429 Too Many Requests")
+        return AgentDecision(
+            tool_call=ToolCall(
+                name="retrieve_context",
+                arguments={"query": "q", "top_k": 5},
+            )
+        )
+
+
+class _FakeAgentClient:
+    def __init__(self, completions: _FakeAgentCompletions) -> None:
+        self.chat = type("Chat", (), {"completions": completions})()
+
+
+class _FakeKeyPoolBackend:
+    model = "m"
+    max_retries = 1
+    timeout_s = 1.0
+
+    def __init__(self, failures_before_success: int) -> None:
+        self._api_keys = ["k1", "k2", "k3"]
+        self._api_key_index = 0
+        self.api_key = self._api_keys[self._api_key_index]
+        self.completions = _FakeAgentCompletions(self, failures_before_success)
+
+    def _get_client(self) -> _FakeAgentClient:
+        return _FakeAgentClient(self.completions)
+
+    async def throttle(self) -> None:
+        return None
+
+    def _rotate_api_key(self, *, reason: str) -> bool:
+        del reason
+        self._api_key_index = (self._api_key_index + 1) % len(self._api_keys)
+        self.api_key = self._api_keys[self._api_key_index]
+        return True
+
+    def _advance_api_key_for_next_request(self) -> None:
+        self._rotate_api_key(reason="test")
+
+    @staticmethod
+    def _is_retryable_exception(exc: Exception) -> bool:
+        return "429" in repr(exc)
+
+    def _is_fallback_key_candidate(self, exc: Exception) -> bool:
+        return self._is_retryable_exception(exc)
+
+
+@pytest.mark.asyncio
+async def test_llm_agent_backend_tries_key_pool_before_retryable_error() -> None:
+    backend = _FakeKeyPoolBackend(failures_before_success=2)
+    decider = LLMAgentBackend(backend=backend, model="m")  # type: ignore[arg-type]
+
+    decision = await decider.decide("q", [], {})
+
+    assert decision.tool_call is not None
+    assert backend.completions.keys_seen == ["k1", "k2", "k3"]
+    assert backend.api_key == "k1"
+
+
+@pytest.mark.asyncio
+async def test_llm_agent_backend_raises_after_key_pool_exhausted() -> None:
+    backend = _FakeKeyPoolBackend(failures_before_success=99)
+    decider = LLMAgentBackend(backend=backend, model="m")  # type: ignore[arg-type]
+
+    with pytest.raises(RetryableGenerationError):
+        await decider.decide("q", [], {})
+
+    assert backend.completions.keys_seen == ["k1", "k2", "k3"]
+
+
 # ---------------------------------------------------------------------------
 # 7) Joint-type coercion regression
 # ---------------------------------------------------------------------------
@@ -457,6 +637,8 @@ def test_coerce_component_accepts_llm_shapes() -> None:
     assert _coerce_component("cylindrical_shell") == "cylindrical_shell"
     assert _coerce_component("cylindrical shell") == "cylindrical_shell"
     assert _coerce_component("inside-radius cylindrical shell") == "cylindrical_shell"
+    assert _coerce_component("pressure vessel") == "cylindrical_shell"
+    assert _coerce_component("vessel") == "cylindrical_shell"
     assert _coerce_component("OD cylindrical shell") == "cylindrical_shell_outside_radius"
     assert (
         _coerce_component("outside radius cylindrical shell") == "cylindrical_shell_outside_radius"

@@ -23,6 +23,18 @@ the failure modes that actually matter:
 | Numeric drift across answer prose | `faithfulness` |
 | Misranked or missing required evidence | `retrieval_precision_at_k`, `retrieval_recall_at_k` |
 
+## Evidence tiers
+
+ANVIL separates evaluation evidence into two tiers:
+
+| tier | backend | purpose |
+| :--- | :--- | :--- |
+| Real backend | `nvidia_nim` or another production provider | Application/headline claims and provider-behavior evidence |
+| Deterministic regression | `FakeLLMBackend` with hash embedder | Fast, offline CI and repeatable regression checks |
+
+Fake-backend rows are useful because they make regressions reproducible without
+API keys. They are not used as primary application-performance proof.
+
 ## Golden dataset
 
 `tests/evaluation/golden_dataset.json` contains 100 public SPES-1 examples
@@ -173,6 +185,28 @@ The integration test `test_run_full_eval_pass_rate` asserts
 `pass_rate >= 0.7` on the bundled fake-LLM backend; production deploys
 should set thresholds higher and treat regressions
 (`evaluation/regression.py`) as CI-blocking.
+
+## Run artifacts and resume
+
+Every full evaluation writes a stamped directory under `data/runs/<run_id>/`
+with `manifest.json`, `summary.json`, `per_example.json`, `raw_responses.jsonl`,
+and `report.md`. Real-provider runs also write `checkpoint.json` as examples
+complete, so interrupted evaluations can resume without replaying completed
+requests:
+
+```bash
+ANVIL_EMBEDDER=sentence_transformer uv run anvil eval \
+  --backend nvidia_nim \
+  --model meta/llama-3.3-70b-instruct \
+  --ablation baseline \
+  --min-pass-rate 0.0 \
+  --resume-run <run_id>
+```
+
+The NIM backend applies per-key request throttling. If fallback keys are
+configured in `.env`, retryable provider errors try each configured key before
+the runner enters cooldown. Manifests redact all configured secret environment
+variables.
 
 ## Regression detection
 

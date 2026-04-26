@@ -79,6 +79,16 @@ def _parse_args() -> argparse.Namespace:
         help="Don't re-run the fixed pipeline as a comparison baseline.",
     )
     p.add_argument(
+        "--run-id",
+        default=None,
+        help="Explicit base run id for agent/fixed artifacts.",
+    )
+    p.add_argument(
+        "--resume-run",
+        default=None,
+        help="Resume data/runs/<run-id>__agent/checkpoint.json.",
+    )
+    p.add_argument(
         "--sleep-between-examples",
         type=float,
         default=0.0,
@@ -101,6 +111,8 @@ async def _run_agent(
     output_root: Path,
     when: datetime,
     dataset_path: Path,
+    run_id_override: str | None = None,
+    resume: bool = False,
 ) -> tuple[Path, AgentRunSummary]:
     os.environ["ANVIL_LLM_BACKEND"] = "nvidia_nim"
     os.environ["ANVIL_LLM_MODEL"] = model
@@ -124,12 +136,10 @@ async def _run_agent(
         inter_example_delay_s=sleep_between_examples,
     )
 
-    run_id = (
-        make_run_id(
-            backend="nvidia_nim", model=model, ablation="baseline", when=when
-        )
-        + "__agent"
+    base_run_id = run_id_override or make_run_id(
+        backend="nvidia_nim", model=model, ablation="baseline", when=when
     )
+    run_id = base_run_id if base_run_id.endswith("__agent") else base_run_id + "__agent"
     cfg = RunLoggerConfig(
         run_id=run_id,
         backend="nvidia_nim",
@@ -141,7 +151,12 @@ async def _run_agent(
     log.info("agent_eval.start", run_id=run_id)
     async with RunLogger(cfg) as rl:
         rl.attach_examples(examples)
-        summary = await runner.run(examples)
+        checkpoint_path = Path(rl.cfg.output_root) / run_id / "checkpoint.json"
+        summary = await runner.run(
+            examples,
+            checkpoint_path=checkpoint_path,
+            resume=resume,
+        )
         rl.write_summary(summary)
         for ex, outcome in zip(examples, summary.outcomes, strict=True):
             # Use the union-of-retrieve as the chunks-of-record so the
@@ -253,6 +268,9 @@ def _render_table(
 
 async def _run() -> int:
     args = _parse_args()
+    if args.resume_run and args.run_id:
+        sys.stderr.write("--resume-run and --run-id are mutually exclusive.\n")
+        return 2
 
     if not os.environ.get("NVIDIA_API_KEY"):
         sys.stderr.write(
@@ -273,9 +291,11 @@ async def _run() -> int:
         sleep_between_examples=args.sleep_between_examples,
     )
     when = datetime.now(UTC)
+    run_id_override = args.resume_run or args.run_id
+    resume = args.resume_run is not None
 
     fixed_summary: Any | None = None
-    if not args.skip_fixed:
+    if not args.skip_fixed and not resume:
         _, fixed_summary = await _run_fixed(
             model=args.model,
             examples=examples,
@@ -292,6 +312,8 @@ async def _run() -> int:
         output_root=args.output_root,
         when=when,
         dataset_path=dataset_path,
+        run_id_override=run_id_override,
+        resume=resume,
     )
 
     md = _render_table(fixed_summary, agent_summary, args.model)

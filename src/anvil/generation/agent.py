@@ -44,6 +44,7 @@ from anvil.schemas.agent import (
     AgentTranscript,
     TerminationReason,
     ToolCall,
+    ToolResult,
 )
 from anvil.schemas.generation import (
     AnvilResponse,
@@ -133,6 +134,106 @@ def _calculation_autofinalize(query: str, output: dict[str, object]) -> AnvilRes
     )
 
 
+def _is_direct_lookup_query(query: str, kind: str) -> bool:
+    """Return true when a pinned lookup result directly answers the query.
+
+    The agent may call `pinned_lookup` as an intermediate step before a
+    calculation. In that case auto-finalizing would be wrong. This narrow
+    intent check only fires for direct table lookups and deliberately excludes
+    calculation/MAWP/thickness requests.
+    """
+    q = query.lower()
+    if any(token in q for token in ("calculate", "compute", "thickness", "mawp")):
+        return False
+    if kind == "allowable_stress":
+        return "allowable stress" in q or "stress" in q
+    if kind == "joint_efficiency":
+        return "joint efficiency" in q or "efficiency" in q
+    if kind == "material":
+        return any(
+            phrase in q
+            for phrase in (
+                "product form",
+                "max temperature",
+                "maximum temperature",
+                "p-number",
+                "p number",
+                "group number",
+                "material",
+                "listed for",
+            )
+        )
+    return False
+
+
+def _pinned_lookup_autofinalize(
+    query: str,
+    output: dict[str, object],
+    registry: ToolRegistry,
+) -> AnvilResponse | None:
+    """Finalize direct pinned-table lookup questions after a successful tool call.
+
+    This mirrors calculation auto-finalization: once a deterministic trusted
+    tool has returned the requested table value plus a source row, an extra LLM
+    turn is avoidable provider load. It does not invent values; all numbers and
+    citations come from pinned data and the parsed standard citation index.
+    """
+    if output.get("found") is not True:
+        return None
+    kind = str(output.get("kind") or "")
+    if not _is_direct_lookup_query(query, kind):
+        return None
+
+    key = str(output.get("key") or "")
+    citations: list[Citation]
+    answer: str
+    try:
+        if kind == "allowable_stress":
+            stress = _required_float(output, "allowable_stress_mpa")
+            temp_c = _required_float(output, "temp_c")
+            citations = [registry.calc_engine._citations.for_material(key)]  # noqa: SLF001
+            answer = (
+                f"The allowable stress of {key} at {temp_c:g}°C is "
+                f"{stress:g} MPa per Table M-1."
+            )
+        elif kind == "joint_efficiency":
+            efficiency = _required_float(output, "joint_efficiency")
+            joint_type = int(_required_float(output, "joint_type"))
+            rt_level = str(output.get("rt_level") or "").strip()
+            citations = [
+                registry.calc_engine._citations.for_joint_efficiency(joint_type)  # noqa: SLF001
+            ]
+            answer = (
+                f"The joint efficiency for Type {joint_type} with {rt_level} "
+                f"is E = {efficiency:g} per Table B-12."
+            )
+        elif kind == "material":
+            citations = [registry.calc_engine._citations.for_material(key)]  # noqa: SLF001
+            details: list[str] = []
+            product_form = output.get("product_form")
+            max_temp_c = output.get("max_temp_c")
+            if isinstance(product_form, str) and product_form:
+                details.append(f"product form {product_form}")
+            if isinstance(max_temp_c, int | float):
+                details.append(f"maximum listed temperature {max_temp_c:g}°C")
+            detail_text = ", ".join(details) if details else "a pinned material row"
+            answer = f"{key} is listed in Table M-1 with {detail_text}."
+        else:
+            return None
+    except Exception as exc:  # noqa: BLE001 - citation lookup must fail closed
+        log.warning("agent.pinned_autofinalize.failed", error=repr(exc), kind=kind)
+        return None
+
+    return AnvilResponse(
+        query=query,
+        answer=answer,
+        citations=citations,
+        calculation_steps=[],
+        confidence=ResponseConfidence.HIGH,
+        retrieved_context_ids=[c.source_element_id for c in citations],
+    )
+
+
 def _required_float(output: dict[str, object], key: str) -> float:
     value = output.get(key)
     if not isinstance(value, int | float | str):
@@ -214,6 +315,51 @@ class AnvilAgent:
             assert decision.tool_call is not None  # XOR invariant on AgentDecision
             call: ToolCall = decision.tool_call
 
+            if call.name == "finalize":
+                try:
+                    raw_response = call.arguments["response"]
+                    final_response = AnvilResponse.model_validate(raw_response)
+                    termination = TerminationReason(
+                        kind="finalized",
+                        detail=(
+                            "Finalized via finalize tool call after "
+                            f"{len(steps)} tool calls."
+                        ),
+                    )
+                    log.info(
+                        "agent.run.finalized",
+                        n_steps=len(steps),
+                        confidence=final_response.confidence.value,
+                    )
+                    break
+                except Exception as exc:  # noqa: BLE001 - model output is untrusted
+                    log.warning(
+                        "agent.tool.finalize_invalid",
+                        error=repr(exc),
+                    )
+                    steps.append(
+                        AgentStep(
+                            step_index=len(steps),
+                            call=call,
+                            result=ToolResult(
+                                name=call.name,
+                                arguments=call.arguments,
+                                error=f"Invalid finalize payload: {exc}",
+                            ),
+                        )
+                    )
+                    n_errors += 1
+                    if n_errors > self.budget.max_tool_errors:
+                        termination = TerminationReason(
+                            kind="tool_error_limit",
+                            detail=(
+                                f"Cumulative tool errors ({n_errors}) exceeded "
+                                f"max_tool_errors={self.budget.max_tool_errors}."
+                            ),
+                        )
+                        break
+                    continue
+
             # Compliance guardrail: a calculation-only transcript is not enough
             # evidence for an auditable answer. If the LLM jumps straight to the
             # deterministic calculation tool, hydrate the transcript with one
@@ -260,6 +406,23 @@ class AnvilAgent:
             )
             result = self.registry.execute(call)
             steps.append(AgentStep(step_index=len(steps), call=call, result=result))
+            if call.name == "pinned_lookup" and result.ok:
+                final_response = _pinned_lookup_autofinalize(
+                    query,
+                    result.output,
+                    self.registry,
+                )
+                if final_response is not None:
+                    termination = TerminationReason(
+                        kind="finalized",
+                        detail=("Auto-finalized after successful deterministic pinned lookup."),
+                    )
+                    log.info(
+                        "agent.run.auto_finalized_after_pinned_lookup",
+                        n_steps=len(steps),
+                        confidence=final_response.confidence.value,
+                    )
+                    break
             if call.name == "calculate" and result.ok and result.output.get("ok") is True:
                 final_response = _calculation_autofinalize(query, result.output)
                 termination = TerminationReason(

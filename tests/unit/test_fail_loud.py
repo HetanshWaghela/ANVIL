@@ -13,7 +13,12 @@ from unittest.mock import patch
 
 import pytest
 
-from anvil import CalculationError, GenerationError, RetrievalError
+from anvil import (
+    CalculationError,
+    GenerationError,
+    RetrievalError,
+    RetryableGenerationError,
+)
 from anvil.generation.calculation_engine import (
     CalculationInputs,
     CitationBuilder,
@@ -24,6 +29,7 @@ from anvil.generation.llm_backend import (
     OpenAICompatibleBackend,
     get_default_backend,
 )
+from anvil.schemas.generation import Citation, LLMAnvilResponse, ResponseConfidence
 
 # ---------------------------------------------------------------------------
 # Calculation engine must fail loud on invariant violations.
@@ -195,6 +201,97 @@ def test_nvidia_nim_backend_selection_via_env(monkeypatch) -> None:
     assert isinstance(backend, OpenAICompatibleBackend)
     assert backend.base_url == "https://integrate.api.nvidia.com/v1"
     assert backend.model == "qwen/qwen3-next-80b-a3b-instruct"
+
+
+def test_nvidia_nim_backend_loads_fallback_keys(monkeypatch) -> None:
+    monkeypatch.setenv("ANVIL_LLM_BACKEND", "nvidia_nim")
+    monkeypatch.setenv("NVIDIA_API_KEY", "primary-key")
+    monkeypatch.setenv("NVIDIA_API_KEY_FALLBACKS", "fallback-one, fallback-two")
+    monkeypatch.setenv("NVIDIA_API_KEYS", "primary-key,fallback-two,fallback-three")
+
+    backend = get_default_backend()
+
+    assert isinstance(backend, OpenAICompatibleBackend)
+    assert backend.api_key == "primary-key"
+    assert backend._api_keys == [  # noqa: SLF001 - intentional invariant test
+        "primary-key",
+        "fallback-one",
+        "fallback-two",
+        "fallback-three",
+    ]
+    assert backend._rotate_api_key(reason="test") is True  # noqa: SLF001
+    assert backend.api_key == "fallback-one"
+
+
+class _FakeOpenAICompletions:
+    def __init__(self, backend: OpenAICompatibleBackend, failures_before_success: int):
+        self.backend = backend
+        self.failures_before_success = failures_before_success
+        self.keys_seen: list[str] = []
+
+    async def create(self, **_: object) -> LLMAnvilResponse:
+        self.keys_seen.append(self.backend.api_key)
+        if len(self.keys_seen) <= self.failures_before_success:
+            raise RuntimeError("429 Too Many Requests")
+        return LLMAnvilResponse(
+            query="q",
+            answer="answer",
+            citations=[
+                Citation(
+                    source_element_id="E1",
+                    paragraph_ref="A-1",
+                    quoted_text="quoted",
+                    page_number=1,
+                )
+            ],
+            confidence=ResponseConfidence.HIGH,
+        )
+
+
+class _FakeOpenAIClient:
+    def __init__(self, completions: _FakeOpenAICompletions):
+        self.chat = type("Chat", (), {"completions": completions})()
+
+
+@pytest.mark.asyncio
+async def test_openai_backend_tries_all_keys_before_retryable_cooldown(
+    monkeypatch,
+) -> None:
+    backend = OpenAICompatibleBackend(
+        base_url="https://example.invalid/v1",
+        api_key="k1",
+        api_keys=["k1", "k2", "k3"],
+        model="m",
+    )
+    backend.requests_per_minute = 0
+    completions = _FakeOpenAICompletions(backend, failures_before_success=2)
+    monkeypatch.setattr(backend, "_get_client", lambda: _FakeOpenAIClient(completions))
+
+    response = await backend.generate("system", "user", "q", [], [])
+
+    assert response.confidence == ResponseConfidence.HIGH
+    assert completions.keys_seen == ["k1", "k2", "k3"]
+    assert backend.api_key == "k1"
+
+
+@pytest.mark.asyncio
+async def test_openai_backend_raises_retryable_only_after_key_pool_exhausted(
+    monkeypatch,
+) -> None:
+    backend = OpenAICompatibleBackend(
+        base_url="https://example.invalid/v1",
+        api_key="k1",
+        api_keys=["k1", "k2", "k3"],
+        model="m",
+    )
+    backend.requests_per_minute = 0
+    completions = _FakeOpenAICompletions(backend, failures_before_success=99)
+    monkeypatch.setattr(backend, "_get_client", lambda: _FakeOpenAIClient(completions))
+
+    with pytest.raises(RetryableGenerationError):
+        await backend.generate("system", "user", "q", [], [])
+
+    assert completions.keys_seen == ["k1", "k2", "k3"]
 
 
 def test_nvidia_nim_backend_reasoning_extra_body(monkeypatch) -> None:

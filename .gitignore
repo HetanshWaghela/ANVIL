@@ -60,6 +60,7 @@ progress.txt
 data/runs/*/raw_responses.jsonl
 data/runs/*/prompts.jsonl
 data/runs/*/request_log.jsonl
+data/runs/*/checkpoint.json
 
 # Internal-only files (kept locally for the audit, not for distribution).
 anvil-prompt.md

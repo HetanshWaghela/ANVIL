@@ -39,6 +39,8 @@ from anvil.schemas.evaluation import GoldenExample
 # Env vars whose VALUES contain credentials and must be redacted.
 _SECRET_VARS = {
     "NVIDIA_API_KEY",
+    "NVIDIA_API_KEY_FALLBACKS",
+    "NVIDIA_API_KEYS",
     "OPENAI_API_KEY",
     "OPENAI_COMPAT_API_KEY",
     "ANTHROPIC_API_KEY",

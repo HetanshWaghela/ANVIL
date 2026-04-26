@@ -160,7 +160,9 @@ def test_build_manifest_redacts_env_secrets(
     """An NVIDIA_API_KEY in the env must NEVER be written verbatim into
     the manifest."""
     secret = "nvapi-must-not-be-committed-1234567890"
+    fallback_secret = "nvapi-fallback-must-not-be-committed"
     monkeypatch.setenv("NVIDIA_API_KEY", secret)
+    monkeypatch.setenv("NVIDIA_API_KEY_FALLBACKS", fallback_secret)
     monkeypatch.setenv("ANVIL_LLM_MODEL", "meta/llama-3.3-70b-instruct")
     m = build_manifest(
         run_id="t-run",
@@ -169,6 +171,7 @@ def test_build_manifest_redacts_env_secrets(
     )
     payload = m.model_dump_json()
     assert secret not in payload, "API key leaked into manifest"
+    assert fallback_secret not in payload, "Fallback API key leaked into manifest"
     assert "<redacted:" in payload
     # Non-secret allowlisted env is captured verbatim.
     assert m.env.get("ANVIL_LLM_MODEL") == "meta/llama-3.3-70b-instruct"

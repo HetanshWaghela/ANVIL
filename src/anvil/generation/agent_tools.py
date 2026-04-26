@@ -204,7 +204,13 @@ def _coerce_component(raw: Any) -> str:
         return "spherical_shell"
     if "outside" in text or re.search(r"\bod\b", text):
         return "cylindrical_shell_outside_radius"
-    if "cylind" in text or "shell" in text or "inside" in text or re.search(r"\bid\b", text):
+    if (
+        "cylind" in text
+        or "shell" in text
+        or "vessel" in text
+        or "inside" in text
+        or re.search(r"\bid\b", text)
+    ):
         return "cylindrical_shell"
 
     raise ValueError(
@@ -384,6 +390,9 @@ class ToolRegistry:
                 "kind": kind,
                 "key": key,
                 "spec_grade": mat.key,
+                "product_form": mat.product_form,
+                "p_no": mat.p_no,
+                "group_no": mat.group_no,
                 "max_temp_c": mat.max_temp_c,
                 "tabulated_temps_c": sorted(mat.stress_by_temp_c),
                 "source": "Pinned table M-1 (materials).",

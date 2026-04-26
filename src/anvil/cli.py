@@ -511,12 +511,26 @@ async def _cmd_eval_async(args: argparse.Namespace) -> int:
     dataset_path = args.dataset
     examples = load_golden_dataset(dataset_path)
 
-    run_id = make_run_id(
+    if args.resume_run and args.run_id and args.resume_run != args.run_id:
+        print(
+            "--resume-run and --run-id refer to different runs; pass only one.",
+            file=sys.stderr,
+        )
+        return 2
+    if args.resume_run:
+        args.run_id = args.resume_run
+        args.resume = True
+    if args.resume and not args.run_id:
+        print("--resume requires --run-id or --resume-run.", file=sys.stderr)
+        return 2
+
+    run_id = args.run_id or make_run_id(
         backend=args.backend,
         model=effective_model,
         ablation=args.ablation,
         dataset_version=args.dataset_version,
     )
+    checkpoint_path = args.output_root / run_id / "checkpoint.json"
     cfg = RunLoggerConfig(
         run_id=run_id,
         backend=args.backend,
@@ -528,7 +542,11 @@ async def _cmd_eval_async(args: argparse.Namespace) -> int:
     )
     async with RunLogger(cfg) as rl:
         rl.attach_examples(examples)
-        summary = await runner.run(examples)
+        summary = await runner.run(
+            examples,
+            checkpoint_path=checkpoint_path,
+            resume=args.resume,
+        )
         rl.write_summary(summary)
         for ex, outcome in zip(examples, summary.outcomes, strict=True):
             rl.record_example(
@@ -546,6 +564,8 @@ async def _cmd_eval_async(args: argparse.Namespace) -> int:
         "pass_rate": summary.pass_rate,
         "aggregate": summary.aggregate,
         "run_dir": str(args.output_root / run_id),
+        "checkpoint_path": str(checkpoint_path),
+        "resumed": bool(args.resume),
     }
     print(json.dumps(payload, indent=2, default=_json_default))
     return 0 if summary.pass_rate >= args.min_pass_rate else 1
@@ -598,6 +618,27 @@ def _add_eval_parser(sub: argparse._SubParsersAction[Any]) -> None:
         type=Path,
         default=Path("data/runs"),
         help="Run artifact root.",
+    )
+    p.add_argument(
+        "--run-id",
+        default=None,
+        help=(
+            "Explicit run id. Use with --resume to continue a partial run "
+            "without re-calling completed examples."
+        ),
+    )
+    p.add_argument(
+        "--resume",
+        action="store_true",
+        help=(
+            "Resume from data/runs/<run-id>/checkpoint.json. Requires --run-id "
+            "or --resume-run."
+        ),
+    )
+    p.add_argument(
+        "--resume-run",
+        default=None,
+        help="Existing run id to resume; implies --run-id and --resume.",
     )
     p.add_argument(
         "--min-pass-rate",

@@ -44,3 +44,21 @@ Before sharing the repo, run:
 ```bash
 uv run python scripts/audit_private_artifacts.py
 ```
+
+Latest audit result from the 2026-04-26 validation pass:
+
+```text
+No unsafe private ASME artifacts visible to git.
+```
+
+## Fail-Closed Checks
+
+The private runner rejects public paths. The validation pass confirmed:
+
+| check | expected behavior |
+| :--- | :--- |
+| `--standard data/standards/spes_1.md` | rejected because `--standard` must live under `data/private` |
+| `--output-root data/runs` | rejected because private outputs must live under `data/private_runs` |
+
+Do not move licensed text, extracted chunks, private prompts, raw responses, or
+agent transcripts outside those private paths.
