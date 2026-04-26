@@ -240,7 +240,14 @@ async def test_successful_pinned_lookup_auto_finalizes(registry: ToolRegistry) -
     assert "SM-516 Gr 70" in outcome.response.answer
     assert outcome.response.confidence == ResponseConfidence.HIGH
     assert outcome.response.citations
-    assert outcome.transcript.n_tool_calls == 1
+    # Two tool calls: an auto-hydrated retrieve_context (so retrieval-based
+    # metrics like recall and faithfulness have something to score against),
+    # then the actual pinned_lookup that auto-finalizes the transcript.
+    assert outcome.transcript.n_tool_calls == 2
+    assert [s.call.name for s in outcome.transcript.steps] == [
+        "retrieve_context",
+        "pinned_lookup",
+    ]
 
 
 @pytest.mark.asyncio
@@ -278,9 +285,12 @@ async def test_pinned_lookup_does_not_auto_finalize_calculation_query(
     )
 
     assert outcome.transcript.termination.kind == "finalized"
+    # The host auto-hydrates a retrieve_context before the first deterministic
+    # tool (pinned_lookup) so retrieval-based metrics have evidence to score.
+    # The subsequent calculate triggers the calculation auto-finalize path.
     assert [s.call.name for s in outcome.transcript.steps] == [
-        "pinned_lookup",
         "retrieve_context",
+        "pinned_lookup",
         "calculate",
     ]
     assert outcome.response.calculation_steps

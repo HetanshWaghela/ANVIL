@@ -447,12 +447,14 @@ class AnvilAgent:
                         break
                     continue
 
-            # Compliance guardrail: a calculation-only transcript is not enough
-            # evidence for an auditable answer. If the LLM jumps straight to the
-            # deterministic calculation tool, hydrate the transcript with one
-            # retrieval step first. This is not answer hardcoding — it records
-            # the standard evidence the calculation answer is conditioned on.
-            if call.name == "calculate" and not any(
+            # Compliance guardrail: a deterministic-tool-only transcript is not
+            # enough evidence for an auditable answer. If the LLM jumps straight
+            # to `calculate` or `pinned_lookup` without first retrieving context,
+            # hydrate the transcript with one retrieval step. This is not answer
+            # hardcoding — it records the standard evidence the deterministic
+            # answer is conditioned on, so downstream metrics (retrieval recall,
+            # faithfulness, entity grounding) have something to score against.
+            if call.name in ("calculate", "pinned_lookup") and not any(
                 s.call.name == "retrieve_context" for s in steps
             ):
                 retrieve_call = ToolCall(
@@ -460,9 +462,10 @@ class AnvilAgent:
                     arguments={"query": query, "top_k": 10},
                 )
                 log.info(
-                    "agent.tool.auto_retrieve_before_calculation",
+                    "agent.tool.auto_retrieve_before_deterministic_tool",
                     step_index=len(steps),
                     tool=retrieve_call.name,
+                    triggered_by=call.name,
                     arg_keys=list(retrieve_call.arguments),
                 )
                 retrieve_result = self.registry.execute(retrieve_call)
