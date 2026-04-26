@@ -21,6 +21,10 @@ class GenerationError(AnvilError):
     """Raised when generation fails or produces invalid output."""
 
 
+class RetryableGenerationError(GenerationError):
+    """Raised when generation failed due to provider capacity/transport noise."""
+
+
 class CalculationError(AnvilError):
     """Raised when a deterministic calculation cannot be completed."""
 
@@ -36,5 +40,6 @@ __all__ = [
     "GenerationError",
     "ParsingError",
     "RetrievalError",
+    "RetryableGenerationError",
     "__version__",
 ]

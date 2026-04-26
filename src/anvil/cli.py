@@ -504,7 +504,10 @@ async def _cmd_eval_async(args: argparse.Namespace) -> int:
 
     pipeline = build_pipeline(standard_path=args.standard, ablation=args.ablation)
     effective_model = getattr(pipeline.generator.backend, "model", args.model)
-    runner = EvaluationRunner(pipeline.generator)
+    runner = EvaluationRunner(
+        pipeline.generator,
+        retry_backend_errors=args.backend != "fake",
+    )
     dataset_path = args.dataset
     examples = load_golden_dataset(dataset_path)
 
@@ -587,8 +590,8 @@ def _add_eval_parser(sub: argparse._SubParsersAction[Any]) -> None:
     )
     p.add_argument(
         "--dataset-version",
-        default="goldenv1",
-        help="Run-id dataset slug, e.g. goldenv1 or asme-private-v1.",
+        default="goldenv2-public100",
+        help="Run-id dataset slug, e.g. goldenv2-public100 or asme-private-v1.",
     )
     p.add_argument(
         "--output-root",

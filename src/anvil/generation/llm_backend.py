@@ -21,10 +21,12 @@ configure one sees a clear warning rather than a silent fake response.
 
 from __future__ import annotations
 
+import asyncio
 import os
+import time
 from typing import Any, Protocol
 
-from anvil import GenerationError
+from anvil import GenerationError, RetryableGenerationError
 from anvil.logging_config import get_logger
 from anvil.schemas.generation import (
     AnvilResponse,
@@ -303,6 +305,12 @@ class OpenAICompatibleBackend:
         self.timeout_s = timeout_s
         self.extra_body = extra_body
         self._client: Any = None
+        self.requests_per_minute = float(
+            os.environ.get("ANVIL_LLM_REQUESTS_PER_MINUTE", "35")
+        )
+        self.max_retries = int(os.environ.get("ANVIL_LLM_MAX_RETRIES", "1"))
+        self._rate_lock = asyncio.Lock()
+        self._last_request_at: float | None = None
 
     def _get_client(self) -> Any:  # pragma: no cover - network dependent
         if self._client is not None:
@@ -331,6 +339,50 @@ class OpenAICompatibleBackend:
         self._client = instructor.from_openai(raw, mode=instructor.Mode.JSON)
         return self._client
 
+    async def throttle(self) -> None:
+        """Apply process-local provider pacing before each live request.
+
+        NIM free-tier limits are commonly around 35-40 requests/minute. We
+        default to 35 rpm and make it env-configurable so headline runs do not
+        accidentally convert provider throttling into bad benchmark answers.
+        """
+        if self.requests_per_minute <= 0:
+            return
+        min_interval_s = 60.0 / self.requests_per_minute
+        async with self._rate_lock:
+            now = time.monotonic()
+            if self._last_request_at is not None:
+                elapsed = now - self._last_request_at
+                if elapsed < min_interval_s:
+                    sleep_s = min_interval_s - elapsed
+                    log.info(
+                        "llm_backend.throttle",
+                        model=self.model,
+                        requests_per_minute=self.requests_per_minute,
+                        sleep_s=round(sleep_s, 3),
+                    )
+                    await asyncio.sleep(sleep_s)
+            self._last_request_at = time.monotonic()
+
+    @staticmethod
+    def _is_retryable_exception(exc: Exception) -> bool:
+        msg = repr(exc).lower()
+        retryable_markers = (
+            "429",
+            "too many requests",
+            "ratelimit",
+            "rate limit",
+            "readtimeout",
+            "timeout",
+            "502",
+            "503",
+            "504",
+            "bad gateway",
+            "service unavailable",
+            "gateway timeout",
+        )
+        return any(marker in msg for marker in retryable_markers)
+
     async def generate(
         self,
         system_prompt: str,
@@ -348,6 +400,7 @@ class OpenAICompatibleBackend:
                 refusal_reason=refusal_reason,
                 retrieved_context_ids=[c.element_id for c in retrieved_chunks],
             )
+        await self.throttle()
         client = self._get_client()
         kwargs: dict[str, Any] = {
             "model": self.model,
@@ -358,18 +411,29 @@ class OpenAICompatibleBackend:
             ],
             "temperature": self.temperature,
             "max_tokens": self.max_tokens,
-            "max_retries": 2,
+            "max_retries": self.max_retries,
         }
         if self.extra_body:
             kwargs["extra_body"] = self.extra_body
         try:
-            llm_response: LLMAnvilResponse = await client.chat.completions.create(
-                **kwargs
+            llm_response: LLMAnvilResponse = await asyncio.wait_for(
+                client.chat.completions.create(**kwargs),
+                timeout=self.timeout_s,
             )
+        except TimeoutError as exc:
+            raise RetryableGenerationError(
+                f"OpenAI-compatible LLM call timed out after {self.timeout_s:.1f}s "
+                f"against {self.base_url} (model={self.model})"
+            ) from exc
         except Exception as exc:
-            raise GenerationError(
+            message = (
                 f"OpenAI-compatible LLM call failed against {self.base_url} "
                 f"(model={self.model}): {exc!r}"
+            )
+            if self._is_retryable_exception(exc):
+                raise RetryableGenerationError(message) from exc
+            raise GenerationError(
+                message
             ) from exc
         return AnvilResponse(
             **llm_response.model_dump(),
@@ -406,7 +470,11 @@ def _nvidia_nim_backend() -> OpenAICompatibleBackend:
                 "ANVIL_NIM_REASONING_EFFORT", "high"
             ),
         }
-    timeout_s = float(os.environ.get("ANVIL_LLM_TIMEOUT_S", "120"))
+    # Hosted NIM occasionally holds a request open for minutes under load.
+    # Eval runs should treat that as provider noise and retry the example
+    # later, not block the whole benchmark indefinitely. Operators can still
+    # raise this for slow models with ANVIL_LLM_TIMEOUT_S.
+    timeout_s = float(os.environ.get("ANVIL_LLM_TIMEOUT_S", "45"))
     max_tokens = int(os.environ.get("ANVIL_LLM_MAX_TOKENS", "4096"))
     return OpenAICompatibleBackend(
         base_url=os.environ.get(

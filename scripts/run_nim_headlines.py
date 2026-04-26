@@ -85,7 +85,10 @@ async def _evaluate_one(
 
     pipeline = build_pipeline(ablation="baseline")
     effective_model = getattr(pipeline.generator.backend, "model", model)
-    runner = EvaluationRunner(pipeline.generator)
+    runner = EvaluationRunner(
+        pipeline.generator,
+        retry_backend_errors=backend != "fake",
+    )
     dataset_path = ROOT / "tests" / "evaluation" / "golden_dataset.json"
     examples = load_golden_dataset(dataset_path)
 

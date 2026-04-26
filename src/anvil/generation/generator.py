@@ -5,7 +5,7 @@ from __future__ import annotations
 import re
 from dataclasses import dataclass
 
-from anvil import CalculationError, GenerationError
+from anvil import CalculationError, GenerationError, RetryableGenerationError
 from anvil.generation.calculation_engine import (
     CalculationEngine,
     CalculationInputs,
@@ -44,6 +44,7 @@ class GenerationOutcome:
     retrieved_chunks: list[RetrievedChunk]
     citation_validation: CitationValidationResult
     calculation: CalculationResult | None = None
+    backend_error: str | None = None
 
 
 class AnvilGenerator:
@@ -220,6 +221,7 @@ class AnvilGenerator:
         # invariant ("every claim is grounded") is still honored
         # because the response says "I cannot answer", not because we
         # silently strip the bad citation.
+        backend_error: str | None = None
         try:
             response = await self.backend.generate(
                 system_prompt=system,
@@ -228,10 +230,17 @@ class AnvilGenerator:
                 retrieved_chunks=chunks,
                 calculation_steps=calc_steps,
             )
+        except RetryableGenerationError:
+            log.warning(
+                "generate.backend_error_retryable",
+                query_preview=query[:80],
+            )
+            raise
         except GenerationError as exc:
+            backend_error = repr(exc)
             log.warning(
                 "generate.backend_error_soft_refusal",
-                error=repr(exc),
+                error=backend_error,
                 query_preview=query[:80],
             )
             response = await self.backend.generate(
@@ -278,6 +287,7 @@ class AnvilGenerator:
             retrieved_chunks=chunks,
             citation_validation=validation,
             calculation=calc_result,
+            backend_error=backend_error,
         )
 
 

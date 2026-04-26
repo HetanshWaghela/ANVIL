@@ -96,7 +96,10 @@ async def _run() -> int:
     pipeline = build_pipeline(standard_path=standard_path, ablation=args.ablation)
     effective_model = getattr(pipeline.generator.backend, "model", args.model)
     examples = load_golden_dataset(dataset_path)
-    runner = EvaluationRunner(pipeline.generator)
+    runner = EvaluationRunner(
+        pipeline.generator,
+        retry_backend_errors=args.backend != "fake",
+    )
 
     run_id = make_run_id(
         backend=args.backend,

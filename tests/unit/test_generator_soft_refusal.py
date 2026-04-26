@@ -13,7 +13,7 @@ from __future__ import annotations
 
 import pytest
 
-from anvil import GenerationError
+from anvil import GenerationError, RetryableGenerationError
 from anvil.generation.generator import AnvilGenerator
 from anvil.generation.llm_backend import FakeLLMBackend, LLMBackend
 from anvil.pipeline import build_pipeline
@@ -50,6 +50,37 @@ class _FlakyBackend(FakeLLMBackend):
                 "AnvilResponse calculation_steps.2.citation"
             )
         self.refusal_calls += 1
+        return await super().generate(
+            system_prompt=system_prompt,
+            user_prompt=user_prompt,
+            query=query,
+            retrieved_chunks=retrieved_chunks,
+            calculation_steps=calculation_steps,
+            refusal_reason=refusal_reason,
+        )
+
+
+class _RetryableOnceBackend(FakeLLMBackend):
+    """Mimics a hosted-provider 429/timeout that succeeds after cooldown."""
+
+    def __init__(self) -> None:
+        super().__init__()
+        self.real_calls = 0
+
+    async def generate(  # type: ignore[override]
+        self,
+        *,
+        system_prompt: str,
+        user_prompt: str,
+        query: str,
+        retrieved_chunks: list[RetrievedChunk],
+        calculation_steps: list,  # type: ignore[type-arg]
+        refusal_reason: str | None = None,
+    ) -> AnvilResponse:
+        if refusal_reason is None:
+            self.real_calls += 1
+            if self.real_calls == 1:
+                raise RetryableGenerationError("HTTP 429: Too Many Requests")
         return await super().generate(
             system_prompt=system_prompt,
             user_prompt=user_prompt,
@@ -122,3 +153,32 @@ async def test_eval_run_completes_when_one_example_fails() -> None:
         and "exhausted retries" in r.response.refusal_reason
     ]
     assert soft_refusals, "soft-refusal path must have triggered at least once"
+
+
+@pytest.mark.asyncio
+async def test_eval_runner_defers_retryable_generation_errors() -> None:
+    """Provider 429s/timeouts must be retried later, not scored as answers."""
+    from anvil.evaluation.dataset import load_golden_dataset
+    from anvil.evaluation.runner import EvaluationRunner
+    from tests.conftest import GOLDEN_DATASET_JSON
+
+    pipe = build_pipeline()
+    backend = _RetryableOnceBackend()
+    gen = AnvilGenerator(
+        retriever=pipe.retriever,
+        backend=backend,
+        calc_engine=pipe.generator.calc_engine,
+        element_index=pipe.generator.element_index,
+    )
+    runner = EvaluationRunner(
+        gen,
+        retryable_attempts=2,
+        retryable_cooldown_s=0,
+    )
+    examples = load_golden_dataset(GOLDEN_DATASET_JSON)[:1]
+    summary = await runner.run(examples)
+
+    assert len(summary.per_example) == 1
+    assert len(summary.outcomes) == 1
+    assert summary.outcomes[0].response.confidence != ResponseConfidence.INSUFFICIENT
+    assert backend.real_calls == 2

@@ -173,7 +173,10 @@ async def _run_fixed(
     os.environ["ANVIL_LLM_BACKEND"] = "nvidia_nim"
     os.environ["ANVIL_LLM_MODEL"] = model
     pipeline = build_pipeline(ablation="baseline")
-    runner = EvaluationRunner(pipeline.generator)
+    runner = EvaluationRunner(
+        pipeline.generator,
+        retry_backend_errors=True,
+    )
 
     run_id = (
         make_run_id(

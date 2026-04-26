@@ -2,9 +2,12 @@
 
 from __future__ import annotations
 
+import asyncio
+import os
 from dataclasses import dataclass, field
 from pathlib import Path
 
+from anvil import EvaluationError, RetryableGenerationError
 from anvil.evaluation.metrics import (
     calculation_correctness,
     citation_accuracy,
@@ -16,10 +19,13 @@ from anvil.evaluation.metrics import (
     structural_completeness,
 )
 from anvil.generation.generator import AnvilGenerator, GenerationOutcome
+from anvil.logging_config import get_logger
 from anvil.schemas.document import DocumentElement
 from anvil.schemas.evaluation import EvaluationResult, GoldenExample, MetricScore
 from anvil.schemas.generation import AnvilResponse
 from anvil.schemas.retrieval import RetrievedChunk
+
+log = get_logger(__name__)
 
 
 @dataclass
@@ -49,33 +55,121 @@ class RunSummary:
 class EvaluationRunner:
     """Runs the golden dataset through an AnvilGenerator and scores each output."""
 
-    def __init__(self, generator: AnvilGenerator) -> None:
+    def __init__(
+        self,
+        generator: AnvilGenerator,
+        *,
+        retryable_attempts: int | None = None,
+        retryable_cooldown_s: float | None = None,
+        inter_example_delay_s: float | None = None,
+        retry_backend_errors: bool | None = None,
+    ) -> None:
         self.generator = generator
+        self.retryable_attempts = retryable_attempts or int(
+            os.environ.get("ANVIL_EVAL_RETRYABLE_ATTEMPTS", "3")
+        )
+        self.retryable_cooldown_s = (
+            retryable_cooldown_s
+            if retryable_cooldown_s is not None
+            else float(os.environ.get("ANVIL_EVAL_RETRY_COOLDOWN_S", "75"))
+        )
+        self.inter_example_delay_s = (
+            inter_example_delay_s
+            if inter_example_delay_s is not None
+            else float(os.environ.get("ANVIL_EVAL_INTER_EXAMPLE_DELAY_S", "0"))
+        )
+        self.retry_backend_errors = (
+            retry_backend_errors
+            if retry_backend_errors is not None
+            else os.environ.get("ANVIL_EVAL_RETRY_BACKEND_ERRORS", "").lower()
+            in {"1", "true", "yes"}
+        )
 
     async def run(self, examples: list[GoldenExample]) -> RunSummary:
-        per_example: list[EvaluationResult] = []
-        outcomes: list[GenerationOutcome] = []
+        per_example_by_index: dict[int, EvaluationResult] = {}
+        outcomes_by_index: dict[int, GenerationOutcome] = {}
         # Reuse the generator's element_index so citation_accuracy can
         # validate canonical-ref quotes against the parsed standard.
         element_index = getattr(self.generator, "element_index", None)
-        for ex in examples:
-            outcome = await self.generator.generate(ex.query, top_k=10)
-            outcomes.append(outcome)
-            metrics = self._score(
-                ex,
-                outcome.response,
-                outcome.retrieved_chunks,
-                element_index=element_index,
-            )
-            passed = all(m.passed for m in metrics)
-            per_example.append(
-                EvaluationResult(
+        pending: list[tuple[int, GoldenExample, int]] = [
+            (idx, ex, 1) for idx, ex in enumerate(examples)
+        ]
+        while pending:
+            deferred: list[tuple[int, GoldenExample, int]] = []
+            while pending:
+                idx, ex, attempt = pending.pop(0)
+                try:
+                    outcome = await self.generator.generate(ex.query, top_k=10)
+                except RetryableGenerationError as exc:
+                    if attempt >= self.retryable_attempts:
+                        raise EvaluationError(
+                            "Retryable LLM error persisted after "
+                            f"{attempt} attempts for example {ex.id}: {exc}"
+                        ) from exc
+                    log.warning(
+                        "evaluation.retryable_deferred",
+                        example_id=ex.id,
+                        attempt=attempt,
+                        next_attempt=attempt + 1,
+                        remaining_before_retry=len(pending),
+                        cooldown_s=self.retryable_cooldown_s,
+                        error=repr(exc),
+                    )
+                    # Defer the failed request and every not-yet-attempted
+                    # request. Continuing immediately after a 429 would only
+                    # pollute more examples with provider throttling.
+                    deferred.append((idx, ex, attempt + 1))
+                    deferred.extend(pending)
+                    pending = []
+                    break
+                if self.retry_backend_errors and outcome.backend_error is not None:
+                    if attempt >= self.retryable_attempts:
+                        raise EvaluationError(
+                            "LLM backend error persisted after "
+                            f"{attempt} attempts for example {ex.id}: "
+                            f"{outcome.backend_error}"
+                        )
+                    log.warning(
+                        "evaluation.backend_error_deferred",
+                        example_id=ex.id,
+                        attempt=attempt,
+                        next_attempt=attempt + 1,
+                        remaining_before_retry=len(pending),
+                        cooldown_s=self.retryable_cooldown_s,
+                        error=outcome.backend_error,
+                    )
+                    deferred.append((idx, ex, attempt + 1))
+                    deferred.extend(pending)
+                    pending = []
+                    break
+                outcomes_by_index[idx] = outcome
+                if self.inter_example_delay_s > 0:
+                    await asyncio.sleep(self.inter_example_delay_s)
+                metrics = self._score(
+                    ex,
+                    outcome.response,
+                    outcome.retrieved_chunks,
+                    element_index=element_index,
+                )
+                passed = all(m.passed for m in metrics)
+                per_example_by_index[idx] = EvaluationResult(
                     example_id=ex.id,
                     category=ex.category,
                     metrics=metrics,
                     passed=passed,
                 )
-            )
+            if deferred:
+                log.info(
+                    "evaluation.retryable_cooldown",
+                    n_deferred=len(deferred),
+                    cooldown_s=self.retryable_cooldown_s,
+                )
+                if self.retryable_cooldown_s > 0:
+                    await asyncio.sleep(self.retryable_cooldown_s)
+                pending = deferred
+
+        per_example = [per_example_by_index[idx] for idx in range(len(examples))]
+        outcomes = [outcomes_by_index[idx] for idx in range(len(examples))]
 
         # Aggregate
         aggregate: dict[str, float] = {}

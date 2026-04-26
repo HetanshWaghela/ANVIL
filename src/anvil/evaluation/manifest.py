@@ -167,7 +167,7 @@ def make_run_id(
     backend: str,
     model: str | None,
     ablation: str,
-    dataset_version: str = "goldenv1",
+    dataset_version: str = "goldenv2-public100",
     when: datetime | None = None,
 ) -> str:
     """Deterministic run-id slug.

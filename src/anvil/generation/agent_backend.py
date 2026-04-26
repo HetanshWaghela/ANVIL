@@ -17,10 +17,12 @@ is decoupled from the decider implementation.
 
 from __future__ import annotations
 
+import asyncio
 from typing import TYPE_CHECKING, Any, Protocol, runtime_checkable
 
 from pydantic import BaseModel, Field
 
+from anvil import RetryableGenerationError
 from anvil.logging_config import get_logger
 from anvil.schemas.agent import AgentStep, FinalAnswer, ToolCall
 
@@ -210,19 +212,44 @@ class LLMAgentBackend:
         client = self.backend._get_client()  # type: ignore[attr-defined]
         model = self.model or self.backend.model  # type: ignore[attr-defined]
         msgs = self._build_messages(query, history, tool_manifest)
-        if hasattr(client, "chat") and hasattr(client.chat, "completions"):
-            decision: AgentDecision = await client.chat.completions.create(
-                model=model,
-                messages=msgs,
-                response_model=AgentDecision,
-                temperature=0.0,
-            )
-        else:
-            decision = await client.create(
-                response_model=AgentDecision,
-                messages=msgs,
-                temperature=0.0,
-            )
+        throttle = getattr(self.backend, "throttle", None)
+        if throttle is not None:
+            await throttle()
+        try:
+            if hasattr(client, "chat") and hasattr(client.chat, "completions"):
+                decision: AgentDecision = await asyncio.wait_for(
+                    client.chat.completions.create(
+                        model=model,
+                        messages=msgs,
+                        response_model=AgentDecision,
+                        temperature=0.0,
+                        max_retries=getattr(self.backend, "max_retries", 1),
+                    ),
+                    timeout=getattr(self.backend, "timeout_s", 45.0),
+                )
+            else:
+                decision = await asyncio.wait_for(
+                    client.create(
+                        response_model=AgentDecision,
+                        messages=msgs,
+                        temperature=0.0,
+                        max_retries=getattr(self.backend, "max_retries", 1),
+                    ),
+                    timeout=getattr(self.backend, "timeout_s", 45.0),
+                )
+        except TimeoutError as exc:
+            raise RetryableGenerationError(
+                f"Agent decider call timed out after "
+                f"{getattr(self.backend, 'timeout_s', 45.0):.1f}s "
+                f"for model={model}"
+            ) from exc
+        except Exception as exc:
+            is_retryable = getattr(self.backend, "_is_retryable_exception", None)
+            if is_retryable is not None and is_retryable(exc):
+                raise RetryableGenerationError(
+                    f"Agent decider call failed for model={model}: {exc!r}"
+                ) from exc
+            raise
         return decision
 
     def _build_messages(  # pragma: no cover - tested via integration

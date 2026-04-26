@@ -34,6 +34,7 @@ from __future__ import annotations
 import time
 from dataclasses import dataclass
 
+from anvil import RetryableGenerationError
 from anvil.generation.agent_backend import AgentBackend
 from anvil.generation.agent_tools import ToolRegistry
 from anvil.logging_config import get_logger
@@ -184,6 +185,9 @@ class AnvilAgent:
             # ---- decide -----------------------------------------------------
             try:
                 decision = await self.decider.decide(query, steps, manifest)
+            except RetryableGenerationError:
+                log.warning("agent.decider.retryable_error")
+                raise
             except Exception as exc:  # noqa: BLE001 — decider is user-supplied
                 log.warning("agent.decider.error", error=repr(exc))
                 termination = TerminationReason(

@@ -106,7 +106,10 @@ async def _run() -> int:
         )
         pipeline = build_pipeline(ablation=ablation_cfg)
         effective_model = getattr(pipeline.generator.backend, "model", args.model)
-        runner = EvaluationRunner(pipeline.generator)
+        runner = EvaluationRunner(
+            pipeline.generator,
+            retry_backend_errors=args.backend != "fake",
+        )
         run_id = make_run_id(
             backend=args.backend,
             model=effective_model,

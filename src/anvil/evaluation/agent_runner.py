@@ -29,10 +29,12 @@ decisions.
 from __future__ import annotations
 
 import asyncio
+import os
 from collections import OrderedDict
 from dataclasses import dataclass, field
 from typing import Any
 
+from anvil import EvaluationError, RetryableGenerationError
 from anvil.evaluation.metrics import (
     calculation_correctness,
     citation_accuracy,
@@ -122,41 +124,87 @@ class AgentEvaluationRunner:
         agent: AnvilAgent,
         element_index: dict[str, DocumentElement] | None = None,
         inter_example_delay_s: float = 0.0,
+        retryable_attempts: int | None = None,
+        retryable_cooldown_s: float | None = None,
     ) -> None:
         self.agent = agent
         self.element_index = element_index
         self.inter_example_delay_s = inter_example_delay_s
+        self.retryable_attempts = retryable_attempts or int(
+            os.environ.get("ANVIL_EVAL_RETRYABLE_ATTEMPTS", "3")
+        )
+        self.retryable_cooldown_s = (
+            retryable_cooldown_s
+            if retryable_cooldown_s is not None
+            else float(os.environ.get("ANVIL_EVAL_RETRY_COOLDOWN_S", "75"))
+        )
 
     async def run(self, examples: list[GoldenExample]) -> AgentRunSummary:
-        per_example: list[EvaluationResult] = []
-        outcomes: list[AgentOutcome] = []
-        for idx, ex in enumerate(examples):
-            if idx > 0 and self.inter_example_delay_s > 0:
-                await asyncio.sleep(self.inter_example_delay_s)
-            outcome = await self.agent.run(ex.query)
-            outcomes.append(outcome)
-            retrieved = _aggregate_retrieval(outcome)
-            metrics = self._score(
-                ex,
-                outcome.response,
-                retrieved,
-                element_index=self.element_index,
-            )
-            passed = all(m.passed for m in metrics)
-            per_example.append(
-                EvaluationResult(
+        per_example_by_index: dict[int, EvaluationResult] = {}
+        outcomes_by_index: dict[int, AgentOutcome] = {}
+        pending: list[tuple[int, GoldenExample, int]] = [
+            (idx, ex, 1) for idx, ex in enumerate(examples)
+        ]
+        while pending:
+            deferred: list[tuple[int, GoldenExample, int]] = []
+            while pending:
+                idx, ex, attempt = pending.pop(0)
+                if idx > 0 and self.inter_example_delay_s > 0:
+                    await asyncio.sleep(self.inter_example_delay_s)
+                try:
+                    outcome = await self.agent.run(ex.query)
+                except RetryableGenerationError as exc:
+                    if attempt >= self.retryable_attempts:
+                        raise EvaluationError(
+                            "Retryable agent LLM error persisted after "
+                            f"{attempt} attempts for example {ex.id}: {exc}"
+                        ) from exc
+                    log.warning(
+                        "agent_runner.retryable_deferred",
+                        example_id=ex.id,
+                        attempt=attempt,
+                        next_attempt=attempt + 1,
+                        remaining_before_retry=len(pending),
+                        cooldown_s=self.retryable_cooldown_s,
+                        error=repr(exc),
+                    )
+                    deferred.append((idx, ex, attempt + 1))
+                    deferred.extend(pending)
+                    pending = []
+                    break
+                outcomes_by_index[idx] = outcome
+                retrieved = _aggregate_retrieval(outcome)
+                metrics = self._score(
+                    ex,
+                    outcome.response,
+                    retrieved,
+                    element_index=self.element_index,
+                )
+                passed = all(m.passed for m in metrics)
+                per_example_by_index[idx] = EvaluationResult(
                     example_id=ex.id,
                     category=ex.category,
                     metrics=metrics,
                     passed=passed,
                 )
-            )
-            log.info(
-                "agent_runner.example.done",
-                example_id=ex.id,
-                passed=passed,
-                **outcome.transcript.to_summary(),
-            )
+                log.info(
+                    "agent_runner.example.done",
+                    example_id=ex.id,
+                    passed=passed,
+                    **outcome.transcript.to_summary(),
+                )
+            if deferred:
+                log.info(
+                    "agent_runner.retryable_cooldown",
+                    n_deferred=len(deferred),
+                    cooldown_s=self.retryable_cooldown_s,
+                )
+                if self.retryable_cooldown_s > 0:
+                    await asyncio.sleep(self.retryable_cooldown_s)
+                pending = deferred
+
+        per_example = [per_example_by_index[idx] for idx in range(len(examples))]
+        outcomes = [outcomes_by_index[idx] for idx in range(len(examples))]
 
         # Aggregate metric scores
         aggregate: dict[str, float] = {}
