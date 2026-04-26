@@ -43,7 +43,10 @@ data/asme_private_outputs/
 data/parser_benchmark/private/
 data/parser_benchmark/asme_private/
 data/runs/*asme-private*/
-data/runs/*/agent_transcripts.json
+# agent_transcripts.json is intentionally COMMITTED for cited runs —
+# every claim in README/docs about the agent loop must be replayable
+# from a stamped run directory. Private/sensitive transcripts are
+# excluded by the data/runs/*asme-private*/ rule above.
 
 # Internal scratch — NOT committed.
 # Note: `docs/` is intentionally NOT excluded — it is the load-bearing

@@ -1,6 +1,10 @@
 # ANVIL
 
-[![CI](https://github.com/Hetansh/ANVIL/actions/workflows/ci.yml/badge.svg)](https://github.com/Hetansh/ANVIL/actions/workflows/ci.yml)
+[![CI](https://github.com/HetanshWaghela/ANVIL/actions/workflows/ci.yml/badge.svg)](https://github.com/HetanshWaghela/ANVIL/actions/workflows/ci.yml)
+[![Tests](https://img.shields.io/badge/tests-285_passing-brightgreen)](https://github.com/HetanshWaghela/ANVIL/actions/workflows/ci.yml)
+[![Type Check](https://img.shields.io/badge/mypy-strict-blue)](https://github.com/HetanshWaghela/ANVIL/blob/main/pyproject.toml)
+[![Python](https://img.shields.io/badge/python-3.12+-blue)](https://github.com/HetanshWaghela/ANVIL/blob/main/pyproject.toml)
+[![License](https://img.shields.io/badge/license-MIT-green)](LICENSE)
 
 **Compliance-grade retrieval-augmented reasoning over engineering standards.**
 
@@ -127,7 +131,7 @@ Two generation paths share the same components:
 
 These invariants are not aspirational; each maps to a regression test in
 `tests/unit/` that fails if the corresponding behavior breaks. CI runs the
-281+ test suite under `--strict` mypy on every push.
+full 285-test suite under `--strict` mypy on every push.
 
 ## Quickstart
 
