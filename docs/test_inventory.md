@@ -105,7 +105,7 @@ deleted/updated in the same commit.
 | `unit/test_agent.py::*` | M6 / agent loop invariants | Scripted agent backend, budget exhaustion, tool-error handling, decision invariants, and tool adapter behavior are locked without a live LLM. |
 | `integration/test_agent_eval.py::*` | M6 / evaluation parity | Agent runs are scored through the same metric surface as fixed-pipeline runs; budget exhaustion returns refusal-shaped responses. |
 | `docs/agent_loop.md` | M6 design artifact | Documents tool surface, loop guarantees, transcript persistence, and known limitations. |
-| `docs/pipeline_vs_agent.md` | M6 honesty gate | Explicitly states that live agent-vs-fixed NIM metrics are pending until committed run artifacts exist. |
+| `docs/pipeline_vs_agent.md` | M6 honesty gate | One-page reviewer comparison; ties every claim to a stamped `data/runs/<run_id>/` directory and lists the acceptance criteria for any future agent claim. |
 
 ## M7 — Real-PDF parser benchmark
 
