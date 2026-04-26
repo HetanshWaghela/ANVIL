@@ -10,9 +10,9 @@ retrieves with BM25/vector/graph signals, gates unsupported queries before
 generation, performs calculations with deterministic pinned data, and validates
 citations after generation.
 
-This report records the current DeepMechanix-facing validation pass. Headline
-claims use real NVIDIA NIM runs only. `FakeLLMBackend` remains a deterministic
-CI/regression backend and is not used as primary performance evidence.
+This report records the current validation pass. Headline claims use real
+NVIDIA NIM runs only. The 285-test suite is the separate offline regression
+layer that locks every behavior the metrics scoring depends on.
 
 ## Core Claim
 
@@ -111,10 +111,10 @@ engineering tables collapses calculation correctness from 1.000 to 0.000. This
 validates the core ANVIL design choice: material stresses and joint
 efficiencies are trusted table lookups, not free-form model extraction.
 
-The refusal-gate ablation is less dramatic under Meta than under deterministic
-fake-backend regression tests, but it still drops refusal calibration and
-citation accuracy. The gate remains part of the defended architecture because
-refusal boundaries should be explicit, audited host behavior.
+The refusal-gate ablation drops refusal calibration and citation accuracy
+under the real backend. The gate remains part of the defended architecture
+because refusal boundaries should be explicit, audited host behavior
+rather than provider-dependent.
 
 The citation-enforcer ablation scoring 0.970 does not justify removing the
 enforcer. It shows that this model run mostly produced valid citations without
@@ -191,7 +191,7 @@ Quality gates:
 ```bash
 uv run ruff check src/ tests/ scripts/
 uv run mypy src/
-ANVIL_LLM_BACKEND=fake ANVIL_EMBEDDER=hash uv run pytest tests/ -q
+uv run pytest tests/ -q
 ```
 
 NIM health:

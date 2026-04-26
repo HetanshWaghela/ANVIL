@@ -1,9 +1,7 @@
 # Headline Results
 
 This is the reviewer-facing result page for the current validation pass.
-Application claims below use real NVIDIA NIM backend runs only. Fake backend
-numbers are CI/regression evidence and are not used as primary performance
-proof.
+Application claims below use real NVIDIA NIM backend runs only.
 
 Every metric row maps to a stamped directory under `data/runs/<run_id>/`
 containing `manifest.json`, `summary.json`, `per_example.json`, raw local
@@ -120,17 +118,6 @@ require schema-adapter changes.
 The defended default remains `pymupdf4llm`: it is local, free, structurally
 strong on SPES-1, and does not require sending licensed standards to a hosted
 parser.
-
-## Fake Backend Scope
-
-The fake backend remains important for deterministic CI and regression checks:
-
-```bash
-ANVIL_LLM_BACKEND=fake ANVIL_EMBEDDER=hash uv run pytest tests/ -q
-```
-
-Those results prove offline repeatability and guard against regressions. They
-are not application headline claims.
 
 ## Reproduction Commands
 

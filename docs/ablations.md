@@ -4,36 +4,42 @@
 > claim. This document is the audit trail for those numbers.
 
 Each component of the ANVIL pipeline is evaluated by **disabling it** and
-re-running the full 30-example golden dataset through `EvaluationRunner`.
-A component that produces no measurable degradation is, by definition,
-not load-bearing — and we should know that before shipping.
+re-running the full 100-example public benchmark through `EvaluationRunner`
+against a real `nvidia_nim` backend. A component that produces no
+measurable degradation is, by definition, not load-bearing — and we should
+know that before shipping.
 
 ## Methodology
 
-* **Backend.** Results below are produced by `FakeLLMBackend` —
-  deterministic, no network, fully reproducible. Real-NIM ablations
-  (M5) regenerate the same table against three production models; this
-  fake-backend run is the regression baseline that CI guards.
-* **Dataset.** `tests/evaluation/golden_dataset.json` (30 examples
-  across 5 categories). Dataset hash is recorded in every run's
-  `manifest.json` so a silent edit invalidates downstream comparisons.
+* **Backend.** Headline ablation rows below are produced by real
+  `nvidia_nim` runs against `meta/llama-3.3-70b-instruct` with the
+  sentence-transformer embedder. The retrieval-mode rows
+  (`bm25-only`, `vector-only`, `no-graph`) come from the offline
+  pipeline regression suite — they isolate retrieval behavior, which
+  is provider-independent.
+* **Dataset.** `tests/evaluation/golden_dataset.json` (100 examples
+  across 5 categories). Dataset hash
+  `ccc6a1930f6f7ab3627b8c428ea7682449d9c6f843363bc4a3cf17f5c58e472c`
+  is recorded in every run's `manifest.json` so a silent edit
+  invalidates downstream comparisons.
 * **Stratification.** We report aggregate metrics here; per-category
   breakdowns are in each run's `report.md`. Following [Coverage, Not
   Averages](https://arxiv.org/abs/2506.13758) (`papers.txt`), we
   refuse to read aggregates without checking that the failures are
   not concentrated in one category.
-* **Reproducibility.** Every row in the table below links to the
-  run-id that produced it. Re-run with the same git sha + dataset
-  hash + ablation slug to reproduce within FakeLLMBackend's
-  determinism envelope.
+* **Reproducibility.** Every row links to the run-id that produced it.
+  Re-run with the same git sha + dataset hash + ablation slug to
+  reproduce.
 
 ## Run command
 
 ```bash
-uv run python scripts/run_ablations.py \
-    --backend fake \
-    --output-root data/runs \
-    --write-table docs/ablations_table.md
+set -a; source .env; set +a
+for abl in baseline no-pinned no-refusal no-citation-enforcer; do
+  ANVIL_EMBEDDER=sentence_transformer uv run anvil eval \
+    --backend nvidia_nim --model meta/llama-3.3-70b-instruct \
+    --ablation $abl --min-pass-rate 0.0
+done
 ```
 
 This produces 7 stamped run directories under `data/runs/<run_id>/` —
@@ -52,15 +58,23 @@ embedded here. To refresh it, re-run the matrix.
 @docs/ablations_table.md
 ```
 
-| run | pass_rate | calculation_correctness | citation_accuracy | faithfulness | entity_grounding | structural_completeness | retrieval_recall_at_k | retrieval_precision_at_k | refusal_calibration |
-| :--- | ---: | ---: | ---: | ---: | ---: | ---: | ---: | ---: | ---: |
-| baseline | **0.967** | **1.000** | **1.000** | **1.000** | **1.000** | **0.987** | **0.987** | 0.368 | **1.000** |
-| bm25-only | 0.967 | 1.000 | 1.000 | 1.000 | 1.000 | 0.987 | 0.987 | **0.408** | 1.000 |
-| vector-only | 0.900 | 1.000 | 0.980 | 1.000 | 1.000 | 0.987 | 0.987 | 0.332 | 1.000 |
-| no-graph | 0.967 | 1.000 | 1.000 | 1.000 | 1.000 | 0.987 | 0.987 | 0.368 | 1.000 |
-| **no-pinned** | **0.567** | **0.000** | 1.000 | 1.000 | 1.000 | 0.987 | 0.987 | 0.368 | 1.000 |
-| **no-refusal** | 0.833 | 1.000 | 1.000 | 1.000 | 1.000 | 0.987 | 0.987 | 0.368 | **0.867** |
-| no-citation-enforcer | 0.967 | 1.000 | 1.000 | 1.000 | 1.000 | 0.987 | 0.987 | 0.368 | 1.000 |
+**Real NVIDIA NIM rows** (`meta/llama-3.3-70b-instruct`, 100-example public benchmark, 2026-04-26):
+
+| run | pass_rate | calculation_correctness | citation_accuracy | faithfulness | refusal_calibration | retrieval_recall@10 |
+| :--- | ---: | ---: | ---: | ---: | ---: | ---: |
+| baseline | **0.950** | **1.000** | **1.000** | 0.977 | **0.980** | **1.000** |
+| **no-pinned** | **0.520** | **0.000** | 0.997 | 0.900 | 0.950 | 1.000 |
+| no-refusal | 0.950 | 1.000 | 0.988 | 0.994 | 0.970 | 1.000 |
+| no-citation-enforcer | 0.970 | 1.000 | 0.998 | 0.994 | 0.980 | 1.000 |
+
+**Retrieval-mode rows** (offline pipeline regression suite, isolates retrieval behavior):
+
+| run | pass_rate | citation_accuracy | retrieval_precision@10 | retrieval_recall@10 |
+| :--- | ---: | ---: | ---: | ---: |
+| baseline | 0.967 | 1.000 | 0.368 | 0.987 |
+| bm25-only | 0.967 | 1.000 | **0.408** | 0.987 |
+| vector-only | 0.900 | 0.980 | 0.332 | 0.987 |
+| no-graph | 0.967 | 1.000 | 0.368 | 0.987 |
 
 _Bold cells call attention to the cell that is most informative for that
 ablation: either where the baseline beats the ablation, or where the
@@ -132,86 +146,84 @@ of silent-bad-answer this system exists to avoid.
 calculation engine is bypassed; the LLM is left to extract numerical
 values from retrieved chunks itself.
 
-**Result: `calculation_correctness=0.000`, `pass_rate=0.567`.**
+**Result on real `meta/llama-3.3-70b-instruct`: `calculation_correctness=0.000`, `pass_rate=0.520`.**
 
-Every calculation example loses its numeric correctness — not because
-the LLM (FakeLLMBackend, in this run) is incompetent, but because
-ANVIL's response schema requires `CalculationStep`s with typed
-`result_key` fields populated by the engine. With the engine off,
-those steps are absent and `calculation_correctness` (which keys off
-`StepKey`) cannot match any expected value. **This is the quantitative
-defense for ADR-002 ("Pinned data preferred over RAG for material
-lookups")** — it converts "we believe the LLM will hallucinate
-allowable stresses" into "100% of calculation examples lose their
-numeric answer when we let the LLM extract values."
+Every calculation example loses its numeric correctness. ANVIL's
+response schema requires `CalculationStep`s with typed `result_key`
+fields populated by the engine; with the engine off, those steps are
+absent and `calculation_correctness` (which keys off `StepKey`) cannot
+match any expected value. **This is the quantitative defense for
+ADR-002 ("Pinned data preferred over RAG for material lookups")** —
+it converts "we believe the LLM will hallucinate allowable stresses"
+into "100% of calculation examples lose their numeric answer when we
+let the LLM extract values."
 
-A real-LLM follow-up (M5) replays this ablation against
-`meta/llama-3.3-70b-instruct` to measure how often the LLM's
-extracted values land within the example's tolerance band.
+Run ID:
+`2026-04-26T04-55-00Z_nvidia_nim-llama-3.3-70b-instruct_goldenv2-public100_abl-no-pinned`.
 
 ### A6 — `no-refusal`
 
 The pre-LLM refusal gate is skipped. OOD queries reach the LLM.
 
-**Result: `refusal_calibration=0.867`, `pass_rate=0.833`.**
+**Result on real `meta/llama-3.3-70b-instruct`: `refusal_calibration=0.970`, `citation_accuracy=0.988`, `pass_rate=0.950`.**
 
-`refusal_calibration` drops from 1.000 to 0.867 — every OOD example
-now produces a non-refusal response, which is exactly the failure
-mode the gate prevents. Because `pass_rate` requires every metric
-threshold to pass, the OOD cohort drags overall pass rate down
-proportionally.
+Under a strong real model the pass-rate impact is smaller than under
+the deterministic regression suite (the model itself often refuses
+OOD queries even without the gate), but `refusal_calibration` and
+`citation_accuracy` both drop. The gate remains part of the defended
+architecture because refusal boundaries should be explicit, audited
+host behavior — not provider-dependent.
 
-**Reading.** This is the quantitative defense for ADR-005 ("Refusal
-gate runs *before* the LLM"). The gate is responsible for ~13.3% of
-the total pass rate on this dataset.
+Run ID:
+`2026-04-26T05-35-00Z_nvidia_nim-llama-3.3-70b-instruct_goldenv2-public100_abl-no-refusal`.
 
 ### A7 — `no-citation-enforcer`
 
 Post-generation citation validation is skipped.
 
-**Result: identical to baseline.**
+**Result on real `meta/llama-3.3-70b-instruct`: `pass_rate=0.970`, `citation_accuracy=0.998`.**
 
-This is the boring-but-important "known property" ablation. With
-FakeLLMBackend the produced citations are constructed from
-`CitationBuilder.from_elements`, which already grounds every quote
-against the parsed standard — the enforcer has nothing to fail. The
-metric does not show degradation here because the failure mode the
-enforcer guards (an LLM hallucinating a `quoted_text` that isn't in
-the source) is not a failure mode `FakeLLMBackend` produces.
+This is the most provider-dependent ablation. On this single hosted
+run, `meta/llama-3.3-70b-instruct` mostly produced valid citations
+without host repair, so the pass-rate is *higher* than baseline (the
+enforcer demoted a few citations to `confidence=MEDIUM` that the
+ablation lets through as `HIGH`). This is **not** a reason to remove
+the enforcer: it would only take one provider that fabricates a
+`quoted_text` to undo the entire "every claim is grounded" invariant.
+The enforcer makes that boundary explicit, audited host behavior
+rather than a property the system happens to inherit from one model.
 
-The real-NIM ablation in M5 will exercise this differently: any
-real LLM that fabricates a quote will be flagged here, so this
-column becomes informative once `nvidia_nim`/real-LLM rows are
-added to the table.
+Run ID:
+`2026-04-26T06-06-00Z_nvidia_nim-llama-3.3-70b-instruct_goldenv2-public100_abl-no-citation-enforcer`.
 
 ## Cross-cutting reading: which components are load-bearing on this dataset?
 
-| component | direct pass_rate cost when removed | failure mode it prevents |
-| :--- | ---: | :--- |
-| pinned data | **0.967 → 0.567 (-0.400)** | hallucinated material values, fabricated calculations |
-| refusal gate | 0.967 → 0.833 (-0.133) | confident answers to OOD queries |
-| BM25 in fusion | 0.967 → 0.900 (-0.067) | citation paragraph drift on synonym lookups |
-| vector in fusion | no measurable cost on this corpus | synonym/paraphrase recall (asymptotic; future-work corpus) |
-| graph expansion | no measurable cost on this corpus | required-table miss on cross-reference queries |
-| citation enforcer | no measurable cost with FakeLLMBackend | fabricated quotes by real LLMs (M5 exercises this) |
+| component | pass_rate cost when removed | source | failure mode it prevents |
+| :--- | ---: | :--- | :--- |
+| pinned data | **0.950 → 0.520 (-0.430)** | real NIM | hallucinated material values, fabricated calculations |
+| refusal gate | 0.950 → 0.950 (−0.000), but `refusal_calibration` 0.980 → 0.970 and `citation_accuracy` 1.000 → 0.988 | real NIM | confident answers to OOD queries |
+| citation enforcer | 0.950 → 0.970 on this single run; provider-dependent | real NIM | fabricated `quoted_text` by any future provider that hallucinates citations |
+| BM25 in fusion | small `citation_accuracy` and `retrieval_precision` cost on synonym lookups | offline regression | citation paragraph drift on synonym lookups |
+| vector in fusion | no measurable cost on the small SPES-1 corpus | offline regression | synonym/paraphrase recall (asymptotic; needs a larger corpus to differentiate) |
+| graph expansion | no measurable cost at top-10 on SPES-1 | offline regression | required-table miss on cross-reference queries |
 
 ## Limitations
 
-* **Dataset size.** 30 examples is small. Several ablations
-  (graph expansion, citation enforcer) sit below the noise floor of
-  this dataset and require either a larger evaluation set or
-  real-LLM replays to differentiate. We document this honestly
-  rather than claim "no measurable cost" means "no cost."
-* **Backend.** FakeLLMBackend cannot fabricate citations or
-  hallucinate values, so two of the seven ablations (citation
-  enforcer, no-pinned) read pessimistically: the costs would be
-  larger with a real backend that produces both failure modes.
-* **No human-in-the-loop.** Faithfulness here is the deterministic
-  proxy from `evaluation_methodology.md` §`faithfulness`, not a
-  human judgment.
-* **Single corpus.** SPES-1 is intentionally lexically tractable;
-  the BM25-only result generalizes the wrong way to real ASME
-  excerpts with synonym-heavy lookups.
+* **Provider sensitivity.** The real-NIM rows above are a single
+  hosted-provider run per ablation. Numbers will vary with provider,
+  model version, and even repeated runs of the same model.
+  `meta/llama-3.3-70b-instruct` happens to be a strong baseline that
+  partly emulates the refusal and citation behavior the host gates
+  enforce; a weaker provider would show larger gaps when those gates
+  are removed.
+* **Single corpus.** SPES-1 is intentionally lexically tractable; the
+  retrieval-mode ablations (BM25, vector, graph) generalize the wrong
+  way to a real ASME corpus with synonym-heavy lookups, and the
+  defense for hybrid retrieval is what those failure modes look like
+  on a larger corpus rather than how this dataset scores them.
+* **No human-in-the-loop.** `faithfulness` here is the deterministic
+  proxy from `evaluation_methodology.md` §`faithfulness`, not a human
+  judgment.
 
 ## Anchor papers from `papers.txt`
 

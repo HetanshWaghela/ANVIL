@@ -159,7 +159,7 @@ for the DeepSeek catalog rows.
 * **Failure mode policy.** `check_nim_health` and `list_nim_catalog`
   both **fail soft** (return structured errors / empty list), but
   `_nvidia_nim_backend()` raises immediately if the API key is missing
-  — we refuse to silently fall through to FakeLLMBackend in production.
+  — we refuse to silently degrade to an offline path in production.
 
 ## Versus OpenRouter / Together / generic OpenAI-compatible
 
@@ -191,5 +191,5 @@ To exercise the real path locally:
 export NVIDIA_API_KEY=nvapi-...
 uv run anvil nim-check --timeout 60                  # 3-row table
 uv run anvil nim-check --json --list --timeout 60    # adds catalog_drift block
-uv run python scripts/run_nim_headlines.py --include-fake
+uv run python scripts/run_nim_headlines.py
 ```

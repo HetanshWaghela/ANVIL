@@ -132,26 +132,25 @@ These invariants are not aspirational; each maps to a regression test in
 ## Quickstart
 
 ```bash
-uv sync --extra dev                                                  # install
-ANVIL_LLM_BACKEND=fake ANVIL_EMBEDDER=hash uv run pytest tests/ -q    # 285 tests, no network, no keys
-uv run anvil ingest                                                  # parse SPES-1 → KG + element artifacts
+uv sync --extra dev                                  # install
+uv run pytest tests/ -q                              # 285 tests, ~1.5s
+cp .env.example .env && set -a && source .env && set +a   # configure NIM keys
+uv run anvil nim-check                               # confirm catalog reachability
+uv run anvil ingest                                  # parse SPES-1 → KG + element artifacts
 uv run anvil query "What does A-27(c)(1) require?"
 uv run anvil calculate --component cylindrical_shell --P 1.5 --temp 350 \
   --material "SM-516 Gr 70" --joint-type 1 --rt-level "Full RT" \
   --ca 3.0 --inside-diameter-mm 1800
-uv run anvil nim-check                                               # key-gated NIM connectivity probe
 uv run anvil eval --backend nvidia_nim --model meta/llama-3.3-70b-instruct --ablation baseline
-uv run uvicorn anvil.api.app:create_app --factory                    # FastAPI demo
+uv run uvicorn anvil.api.app:create_app --factory    # FastAPI demo
 ```
 
 The production path is NVIDIA NIM with the sentence-transformer embedder —
-every headline number above came from that configuration. The deterministic
-`FakeLLMBackend` + `DeterministicHashEmbedder` defaults exist *only* so CI and
-local development can run the entire 285-test suite without network access or
-an API key; both log a loud `WARNING` at startup so a misconfigured deploy
-cannot silently ship fake responses, and any unrecognized value for
-`ANVIL_LLM_BACKEND` / `ANVIL_EMBEDDER` raises at startup rather than coercing
-to fake.
+every headline number above came from that configuration. Any unrecognized
+value for `ANVIL_LLM_BACKEND` / `ANVIL_EMBEDDER` raises at startup rather
+than silently coercing to a deterministic offline backend, so a misconfigured
+production deploy fails loudly close to the configuration site instead of
+shipping degraded responses far from it.
 
 ## Reproducing the headline results
 
@@ -379,26 +378,23 @@ the agent's decisions deterministically. Regression tests in
 ## Deployment
 
 A minimal `Dockerfile` and `fly.toml` are included for a read-only FastAPI
-demo. The default container uses the deterministic fake backend so it
-requires no secrets. To deploy a live NIM-backed demo, set
-`NVIDIA_API_KEY`, `ANVIL_LLM_BACKEND=nvidia_nim`,
-`ANVIL_EMBEDDER=sentence_transformer`, and an explicit `ANVIL_LLM_MODEL` as
-platform secrets. Rationale and tradeoffs in ADR-013
-(`docs/design_decisions.md`).
+demo. To deploy a live NIM-backed demo, set `NVIDIA_API_KEY`,
+`ANVIL_LLM_BACKEND=nvidia_nim`, `ANVIL_EMBEDDER=sentence_transformer`, and
+an explicit `ANVIL_LLM_MODEL` as platform secrets. Rationale and tradeoffs
+in ADR-013 (`docs/design_decisions.md`).
 
 ## Quality gates (run on every push)
 
 ```bash
-uv run ruff check src/ tests/ scripts/                                 # lint
-uv run mypy src/                                                       # --strict, 61 source files
-ANVIL_LLM_BACKEND=fake ANVIL_EMBEDDER=hash uv run pytest tests/ -q     # 285 tests, ~1.5s
-uv run anvil eval --backend fake --min-pass-rate 0.95                  # full pipeline regression on 100 golden examples
+uv run ruff check src/ tests/ scripts/   # lint
+uv run mypy src/                         # --strict, 61 source files
+uv run pytest tests/ -q                  # 285 tests, ~1.5s
 ```
 
-All four pass on `main`. CI is a five-job GitHub Actions workflow
-([`.github/workflows/ci.yml`](.github/workflows/ci.yml)): `ruff`,
-`mypy --strict`, `pytest`, `eval-fake`, and an optional `nim-check` that
-runs only when `NVIDIA_API_KEY` is configured as a repo secret.
+All three pass on `main`. CI is a GitHub Actions workflow
+([`.github/workflows/ci.yml`](.github/workflows/ci.yml)) running `ruff`,
+`mypy --strict`, and `pytest`, plus an optional `nim-check` job that runs
+only when `NVIDIA_API_KEY` is configured as a repo secret.
 
 ## Honest limitations
 

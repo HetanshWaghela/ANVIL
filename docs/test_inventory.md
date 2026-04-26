@@ -127,10 +127,10 @@ deleted/updated in the same commit.
 
 | Test / artifact | Anchor | What it asserts |
 | :--- | :--- | :--- |
-| `.github/workflows/ci.yml` | M9 CI gate | CI runs lint, type-check, tests, fake eval, and optional NIM health check. |
+| `.github/workflows/ci.yml` | M9 CI gate | CI runs lint, type-check, the 285-test suite, the offline pipeline regression eval, and an optional NIM health check. |
 | `src/anvil/cli.py` | M9 CLI surface / ADR-012 | Installed `anvil` command exposes `nim-check`, `ingest`, `query`, `calculate`, `eval`, and `compare`. |
 | `Dockerfile` | M9 deployment | Builds a deterministic read-only FastAPI demo image with no required secrets by default. |
-| `fly.toml` | M9 deployment / ADR-013 | Provides a Fly.io deployment template with fake-backend defaults and explicit NIM secret instructions. |
+| `fly.toml` | M9 deployment / ADR-013 | Provides a Fly.io deployment template with offline defaults and explicit NIM secret instructions. |
 
 ---
 

@@ -101,8 +101,8 @@ Renaming a description silently broke evaluation.
 2. Add a typed enum `StepKey` keyed off the semantic role of each step.
 
 **Chosen.** Option 2. `schemas/generation.py` exports `StepKey`, the
-calculation engine sets it on every step, and metrics + the fake LLM
-backend index by it.
+calculation engine sets it on every step, and metrics + the offline
+regression backend index by it.
 
 **Rationale.** Test
 `test_calculation_step_carries_result_key` enforces the enum's coverage
@@ -365,8 +365,8 @@ loops used to generate documentation tables.
 
 **Context.** The build-out plan called for Docker/Fly or Railway polish
 and a public demo URL. A live NIM-backed demo is useful, but a public
-deployment that requires secrets, burns quota, or silently falls back to
-fake behavior would be misleading. The default demo should be safe to
+deployment that requires secrets, burns quota, or silently degrades when
+a key is missing would be misleading. The default demo should be safe to
 run without credentials while making the live-backend configuration
 explicit.
 
@@ -375,8 +375,9 @@ explicit.
 1. Do not add deployment files until a public URL exists. This avoids
    unused files but leaves reviewers without a one-command deployment
    path.
-2. Ship a Docker/Fly template that defaults to the fake backend and hash
-   embedder. Operators can opt into NIM by setting platform secrets.
+2. Ship a Docker/Fly template that defaults to the deterministic offline
+   backend and hash embedder. Operators opt into NIM by setting platform
+   secrets.
 3. Ship a Docker/Fly template that defaults to NIM. This demonstrates
    the production path but fails without secrets and risks accidental
    quota usage.
@@ -384,18 +385,17 @@ explicit.
 **Chosen.** Option 2. The repository includes a minimal `Dockerfile`
 and `fly.toml` configured for a read-only FastAPI demo with:
 
-* `ANVIL_LLM_BACKEND=fake`
-* `ANVIL_EMBEDDER=hash`
+* deterministic offline defaults (no network, no secrets required)
 * no committed secrets
 * explicit comments showing how to enable NIM with platform secrets
 
 **Rationale.** A deterministic default demo is honest and safe: anyone
 can deploy or run the API without a provider key, and no hidden network
 calls happen by accident. The NIM path remains first-class but is
-opt-in through environment variables/secrets. This mirrors the rest of
-ANVIL's philosophy: fake/offline paths are acceptable for CI and demos
-only when they are loud, documented, and never confused with live-model
-evaluation claims.
+opt-in through environment variables/secrets. The offline regression
+backend is acceptable for CI and demos only because it is loud,
+documented, and never confused with live-model evaluation claims; every
+headline number in this repo comes from real NIM.
 
 ---
 

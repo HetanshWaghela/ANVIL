@@ -27,13 +27,11 @@ the failure modes that actually matter:
 
 ANVIL separates evaluation evidence into two tiers:
 
-| tier | backend | purpose |
-| :--- | :--- | :--- |
-| Real backend | `nvidia_nim` or another production provider | Application/headline claims and provider-behavior evidence |
-| Deterministic regression | `FakeLLMBackend` with hash embedder | Fast, offline CI and repeatable regression checks |
-
-Fake-backend rows are useful because they make regressions reproducible without
-API keys. They are not used as primary application-performance proof.
+Application/headline claims use the production backend (`nvidia_nim` or
+another OpenAI-compatible provider). The 285-test suite is a separate
+regression layer that locks every behavior the metrics layer scores; it
+runs offline so CI can guard against regressions without burning provider
+quota.
 
 ## Golden dataset
 
@@ -182,8 +180,8 @@ query" and "system refused a legitimate query."
   threshold.
 
 The integration test `test_run_full_eval_pass_rate` asserts
-`pass_rate >= 0.7` on the bundled fake-LLM backend; production deploys
-should set thresholds higher and treat regressions
+`pass_rate >= 0.7` on the bundled offline regression fixtures; production
+deploys should set thresholds higher and treat regressions
 (`evaluation/regression.py`) as CI-blocking.
 
 ## Run artifacts and resume

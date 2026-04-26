@@ -35,7 +35,7 @@ treats the layer below as immutable, typed input.
    ┌──────────────────────────────────────────────────────────────┐
    │  generation/                                                 │
    │   refusal_gate  → calculation_engine → prompt_builder →      │
-   │   llm_backend (Fake / Instructor / OpenAI-compat) →          │
+   │   llm_backend (NVIDIA NIM / Instructor / OpenAI-compat) →    │
    │   citation_enforcer                                          │
    │   → AnvilResponse (Pydantic, with Citations)                 │
    └──────────────────────────────────────────────────────────────┘
@@ -158,11 +158,10 @@ definition in its docstring. Notable choices:
 
 | Env value | Backend | Notes |
 | :--- | :--- | :--- |
-| `fake` (default) | `FakeLLMBackend` | Deterministic. Logs WARNING on selection. |
-| `nvidia_nim` | NVIDIA NIM via `OpenAICompatibleBackend` | Requires `NVIDIA_API_KEY`. |
+| `nvidia_nim` (recommended for production) | NVIDIA NIM via `OpenAICompatibleBackend` | Requires `NVIDIA_API_KEY`; supports per-key throttling and fallback-key rotation. |
 | `openai_compatible` | Any OpenAI-protocol endpoint | Requires `OPENAI_COMPAT_BASE_URL`, `OPENAI_COMPAT_API_KEY`, `ANVIL_LLM_MODEL`. |
 | `instructor` | `instructor.from_provider` | Requires `ANVIL_LLM_MODEL` like `openai/gpt-4o-mini`. |
 
 Every misconfigured selection (missing env var, unknown value, missing key)
 raises `GenerationError` at construction time — a deploy that forgot to set
-secrets fails immediately rather than shipping silent fake responses.
+secrets fails immediately rather than silently degrading.

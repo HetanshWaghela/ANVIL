@@ -31,7 +31,8 @@ data/private_runs/
 
 ```bash
 uv run anvil eval \
-  --backend fake \
+  --backend nvidia_nim \
+  --model meta/llama-3.3-70b-instruct \
   --dataset data/private/asme/asme_eval_v1.json \
   --standard data/private/asme/asme_viii_private.md \
   --output-root data/private_runs \

@@ -4,7 +4,7 @@
 
 This document records the expected NVIDIA NIM usage for ANVIL evaluation runs, the current cost posture, and the guardrails used to keep real-inference experiments reproducible and inexpensive.
 
-ANVIL’s default development and CI paths do **not** require a live model key. They use deterministic local components plus `FakeLLMBackend`. Real NVIDIA NIM calls are reserved for explicitly requested runs such as:
+ANVIL’s default development and CI paths do **not** require a live model key. They run the offline regression suite using the deterministic local pipeline. Real NVIDIA NIM calls are reserved for explicitly requested runs such as:
 
 - `anvil nim-check`
 - `anvil eval --backend nvidia_nim --model <model-id>`
@@ -41,7 +41,7 @@ The committed headline results currently include baseline NIM runs for three liv
 | :--- | ---: | ---: | ---: |
 | NIM health check | 3 | 1 tiny probe | 3 |
 | Baseline headline eval | 3 | 30 golden examples | 90 |
-| Fake control | 0 | 30 examples | 0 |
+| Offline regression control | 0 | 30 examples | 0 |
 
 Approximate live NIM requests used for the committed headline table:
 
@@ -67,7 +67,7 @@ The original build-out plan described several experiment groups. The table below
 
 The most expensive planned items are the full NIM ablation matrix and any calibration sweep that calls the LLM at every threshold. ANVIL therefore treats these as optional live runs. The defended default is:
 
-1. Run all ablations with `FakeLLMBackend`.
+1. Run all ablations against the offline regression suite first to confirm pipeline plumbing.
 2. Run only the most informative ablations live on NIM.
 3. Run the full live matrix only if quota/time allow.
 
@@ -111,9 +111,9 @@ The project assumes a key-gated hosted usage model and does not hardcode prices,
 
 | Path | Cost expectation | Notes |
 | :--- | :--- | :--- |
-| CI tests | $0 | Fake backend only |
-| Local unit/integration tests | $0 | Fake backend only |
-| `scripts/evaluate.py` default | $0 | Fake backend unless backend override is supplied |
+| CI tests | $0 | Offline regression only |
+| Local unit/integration tests | $0 | Offline regression only |
+| `scripts/evaluate.py` default | $0 | Offline regression unless backend override is supplied |
 | `anvil nim-check` | Free-tier / key quota | 3 tiny probes by default |
 | 3-model headline eval | Free-tier / key quota | ~90 requests |
 | Full NIM ablations | Free-tier if quota allows; otherwise paid/provider-dependent | ~630 requests |
@@ -158,7 +158,7 @@ Practical rule:
 
 ANVIL uses the following guardrails to avoid accidental quota burn:
 
-1. **Fake backend by default.** No real LLM call happens unless `ANVIL_LLM_BACKEND=nvidia_nim` or an explicit CLI/backend flag is used.
+1. **Offline-by-default.** No real LLM call happens unless `ANVIL_LLM_BACKEND=nvidia_nim` or an explicit CLI/backend flag is used.
 
 2. **Key-gated live paths.** If `NVIDIA_API_KEY` is missing, NIM health checks return structured failures and live eval scripts abort clearly.
 
@@ -170,7 +170,7 @@ ANVIL uses the following guardrails to avoid accidental quota burn:
 
 6. **Raw logs gitignored.** Full prompts and request logs can be inspected locally without committing large or sensitive traces.
 
-7. **Ablations can run fake first.** The full 7-config ablation study is reproducible offline. NIM replay is reserved for selected high-value rows.
+7. **Ablations can run offline first.** The full 7-config ablation study is reproducible offline. NIM replay is reserved for selected high-value rows.
 
 8. **Agent step budget.** The agent loop uses a max-step budget so a runaway tool-calling sequence cannot generate unbounded requests.
 
@@ -207,13 +207,13 @@ For a fresh machine with a valid key:
 
 `uv run anvil nim-check`
 
-2. Run fake baseline to verify local pipeline health:
+2. Run the offline regression baseline to verify local pipeline health:
 
-`uv run anvil eval --backend fake`
+`uv run anvil eval`
 
 3. Run the 3-model NIM headline script:
 
-`uv run python scripts/run_nim_headlines.py --include-fake`
+`uv run python scripts/run_nim_headlines.py`
 
 4. Run selected high-value NIM ablations on the strongest model:
 
