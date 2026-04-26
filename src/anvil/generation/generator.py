@@ -290,6 +290,112 @@ class AnvilGenerator:
             backend_error=backend_error,
         )
 
+    async def synthesize_from_chunks(
+        self,
+        query: str,
+        chunks: list[RetrievedChunk],
+    ) -> GenerationOutcome:
+        """Synthesize a final answer from *pre-retrieved* chunks.
+
+        Identical to steps 4–6 of `generate()` (prompt → LLM → citation
+        validation), but skips retrieval and the calculation engine. Used by
+        the agent loop's saturation auto-finalize: the agent picks the chunks
+        via its own tool calls, then the trusted host code synthesizes a
+        structured `AnvilResponse` with the same citation enforcement the
+        fixed pipeline uses.
+
+        Empty `chunks` is treated as a refusal (no evidence, no answer) — same
+        contract as the pre-LLM refusal gate, but produced *without* needing
+        to re-run retrieval.
+        """
+        log.info(
+            "synthesize_from_chunks.start",
+            query=query[:120],
+            n_chunks=len(chunks),
+        )
+
+        if not chunks:
+            system, user = build_context_prompt(query, [])
+            response = await self.backend.generate(
+                system_prompt=system,
+                user_prompt=user,
+                query=query,
+                retrieved_chunks=[],
+                calculation_steps=[],
+                refusal_reason=(
+                    "No supporting evidence was retrieved by the agent loop "
+                    "before saturation auto-finalize."
+                ),
+            )
+            return GenerationOutcome(
+                response=response,
+                retrieved_chunks=[],
+                citation_validation=CitationValidationResult(total=0, valid=0, issues=[]),
+            )
+
+        system, user = build_context_prompt(query, chunks, calculation_summary=None)
+
+        backend_error: str | None = None
+        try:
+            response = await self.backend.generate(
+                system_prompt=system,
+                user_prompt=user,
+                query=query,
+                retrieved_chunks=chunks,
+                calculation_steps=[],
+            )
+        except RetryableGenerationError:
+            log.warning(
+                "synthesize_from_chunks.backend_error_retryable",
+                query_preview=query[:80],
+            )
+            raise
+        except GenerationError as exc:
+            backend_error = repr(exc)
+            log.warning(
+                "synthesize_from_chunks.backend_error_soft_refusal",
+                error=backend_error,
+                query_preview=query[:80],
+            )
+            response = await self.backend.generate(
+                system_prompt=system,
+                user_prompt=user,
+                query=query,
+                retrieved_chunks=chunks,
+                calculation_steps=[],
+                refusal_reason=(
+                    f"LLM backend produced an invalid structured response "
+                    f"and exhausted retries: {exc}"
+                ),
+            )
+
+        if self.use_citation_enforcer:
+            validation = validate_citations(
+                response, chunks, element_index=self.element_index
+            )
+            if not validation.passed and response.confidence == ResponseConfidence.HIGH:
+                response = response.model_copy(
+                    update={"confidence": ResponseConfidence.MEDIUM}
+                )
+        else:
+            validation = CitationValidationResult(
+                total=len(response.citations), valid=len(response.citations), issues=[]
+            )
+
+        log.info(
+            "synthesize_from_chunks.done",
+            confidence=response.confidence.value,
+            citations=len(response.citations),
+            validation_issues=len(validation.issues),
+        )
+        return GenerationOutcome(
+            response=response,
+            retrieved_chunks=chunks,
+            citation_validation=validation,
+            calculation=None,
+            backend_error=backend_error,
+        )
+
 
 # ---- input parsing helpers -------------------------------------------------
 

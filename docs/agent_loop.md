@@ -19,8 +19,12 @@ The first live NIM agent smoke run exposed realistic structured-output boundary 
 | Model emitted verbose joint labels such as `Type 2 with full radiography` | Joint-type coercion extracts and validates the integer joint type |
 | Model called `calculate` without first retrieving evidence | Agent auto-hydrates the transcript with `retrieve_context(query, top_k=10)` before calculation |
 | Model repeatedly called `calculate` after a successful calculation | Agent auto-finalizes from deterministic calculation steps and citations, avoiding extra LLM turns and rate-limit exposure |
+| Model repeatedly called `pinned_lookup` for direct table questions | Agent auto-finalizes from the pinned table value plus its `CitationBuilder` row reference; no additional LLM turn is required |
+| Model looped on `retrieve_context` with paraphrased queries on lookup / cross_reference questions until `budget_steps_exhausted` | After `_RETRIEVAL_SATURATION_THRESHOLD` (=2) successful retrieve/graph calls without a deterministic tool firing, the host hands the agent-curated chunks to `AnvilGenerator.synthesize_from_chunks(...)` — same prompt/LLM/citation-enforcement code path as the fixed pipeline, but executed on the chunks the agent itself selected |
 
 These guardrails are not hardcoded answers. They are host-side contract enforcement around typed tools: the model may decide to calculate, but the host normalizes tool arguments, retrieves evidence, executes trusted deterministic code, and assembles the final `AnvilResponse` from calculation-step provenance.
+
+The retrieval-saturation gate is the most recent addition. It directly targets the failure mode that capped the agent at 0/20 lookup and 0/20 cross_reference passes in the 2026-04-26 100-example run: the LLM rephrased its retrieval query 8 times in a row instead of finalizing. The fix preserves agency — the agent still chooses *which* chunks to retrieve via its own tool calls — while delegating *answer assembly* to trusted host code that already has citation enforcement. Regression tests in `tests/unit/test_agent.py` lock in the trigger conditions and the backwards-compat path (no synthesizer attached → previous behavior).
 
 ## Tool surface
 

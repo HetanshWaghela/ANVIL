@@ -32,7 +32,9 @@ as the generator's output.
 from __future__ import annotations
 
 import time
+from collections import OrderedDict
 from dataclasses import dataclass
+from typing import TYPE_CHECKING
 
 from anvil import RetryableGenerationError
 from anvil.generation.agent_backend import AgentBackend
@@ -52,6 +54,10 @@ from anvil.schemas.generation import (
     Citation,
     ResponseConfidence,
 )
+from anvil.schemas.retrieval import RetrievedChunk
+
+if TYPE_CHECKING:
+    from anvil.generation.generator import AnvilGenerator
 
 log = get_logger(__name__)
 
@@ -246,6 +252,78 @@ def _required_float(output: dict[str, object], key: str) -> float:
 # ---------------------------------------------------------------------------
 
 
+# Saturation threshold: after this many retrieve_context+graph_lookup calls
+# without finalizing AND without firing a deterministic tool (pinned_lookup
+# or calculate), the host hands off to the trusted synthesizer. This caps
+# the runaway-retrieval failure mode (transcripts showed 8/8 retrieve calls
+# in a loop on lookup and cross_reference queries) without blocking genuine
+# multi-hop research that legitimately needs more steps.
+_RETRIEVAL_SATURATION_THRESHOLD = 2
+
+
+def _aggregate_retrieved_chunks(steps: list[AgentStep]) -> list[RetrievedChunk]:
+    """Union of every retrieve_context chunk in the transcript.
+
+    Mirrors the deduplication policy in `agent_runner._aggregate_retrieval`
+    so the saturation auto-finalize sees exactly the chunk set that the
+    metric layer will score.
+    """
+    seen: OrderedDict[str, RetrievedChunk] = OrderedDict()
+    for step in steps:
+        if step.call.name != "retrieve_context" or not step.result.ok:
+            continue
+        for raw in step.result.output.get("chunks", []):
+            eid = raw.get("element_id")
+            if not eid or eid in seen:
+                continue
+            seen[eid] = RetrievedChunk(
+                element_id=eid,
+                content=raw.get("content", ""),
+                element_type=raw.get("element_type", "paragraph"),
+                paragraph_ref=raw.get("paragraph_ref"),
+                page_number=int(raw.get("page_number") or 1),
+                score=float(raw.get("score", 0.0)),
+                retrieval_source=raw.get("retrieval_source", "agent"),
+            )
+    return list(seen.values())
+
+
+def _retrieval_saturation_triggered(steps: list[AgentStep]) -> bool:
+    """True when the agent has gathered evidence but is looping on retrieval.
+
+    Conditions:
+      1. ≥ `_RETRIEVAL_SATURATION_THRESHOLD` successful retrieve_context or
+         graph_lookup calls.
+      2. No successful pinned_lookup or calculate calls (those have their
+         own deterministic auto-finalize paths and must not be pre-empted).
+      3. At least one chunk has been gathered.
+
+    The threshold is intentionally low (2). The fixed pipeline does well on
+    these queries with a single retrieval; an agent that has called retrieval
+    twice without finalizing is effectively confused and will benefit from
+    trusted host-side synthesis over the chunks it has already chosen.
+    """
+    n_retrieval_calls = sum(
+        1
+        for s in steps
+        if s.call.name in ("retrieve_context", "graph_lookup") and s.result.ok
+    )
+    if n_retrieval_calls < _RETRIEVAL_SATURATION_THRESHOLD:
+        return False
+    has_deterministic_tool = any(
+        s.call.name in ("pinned_lookup", "calculate") and s.result.ok
+        for s in steps
+    )
+    if has_deterministic_tool:
+        return False
+    return any(
+        s.call.name == "retrieve_context"
+        and s.result.ok
+        and s.result.output.get("chunks")
+        for s in steps
+    )
+
+
 class AnvilAgent:
     """Orchestrate the tool-calling loop."""
 
@@ -254,10 +332,19 @@ class AnvilAgent:
         decider: AgentBackend,
         registry: ToolRegistry,
         budget: AgentBudget | None = None,
+        synthesizer: AnvilGenerator | None = None,
     ) -> None:
         self.decider = decider
         self.registry = registry
         self.budget = budget or AgentBudget()
+        # Optional trusted host-side answer synthesizer. When attached, the
+        # loop falls through to `synthesizer.synthesize_from_chunks(...)`
+        # after retrieval saturation, producing a structured AnvilResponse
+        # with citation enforcement instead of letting the LLM loop until
+        # the step budget is exhausted. Backwards compatible: passing None
+        # preserves the previous "only finalize via LLM or auto-finalize on
+        # pinned/calc" behavior, which existing unit tests depend on.
+        self.synthesizer = synthesizer
 
     async def run(self, query: str) -> AgentOutcome:
         """Execute the loop until finalize, budget exhaustion, or error limit."""
@@ -432,6 +519,46 @@ class AnvilAgent:
                 log.info(
                     "agent.run.auto_finalized_after_calculation",
                     n_steps=len(steps),
+                    confidence=final_response.confidence.value,
+                )
+                break
+            # Retrieval saturation: the agent has gathered evidence but is
+            # looping on retrieval. Hand off to the trusted synthesizer to
+            # produce a structured AnvilResponse with full citation
+            # enforcement, using the chunks the agent itself chose. This is
+            # not a "give up" path — it is the same answer-synthesis code
+            # the fixed pipeline uses, executed over the agent-curated
+            # context. Only triggers when a synthesizer is attached, so the
+            # standalone agent semantics are unchanged for callers that
+            # don't opt in.
+            if (
+                self.synthesizer is not None
+                and call.name in ("retrieve_context", "graph_lookup")
+                and result.ok
+                and _retrieval_saturation_triggered(steps)
+            ):
+                aggregated = _aggregate_retrieved_chunks(steps)
+                log.info(
+                    "agent.run.retrieval_saturation_synthesize",
+                    n_steps=len(steps),
+                    n_chunks=len(aggregated),
+                )
+                synth_outcome = await self.synthesizer.synthesize_from_chunks(
+                    query, aggregated
+                )
+                final_response = synth_outcome.response
+                termination = TerminationReason(
+                    kind="finalized",
+                    detail=(
+                        f"Auto-finalized via host synthesizer after "
+                        f"{len(steps)} tool calls — retrieval saturation "
+                        f"on {len(aggregated)} unique chunks."
+                    ),
+                )
+                log.info(
+                    "agent.run.auto_finalized_after_retrieval_saturation",
+                    n_steps=len(steps),
+                    n_chunks=len(aggregated),
                     confidence=final_response.confidence.value,
                 )
                 break

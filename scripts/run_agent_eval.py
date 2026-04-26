@@ -129,6 +129,14 @@ async def _run_agent(
         decider=decider,
         registry=registry,
         budget=AgentBudget(max_steps=max_steps),
+        # Hand the loop the same fixed-pipeline generator so it can fall
+        # through to the trusted synthesizer when the LLM gets stuck on
+        # retrieval (lookup / cross_reference queries that don't have a
+        # direct pinned answer). The agent still chooses *which* chunks
+        # to retrieve via its own tool calls; the host code only owns
+        # the answer assembly + citation enforcement when the model
+        # cannot finalize on its own.
+        synthesizer=pipeline.generator,
     )
     runner = AgentEvaluationRunner(
         agent=agent,
