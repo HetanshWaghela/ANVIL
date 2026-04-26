@@ -425,5 +425,7 @@ Intentionally scoped gaps:
 
 ## License
 
-MIT. The synthetic standard in `data/synthetic/` is an original work
-inspired by public ASME BPVC conventions; no proprietary content.
+MIT — see [`LICENSE`](LICENSE). The synthetic standard in
+`data/synthetic/` is an original work inspired by public ASME BPVC
+conventions and contains no proprietary content; see [`NOTICE`](NOTICE)
+for details.

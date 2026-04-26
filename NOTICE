@@ -1,0 +1,14 @@
+ANVIL
+Copyright (c) 2026 Hetansh Waghela
+
+This product is licensed under the MIT License (see LICENSE).
+
+------------------------------------------------------------------------
+Note on the synthetic standard
+------------------------------------------------------------------------
+
+SPES-1 (Synthetic Pressure Equipment Standard), located under
+`data/synthetic/`, is an original work inspired by public ASME BPVC
+Section VIII Division 1 conventions. It contains no proprietary content
+from ASME or any other standards body and is distributed here under the
+same MIT license as the rest of the repository.

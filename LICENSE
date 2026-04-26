@@ -19,11 +19,3 @@ AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
 LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
 OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 SOFTWARE.
-
----
-
-Note on the synthetic standard: SPES-1 (Synthetic Pressure Equipment
-Standard) in `data/synthetic/` is an original work inspired by public
-ASME BPVC Section VIII Division 1 conventions. It contains no proprietary
-content from ASME or any other standards body. It is provided here under
-the same MIT license as the rest of the repository.
