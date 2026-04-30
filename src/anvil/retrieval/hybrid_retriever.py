@@ -19,6 +19,13 @@ from anvil.schemas.retrieval import HybridScores, RetrievalQuery, RetrievedChunk
 
 log = get_logger(__name__)
 
+_CODE_REF_PATTERN = (
+    r"(?:[A-Z]{1,5}-\d+(?:\.\d+)?(?:-\d+)?(?:\([a-z0-9]+\))?"
+    r"|[0-9]{1,2}-[0-9]+(?:\.\d+)?(?:\([a-z]\))?)"
+)
+_QUERY_TABLE_REF_RE = re.compile(rf"\bTable\s+({_CODE_REF_PATTERN})\b", re.IGNORECASE)
+_QUERY_PARA_REF_RE = re.compile(rf"\b({_CODE_REF_PATTERN})\b", re.IGNORECASE)
+
 
 def reciprocal_rank_fusion(
     ranked_lists: Sequence[Sequence[str]], k: int = 60
@@ -177,6 +184,8 @@ class HybridRetriever:
         else:
             result = seeds[: query.top_k]
 
+        result = self._promote_exact_reference_matches(query.text, result)
+
         # 5) Element type filter (post)
         if query.element_type_filter:
             etypes = set(query.element_type_filter)
@@ -185,6 +194,52 @@ class HybridRetriever:
         return result
 
     # ---- helpers -----------------------------------------------------------
+
+    def _promote_exact_reference_matches(
+        self, query_text: str, chunks: list[RetrievedChunk]
+    ) -> list[RetrievedChunk]:
+        """Promote elements whose canonical ref is explicitly named in the query.
+
+        Hybrid lexical/vector search can rank a nearby heading above the exact
+        table or paragraph mentioned by the user. In standards retrieval,
+        explicit references such as "Table UW-12" and "UG-27" are high-precision
+        identifiers, so they should be honored before softer semantic signals.
+        """
+        table_refs = {m.group(1).upper() for m in _QUERY_TABLE_REF_RE.finditer(query_text)}
+        para_refs = {m.group(1).upper() for m in _QUERY_PARA_REF_RE.finditer(query_text)}
+        if not table_refs and not para_refs:
+            return chunks
+
+        existing = {chunk.element_id for chunk in chunks}
+        promoted: list[RetrievedChunk] = []
+        seen: set[str] = set()
+        max_score = max((chunk.score for chunk in chunks), default=1.0)
+
+        for el in self.elements:
+            if not (el.table and el.table.table_id.upper() in table_refs):
+                continue
+            chunk = self._element_to_chunk(el, score=max(max_score, 1.0), source="exact_ref")
+            promoted.append(chunk)
+            seen.add(chunk.element_id)
+
+        for el in self.elements:
+            is_exact_section = (
+                el.element_type.value == "section"
+                and el.paragraph_ref is not None
+                and el.paragraph_ref.upper() in para_refs
+            )
+            if not is_exact_section or el.element_id in seen:
+                continue
+            chunk = self._element_to_chunk(el, score=max(max_score, 1.0), source="exact_ref")
+            promoted.append(chunk)
+            seen.add(chunk.element_id)
+
+        for chunk in chunks:
+            if chunk.element_id in seen:
+                continue
+            if chunk.element_id in existing:
+                promoted.append(chunk)
+        return promoted
 
     @staticmethod
     def _element_text(el: DocumentElement) -> str:

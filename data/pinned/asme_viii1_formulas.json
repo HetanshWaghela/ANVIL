@@ -1,0 +1,152 @@
+[
+  {
+    "paragraph_ref": "UG-27(c)(1)",
+    "title": "Circumferential Stress (Longitudinal Joints) — Inside Radius",
+    "formula_latex": "t = \\frac{P \\times R}{S \\times E - 0.6 \\times P}",
+    "formula_text": "t = (P × R) / (S × E − 0.6 × P)",
+    "variables": {
+      "t": "minimum required thickness of shell (mm)",
+      "P": "internal design pressure (MPa)",
+      "R": "inside radius of shell (mm)",
+      "S": "maximum allowable stress value (MPa) per Table UCS-23 at design temperature",
+      "E": "joint efficiency per Table UW-12"
+    },
+    "applicability": "When t does not exceed one-half of the inside radius, or P does not exceed 0.385 × S × E",
+    "source": "ASME BPVC Section VIII Division 1, UG-27(c)(1)"
+  },
+  {
+    "paragraph_ref": "UG-27(c)(2)",
+    "title": "Longitudinal Stress (Circumferential Joints) — Inside Radius",
+    "formula_latex": "t = \\frac{P \\times R}{2 \\times S \\times E + 0.4 \\times P}",
+    "formula_text": "t = (P × R) / (2 × S × E + 0.4 × P)",
+    "variables": {
+      "t": "minimum required thickness of shell (mm)",
+      "P": "internal design pressure (MPa)",
+      "R": "inside radius of shell (mm)",
+      "S": "maximum allowable stress value (MPa)",
+      "E": "joint efficiency for circumferential joint per Table UW-12"
+    },
+    "applicability": "When t does not exceed one-half of the inside radius, or P does not exceed 1.25 × S × E",
+    "source": "ASME BPVC Section VIII Division 1, UG-27(c)(2)"
+  },
+  {
+    "paragraph_ref": "UG-27(c)(2)-alt",
+    "title": "Circumferential Stress — Outside Radius",
+    "formula_latex": "t = \\frac{P \\times R_o}{S \\times E + 0.4 \\times P}",
+    "formula_text": "t = (P × Ro) / (S × E + 0.4 × P)",
+    "variables": {
+      "t": "minimum required thickness of shell (mm)",
+      "P": "internal design pressure (MPa)",
+      "Ro": "outside radius of shell (mm)",
+      "S": "maximum allowable stress value (MPa)",
+      "E": "joint efficiency per Table UW-12"
+    },
+    "applicability": "Alternative form using outside radius",
+    "source": "ASME BPVC Section VIII Division 1, UG-27(c)(2)"
+  },
+  {
+    "paragraph_ref": "UG-27(d)",
+    "title": "Spherical Shells",
+    "formula_latex": "t = \\frac{P \\times R}{2 \\times S \\times E - 0.2 \\times P}",
+    "formula_text": "t = (P × R) / (2 × S × E − 0.2 × P)",
+    "variables": {
+      "t": "minimum required thickness of shell (mm)",
+      "P": "internal design pressure (MPa)",
+      "R": "inside radius of sphere (mm)",
+      "S": "maximum allowable stress value (MPa)",
+      "E": "joint efficiency per Table UW-12"
+    },
+    "applicability": "When t does not exceed 0.356R, or P does not exceed 0.665 × S × E",
+    "source": "ASME BPVC Section VIII Division 1, UG-27(d)"
+  },
+  {
+    "paragraph_ref": "UG-32(c)",
+    "title": "Ellipsoidal Heads — Pressure on Concave Side",
+    "formula_latex": "t = \\frac{P \\times D}{2 \\times S \\times E - 0.2 \\times P}",
+    "formula_text": "t = (P × D) / (2 × S × E − 0.2 × P)",
+    "variables": {
+      "t": "minimum required thickness of head after forming (mm)",
+      "P": "internal design pressure (MPa)",
+      "D": "inside diameter of the head skirt (mm)",
+      "S": "maximum allowable stress value (MPa)",
+      "E": "lowest joint efficiency per Table UW-12 of any Category A joint in the head"
+    },
+    "applicability": "For 2:1 semi-ellipsoidal heads where ts/L ≥ 0.002. An acceptable approximation of a 2:1 ellipsoidal head is one with a knuckle radius of 0.17D and a spherical radius of 0.90D.",
+    "source": "ASME BPVC Section VIII Division 1, UG-32(c)"
+  },
+  {
+    "paragraph_ref": "UG-32(d)",
+    "title": "Torispherical Heads — Pressure on Concave Side",
+    "formula_latex": "t = \\frac{0.885 \\times P \\times L}{S \\times E - 0.1 \\times P}",
+    "formula_text": "t = (0.885 × P × L) / (S × E − 0.1 × P)",
+    "variables": {
+      "t": "minimum required thickness of head after forming (mm)",
+      "P": "internal design pressure (MPa)",
+      "L": "inside spherical or crown radius (mm)",
+      "S": "maximum allowable stress value (MPa)",
+      "E": "lowest joint efficiency per Table UW-12 of any Category A joint in the head"
+    },
+    "applicability": "For torispherical heads where ts/L ≥ 0.002 and the knuckle radius is 6% of the inside crown radius",
+    "source": "ASME BPVC Section VIII Division 1, UG-32(d)"
+  },
+  {
+    "paragraph_ref": "UG-32(e)",
+    "title": "Hemispherical Heads — Pressure on Concave Side",
+    "formula_latex": "t = \\frac{P \\times L}{2 \\times S \\times E - 0.2 \\times P}",
+    "formula_text": "t = (P × L) / (2 × S × E − 0.2 × P)",
+    "variables": {
+      "t": "minimum required thickness of head after forming (mm)",
+      "P": "internal design pressure (MPa)",
+      "L": "inside spherical radius (mm)",
+      "S": "maximum allowable stress value (MPa)",
+      "E": "joint efficiency per Table UW-12"
+    },
+    "applicability": "When t does not exceed 0.356L, or P does not exceed 0.665 × S × E",
+    "source": "ASME BPVC Section VIII Division 1, UG-32(e)"
+  },
+  {
+    "paragraph_ref": "UG-34(c)(2)",
+    "title": "Unstayed Flat Heads and Covers — Circular",
+    "formula_latex": "t = d \\sqrt{\\frac{C \\times P}{S \\times E}}",
+    "formula_text": "t = d × √(C × P / (S × E))",
+    "variables": {
+      "t": "minimum required thickness of flat head or cover (mm)",
+      "d": "diameter or short span, measured per UG-34(d) (mm)",
+      "C": "factor depending on the method of attachment, from UG-34 Table",
+      "P": "internal design pressure (MPa)",
+      "S": "maximum allowable stress value (MPa)",
+      "E": "joint efficiency per Table UW-12 (for welded heads)"
+    },
+    "applicability": "For circular flat heads and covers attached by various methods per UG-34(c)(2)",
+    "source": "ASME BPVC Section VIII Division 1, UG-34(c)(2)"
+  },
+  {
+    "paragraph_ref": "UG-37",
+    "title": "Nozzle Reinforcement — Area Replacement Method",
+    "formula_latex": "A_{required} = d \\times t_r \\times F",
+    "formula_text": "A_required = d × tr × F",
+    "variables": {
+      "A_required": "total cross-sectional area of reinforcement required (mm²)",
+      "d": "finished diameter of the opening in its corroded condition (mm)",
+      "tr": "required thickness of the shell or head, computed by the applicable formula (mm)",
+      "F": "correction factor, normally 1.0 for nozzles on the axis"
+    },
+    "applicability": "Openings in shells and heads shall be reinforced when the area replacement method demonstrates that available reinforcement area ≥ required area. Available area comes from excess shell thickness, nozzle wall thickness, and added pads per UG-40.",
+    "source": "ASME BPVC Section VIII Division 1, UG-37"
+  },
+  {
+    "paragraph_ref": "MAWP-UG-27(c)(1)",
+    "title": "Maximum Allowable Working Pressure — Cylindrical Shell (Inside Radius)",
+    "formula_latex": "P = \\frac{S \\times E \\times t}{R + 0.6 \\times t}",
+    "formula_text": "P = (S × E × t) / (R + 0.6 × t)",
+    "variables": {
+      "P": "maximum allowable working pressure (MPa)",
+      "S": "maximum allowable stress value at design temperature (MPa)",
+      "E": "joint efficiency per Table UW-12",
+      "t": "nominal thickness minus corrosion allowance (mm)",
+      "R": "inside radius (mm)"
+    },
+    "applicability": "Back-calculation of MAWP from UG-27(c)(1) formula, using corroded thickness",
+    "source": "ASME BPVC Section VIII Division 1, UG-27(c)(1) rearranged"
+  }
+]

@@ -1,0 +1,793 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>ANVIL - Local Demo</title>
+<style>
+*{box-sizing:border-box;margin:0;padding:0}
+body{font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Helvetica,Arial,sans-serif;
+  color:#111;background:#fff;font-size:14px;line-height:1.5}
+a{color:#111;text-decoration:underline}
+code,pre,.mono{font-family:"SF Mono",SFMono-Regular,Consolas,"Liberation Mono",Menlo,monospace;font-size:13px}
+pre{background:#f6f6f6;border:1px solid #ddd;padding:10px;overflow-x:auto;white-space:pre-wrap}
+
+/* Nav */
+.topnav{display:flex;border-bottom:2px solid #111;padding:0;align-items:stretch}
+.topnav .brand{font-weight:700;font-size:16px;padding:10px 16px;border-right:1px solid #ccc;letter-spacing:1px}
+.topnav button{background:none;border:none;border-right:1px solid #ccc;padding:10px 20px;
+  cursor:pointer;font-size:14px;color:#555;font-weight:500;transition:background .1s}
+.topnav button:hover{background:#f0f0f0}
+.topnav button.active{color:#111;font-weight:700;border-bottom:2px solid #111;margin-bottom:-2px}
+.topnav .status-dot{display:inline-block;width:8px;height:8px;border-radius:50%;margin-left:10px;
+  vertical-align:middle;background:#bbb}
+.topnav .status-dot.ok{background:#2a2}
+.topnav .status-dot.degraded{background:#c80}
+
+/* Layout */
+.container{max-width:1100px;margin:0 auto;padding:20px}
+.tab-content{display:none}
+.tab-content.active{display:block}
+h2{font-size:18px;margin:20px 0 10px;border-bottom:1px solid #ccc;padding-bottom:4px}
+h3{font-size:15px;margin:14px 0 6px}
+.section{margin-bottom:24px}
+
+/* Tables */
+table{border-collapse:collapse;width:100%;margin:8px 0}
+th,td{border:1px solid #ccc;padding:5px 8px;text-align:left;font-size:13px}
+th{background:#f4f4f4;font-weight:600}
+tr:hover{background:#fafafa}
+
+/* Buttons */
+.btn{background:#111;color:#fff;border:1px solid #111;padding:6px 16px;cursor:pointer;
+  font-size:13px;font-weight:500;transition:background .15s}
+.btn:hover{background:#333}
+.btn:disabled{background:#888;border-color:#888;cursor:not-allowed}
+.btn-outline{background:#fff;color:#111;border:1px solid #111}
+.btn-outline:hover{background:#f0f0f0}
+.btn-sm{padding:4px 10px;font-size:12px}
+
+/* Cards */
+.card{border:1px solid #ccc;padding:14px;margin:8px 0}
+.card-title{font-weight:600;margin-bottom:6px}
+
+/* Collapsible */
+details{border:1px solid #ddd;margin:6px 0;padding:0}
+details>summary{padding:8px 12px;cursor:pointer;font-weight:500;background:#fafafa;
+  border-bottom:1px solid #ddd;user-select:none;font-size:13px}
+details[open]>summary{border-bottom:1px solid #ccc}
+details>.detail-body{padding:10px 12px}
+
+/* Forms */
+input[type=file]{margin:6px 0}
+select{border:1px solid #ccc;padding:4px 8px;font-size:13px}
+
+/* Status */
+.loading{color:#666;font-style:italic}
+.error{color:#a00;font-weight:500}
+.success{color:#060;font-weight:500}
+.badge{display:inline-block;padding:2px 8px;font-size:11px;font-weight:600;border:1px solid #999;margin:0 4px}
+.badge-high{border-color:#2a2;color:#2a2}
+.badge-medium{border-color:#c80;color:#c80}
+.badge-insufficient{border-color:#a00;color:#a00}
+
+/* Filter bar */
+.filter-bar{display:flex;gap:10px;align-items:center;margin:8px 0;flex-wrap:wrap}
+.filter-bar label{font-weight:500;font-size:13px}
+
+/* Pipeline */
+.pipeline-step{display:flex;align-items:flex-start;margin:12px 0;gap:14px}
+.step-num{width:32px;height:32px;border:2px solid #111;display:flex;align-items:center;
+  justify-content:center;font-weight:700;font-size:14px;flex-shrink:0}
+.step-body h3{margin:0 0 2px;font-size:14px}
+.step-body p{margin:0;color:#444;font-size:13px}
+.step-arrow{text-align:center;color:#999;font-size:18px;margin:2px 0 2px 10px}
+.info-box{background:#f8f8f8;border:1px solid #ddd;padding:10px 14px;margin:10px 0;font-size:13px}
+
+/* Query buttons */
+.query-grid{display:grid;grid-template-columns:1fr 1fr;gap:8px;margin:10px 0}
+.query-btn{text-align:left;padding:10px 14px;border:1px solid #ccc;background:#fff;
+  cursor:pointer;font-size:13px;transition:border-color .15s}
+.query-btn:hover{border-color:#111}
+.query-btn .qlabel{font-size:11px;color:#666;margin-bottom:4px;font-weight:600;text-transform:uppercase}
+.query-btn .qtext{color:#111}
+.query-btn:disabled{opacity:.5;cursor:not-allowed}
+
+/* Results area */
+.result-section{border:1px solid #ccc;margin:12px 0;padding:14px}
+.result-section h3{margin:0 0 8px;font-size:14px}
+.kv-row{display:flex;gap:10px;margin:2px 0;font-size:13px}
+.kv-row .kv-key{font-weight:600;min-width:140px;color:#555}
+.kv-row .kv-val{color:#111}
+</style>
+</head>
+<body>
+
+<!-- Top Navigation -->
+<nav class="topnav">
+  <span class="brand">ANVIL</span>
+  <button class="active" onclick="showTab('upload')">Upload &amp; Parse</button>
+  <button onclick="showTab('pinned')">Pinned Tables</button>
+  <button onclick="showTab('query')">Query Demo</button>
+  <button onclick="showTab('pipeline')">Pipeline</button>
+  <span class="status-dot" id="statusDot" title="Checking backend..."></span>
+</nav>
+
+<div class="container">
+
+<!-- ==================== UPLOAD TAB ==================== -->
+<div id="tab-upload" class="tab-content active">
+  <h2>Upload &amp; Parse</h2>
+
+  <div class="section">
+    <div style="display:flex;gap:12px;align-items:center;flex-wrap:wrap">
+      <button class="btn" onclick="loadSpes1()" id="btnSpes1">Load SPES-1 (synthetic standard)</button>
+      <span style="color:#888">or</span>
+      <input type="file" id="pdfInput" accept=".pdf">
+      <button class="btn btn-outline" onclick="uploadPdf()" id="btnUpload">Upload PDF</button>
+    </div>
+    <div id="uploadStatus" style="margin-top:8px"></div>
+  </div>
+
+  <div id="corpusInfo" style="display:none">
+    <h3>Corpus Stats</h3>
+    <table id="statsTable"><tbody></tbody></table>
+
+    <h3>Elements</h3>
+    <div class="filter-bar">
+      <label>Type:</label>
+      <select id="elTypeFilter" onchange="loadElements()">
+        <option value="">All</option>
+        <option value="section">section</option>
+        <option value="table">table</option>
+        <option value="formula">formula</option>
+        <option value="paragraph">paragraph</option>
+        <option value="definition">definition</option>
+        <option value="condition">condition</option>
+        <option value="note">note</option>
+      </select>
+      <label>Search:</label>
+      <input type="text" id="elSearch" placeholder="keyword" style="border:1px solid #ccc;padding:4px 8px;font-size:13px" onkeydown="if(event.key==='Enter')loadElements()">
+      <button class="btn btn-sm" onclick="loadElements()">Filter</button>
+    </div>
+    <div id="elementsContainer"></div>
+
+    <details>
+      <summary>Extracted Tables</summary>
+      <div class="detail-body" id="tablesContainer"><span class="loading">Loading...</span></div>
+    </details>
+
+    <details>
+      <summary>Knowledge Graph Edges</summary>
+      <div class="detail-body" id="graphContainer"><span class="loading">Loading...</span></div>
+    </details>
+  </div>
+</div>
+
+<!-- ==================== PINNED TAB ==================== -->
+<div id="tab-pinned" class="tab-content">
+  <h2>Pinned Tables</h2>
+  <div class="info-box">
+    <strong>Pinned data</strong> means critical engineering values are stored as verified structured data
+    instead of being extracted by the LLM at answer time. Hallucinated material properties are the
+    highest-risk failure mode in engineering AI. By pinning these values, the system uses deterministic
+    lookups for calculations and refuses rather than guessing when data is missing.
+  </div>
+
+  <h3>Materials (Table M-1)</h3>
+  <div id="materialsListContainer"><span class="loading">Loading...</span></div>
+
+  <div id="materialDetailContainer" style="display:none">
+    <h3 id="materialDetailTitle">Material Detail</h3>
+    <div id="materialDetail"></div>
+  </div>
+
+  <h3>Joint Efficiency (Table B-12)</h3>
+  <div id="jointEffContainer"><span class="loading">Loading...</span></div>
+
+  <div class="info-box" style="margin-top:16px">
+    <strong>Why pinned?</strong> Allowable stress S is always temperature-dependent.
+    Joint efficiency E depends on both weld type and radiographic examination extent.
+    Using incorrect values in a wall thickness calculation produces a structurally unsafe design.
+    These tables are verified against the synthetic SPES-1 standard and locked in code.
+    The RAG pipeline retrieves the same data for citation context, but the calculation engine
+    always sources numerical values from pinned tables, never from LLM extraction.
+  </div>
+</div>
+
+<!-- ==================== QUERY TAB ==================== -->
+<div id="tab-query" class="tab-content">
+  <h2>Query Demo</h2>
+  <div id="queryBackendStatus"></div>
+
+  <div id="queryCorpusSelect" style="margin:10px 0">
+    <label style="font-weight:500">Active corpus:</label>
+    <select id="corpusSelect" onchange="loadQuerySuggestions()" style="border:1px solid #ccc;padding:4px 8px">
+      <option value="">None loaded</option>
+    </select>
+  </div>
+
+  <div class="info-box" id="queryFraming" style="display:none"></div>
+
+  <h3>Demo Queries</h3>
+  <div id="querySuggestions" class="query-grid"></div>
+
+  <div style="margin:14px 0">
+    <label style="font-weight:500">Custom query:</label>
+    <div style="display:flex;gap:8px;margin-top:4px">
+      <input type="text" id="customQuery" placeholder="Enter your query..."
+        style="flex:1;border:1px solid #ccc;padding:6px 10px;font-size:13px"
+        onkeydown="if(event.key==='Enter')runCustomQuery()">
+      <button class="btn" onclick="runCustomQuery()" id="btnRunQuery">Run</button>
+    </div>
+  </div>
+
+  <div id="queryResult" style="display:none">
+    <h3>Result</h3>
+    <div id="queryResultContent"></div>
+  </div>
+</div>
+
+<!-- ==================== PIPELINE TAB ==================== -->
+<div id="tab-pipeline" class="tab-content">
+  <h2>Pipeline Explainer</h2>
+  <p style="color:#555;margin-bottom:16px">
+    How ANVIL processes a query end-to-end. Each step is transparent and auditable.
+  </p>
+
+  <div class="pipeline-step"><div class="step-num">1</div><div class="step-body">
+    <h3>Parse</h3>
+    <p>PDF or Markdown source is parsed into typed <code>DocumentElement</code> objects:
+    sections, tables, formulas, definitions, conditions. Each element has a stable ID,
+    paragraph reference (e.g. A-27), and page number.</p>
+  </div></div>
+  <div class="step-arrow">&darr;</div>
+
+  <div class="pipeline-step"><div class="step-num">2</div><div class="step-body">
+    <h3>Index</h3>
+    <p>Parsed elements are indexed three ways: BM25 for keyword matching, vector embeddings
+    for semantic similarity, and a typed knowledge graph (NetworkX) encoding contains/references/requires
+    relationships between sections, tables, and formulas.</p>
+  </div></div>
+  <div class="step-arrow">&darr;</div>
+
+  <div class="pipeline-step"><div class="step-num">3</div><div class="step-body">
+    <h3>Retrieve</h3>
+    <p>A query triggers hybrid retrieval: BM25 + vector search are fused via Reciprocal Rank Fusion (RRF),
+    then graph expansion pulls in structurally related elements (e.g. if A-27 is retrieved, Table M-1
+    and Table B-12 follow via REQUIRES edges). Result: ranked evidence with provenance.</p>
+  </div></div>
+  <div class="step-arrow">&darr;</div>
+
+  <div class="pipeline-step"><div class="step-num">4</div><div class="step-body">
+    <h3>Pin</h3>
+    <p>Critical numerical values &mdash; allowable stress (Table M-1) and joint efficiency (Table B-12) &mdash;
+    come from verified pinned tables, not model memory or RAG extraction. The calculation engine
+    uses Decimal-backed arithmetic on these values. If a value is missing, the system refuses.</p>
+  </div></div>
+  <div class="step-arrow">&darr;</div>
+
+  <div class="pipeline-step"><div class="step-num">5</div><div class="step-body">
+    <h3>Calculate</h3>
+    <p>Deterministic formulas compute engineering results (e.g. minimum wall thickness per A-27).
+    Every input, its source, the formula, and the result are recorded as <code>CalculationStep</code>
+    objects with full provenance. The LLM never does arithmetic.</p>
+  </div></div>
+  <div class="step-arrow">&darr;</div>
+
+  <div class="pipeline-step"><div class="step-num">6</div><div class="step-body">
+    <h3>Generate</h3>
+    <p>The LLM receives the retrieved evidence and pre-computed calculation results.
+    It produces a structured <code>AnvilResponse</code> with citations, confidence tier,
+    and explanation. Calculation steps are injected by trusted host code, not generated by the model.</p>
+  </div></div>
+  <div class="step-arrow">&darr;</div>
+
+  <div class="pipeline-step"><div class="step-num">7</div><div class="step-body">
+    <h3>Validate</h3>
+    <p>The citation enforcer checks every quoted_text against the parsed source document.
+    If a citation cannot be verified (source element missing, quote not found, paragraph mismatch),
+    confidence is downgraded. No ungrounded claims pass through.</p>
+  </div></div>
+  <div class="step-arrow">&darr;</div>
+
+  <div class="pipeline-step"><div class="step-num">8</div><div class="step-body">
+    <h3>Refuse</h3>
+    <p>If evidence is insufficient, material data is missing, temperature is out of range,
+    or the query is out-of-domain, the system returns a structured refusal with a clear reason
+    instead of guessing. This is a feature, not a limitation.</p>
+  </div></div>
+
+  <div class="info-box" style="margin-top:20px">
+    <strong>Interview context:</strong><br>
+    &bull; <strong>SPES-1 (synthetic standard)</strong>: full calculation pipeline works end-to-end with pinned tables and deterministic formulas.<br>
+    &bull; <strong>Uploaded real ASME PDF</strong>: parser, retriever, graph onboarding work. Retrieval and citation demos are functional.<br>
+    &bull; <strong>Real ASME deterministic calculation</strong> requires validated pinned tables, formula tools, and private golden evals &mdash; that is ongoing engineering work, not a limitation of the architecture.
+  </div>
+
+  <h2 style="margin-top:32px">Pinned Tables: What, Why, and How</h2>
+  <p style="color:#555;margin-bottom:16px">
+    Pinned tables are the most safety-critical design decision in the system.
+    This section explains the reasoning for an interviewer.
+  </p>
+
+  <div class="card" style="margin-bottom:12px">
+    <div class="card-title">What gets pinned?</div>
+    <p>Data that meets <em>all three</em> criteria:</p>
+    <p style="margin:6px 0"><strong>1. Safety-critical numerical values</strong> &mdash; values that enter a calculation formula where an error produces a structurally unsafe design. Allowable stress S (temperature-dependent), joint efficiency E (depends on weld type + examination extent), material yield/tensile strengths.</p>
+    <p style="margin:6px 0"><strong>2. Structured tabular form</strong> &mdash; the data exists as a finite lookup table in the standard, not as free-text prose. Table M-1 (materials), Table B-12 (joint efficiencies), Table UG-43 (pipe threads).</p>
+    <p style="margin:6px 0"><strong>3. Used by deterministic formulas</strong> &mdash; the value is an input to a host-code calculation (e.g. wall thickness per UG-27/A-27) where the LLM must <em>never</em> do the arithmetic.</p>
+  </div>
+
+  <div class="card" style="margin-bottom:12px">
+    <div class="card-title">What does NOT get pinned?</div>
+    <p style="margin:6px 0"><strong>Prose requirements</strong> &mdash; "Vessels designed for external pressure shall also satisfy UG-28." This is retrieved by the RAG pipeline and cited. No numerical lookup needed.</p>
+    <p style="margin:6px 0"><strong>Qualitative rules</strong> &mdash; "Impact testing is required when the minimum design metal temperature is below &minus;29&deg;C." The LLM explains the rule from retrieved context; no calculation.</p>
+    <p style="margin:6px 0"><strong>Design guidance</strong> &mdash; "Nozzle reinforcement shall be provided per UG-37." The formula tools handle reinforcement calculations using pinned values, but the guidance text itself is retrieved normally.</p>
+  </div>
+
+  <div class="card" style="margin-bottom:12px">
+    <div class="card-title">Onboarding process after PDF upload</div>
+    <p>When a new standard PDF is uploaded, the system works in two modes:</p>
+    <p style="margin:8px 0"><strong>Immediate (automatic):</strong> Parse &rarr; Index &rarr; Retrieve &rarr; Generate. All retrieval, citation, and prose-based Q&amp;A works out of the box. The demo shows this today.</p>
+    <p style="margin:8px 0"><strong>Engineering effort (manual):</strong> To enable deterministic calculations for a new standard, an engineer must:</p>
+    <ol style="margin:6px 0 6px 20px;font-size:13px">
+      <li><strong>Extract &amp; validate</strong> the material property tables from the standard. Cross-check against the published errata and addenda.</li>
+      <li><strong>Create typed Pydantic models</strong> for each pinned table (like <code>MaterialSpec</code>, <code>JointEfficiency</code>). Each row is a structured record with typed fields.</li>
+      <li><strong>Write deterministic formula tools</strong> (like <code>wall_thickness_cylindrical</code>) that use Decimal arithmetic, accept pinned values as inputs, and return <code>CalculationStep</code> objects with full provenance.</li>
+      <li><strong>Build a golden evaluation dataset</strong> with known-correct answers for calculation queries, so every pinned value and formula can be regression-tested.</li>
+      <li><strong>Register the standard</strong> in the pinned data module so the calculation engine can discover and use the new tables.</li>
+    </ol>
+    <p style="margin:8px 0;color:#555;font-size:13px">This is engineering maturity, not a limitation. Each standard requires ~2&ndash;4 weeks of validated data entry + testing. The architecture handles it; the data curation is the gating factor.</p>
+  </div>
+
+  <div class="card" style="margin-bottom:12px">
+    <div class="card-title">Why not just let the LLM extract table values?</div>
+    <p style="margin:6px 0">Because the failure mode is invisible and catastrophic. An LLM that hallucinates allowable stress S = 138 MPa instead of the correct 114 MPa at 350&deg;C for SM-516 Gr 70 will produce a wall thickness calculation that <em>looks correct</em> but results in a vessel designed 17% thinner than required. No amount of prompt engineering prevents this &mdash; the model has no concept of what a "right" stress value is for a temperature it hasn't memorized.</p>
+    <p style="margin:6px 0">Pinned tables make this failure mode <strong>impossible by construction</strong>: the LLM never sees the raw numbers until they're already validated and injected by host code.</p>
+  </div>
+</div>
+
+</div><!-- /container -->
+
+<script>
+const API = '';
+let currentCorpusId = null;
+let healthData = null;
+
+// ---- Tab switching --------------------------------------------------------
+function showTab(name) {
+  document.querySelectorAll('.tab-content').forEach(el => el.classList.remove('active'));
+  document.querySelectorAll('.topnav button').forEach(el => el.classList.remove('active'));
+  document.getElementById('tab-' + name).classList.add('active');
+  // Find the button by text content
+  document.querySelectorAll('.topnav button').forEach(btn => {
+    const map = {'upload':'Upload','pinned':'Pinned','query':'Query','pipeline':'Pipeline'};
+    if (btn.textContent.includes(map[name])) btn.classList.add('active');
+  });
+  if (name === 'pinned') loadPinnedData();
+  if (name === 'query') { refreshCorpusSelect(); loadQuerySuggestions(); }
+}
+
+// ---- Health check ---------------------------------------------------------
+async function checkHealth() {
+  const dot = document.getElementById('statusDot');
+  try {
+    const r = await fetch(API + '/demo/health');
+    healthData = await r.json();
+    dot.className = 'status-dot ' + (healthData.real_backend_configured ? 'ok' : 'degraded');
+    dot.title = healthData.real_backend_configured
+      ? `Backend: ${healthData.backend} | Model: ${healthData.model}`
+      : `Degraded: ${healthData.missing.join('; ')}`;
+    updateQueryBackendStatus();
+  } catch(e) {
+    dot.className = 'status-dot';
+    dot.title = 'Cannot reach backend';
+  }
+}
+
+function updateQueryBackendStatus() {
+  const el = document.getElementById('queryBackendStatus');
+  if (!healthData) { el.innerHTML = '<span class="loading">Checking backend...</span>'; return; }
+  if (healthData.real_backend_configured) {
+    el.innerHTML = `<div class="info-box success">Backend: <strong>${healthData.backend}</strong> | Model: <strong>${healthData.model}</strong> | Embedder: <strong>${healthData.embedder}</strong></div>`;
+  } else {
+    el.innerHTML = `<div class="info-box error">Real backend not configured. ${healthData.missing.join(' ')}. Queries will fail.</div>`;
+  }
+}
+
+// ---- SPES-1 Load ----------------------------------------------------------
+async function loadSpes1() {
+  const btn = document.getElementById('btnSpes1');
+  const status = document.getElementById('uploadStatus');
+  btn.disabled = true;
+  status.innerHTML = '<span class="loading">Loading SPES-1 standard (parsing + indexing)...</span>';
+  try {
+    const r = await fetch(API + '/demo/load-spes1', {method:'POST'});
+    if (!r.ok) throw new Error((await r.json()).detail || r.statusText);
+    const data = await r.json();
+    currentCorpusId = data.corpus_id;
+    status.innerHTML = `<span class="success">SPES-1 loaded (corpus: ${data.corpus_id})${data.already_loaded ? ' [cached]' : ''}</span>`;
+    showCorpusInfo(data.stats);
+    refreshCorpusSelect();
+  } catch(e) {
+    status.innerHTML = `<span class="error">Error: ${e.message}</span>`;
+  }
+  btn.disabled = false;
+}
+
+// ---- PDF Upload -----------------------------------------------------------
+async function uploadPdf() {
+  const input = document.getElementById('pdfInput');
+  const btn = document.getElementById('btnUpload');
+  const status = document.getElementById('uploadStatus');
+  if (!input.files || !input.files[0]) { status.innerHTML = '<span class="error">Select a PDF file first.</span>'; return; }
+  btn.disabled = true;
+  status.innerHTML = '<span class="loading">Uploading and parsing PDF...</span>';
+  const fd = new FormData();
+  fd.append('file', input.files[0]);
+  try {
+    const r = await fetch(API + '/demo/upload', {method:'POST', body:fd});
+    if (!r.ok) throw new Error((await r.json()).detail || r.statusText);
+    const data = await r.json();
+    currentCorpusId = data.corpus_id;
+    status.innerHTML = `<span class="success">Parsed (corpus: ${data.corpus_id})</span>`;
+    showCorpusInfo(data.stats);
+    refreshCorpusSelect();
+  } catch(e) {
+    status.innerHTML = `<span class="error">Error: ${e.message}</span>`;
+  }
+  btn.disabled = false;
+}
+
+// ---- Corpus info display --------------------------------------------------
+function showCorpusInfo(stats) {
+  document.getElementById('corpusInfo').style.display = 'block';
+  const rows = [
+    ['Filename', stats.filename],
+    ['File size', formatBytes(stats.file_size)],
+    ['Page count', stats.page_count ?? 'N/A'],
+    ['Markdown chars', stats.md_chars.toLocaleString()],
+    ['Markdown lines', stats.md_lines.toLocaleString()],
+    ['DocumentElements', stats.num_elements],
+    ['Type breakdown', Object.entries(stats.type_counts).map(([k,v])=>`${k}: ${v}`).join(', ')],
+    ['Tables', stats.num_tables],
+    ['Formulas', stats.num_formulas],
+    ['Graph nodes', stats.num_graph_nodes],
+    ['Graph edges', stats.num_graph_edges],
+    ['Paragraph refs', stats.num_paragraph_refs],
+    ['Duplicate IDs', stats.duplicate_id_count],
+  ];
+  if (stats.preindexed_source)
+    rows.push(['Pre-indexed source', stats.preindexed_source]);
+  if (stats.already_loaded !== undefined)
+    rows.push(['Already loaded', stats.already_loaded ? 'yes' : 'no']);
+  if (stats.warnings && stats.warnings.length)
+    rows.push(['Warnings', stats.warnings.join('; ')]);
+  document.getElementById('statsTable').querySelector('tbody').innerHTML =
+    rows.map(([k,v]) => `<tr><th>${k}</th><td>${v}</td></tr>`).join('');
+  loadElements();
+  loadTables();
+  loadGraph();
+}
+
+function formatBytes(b) {
+  if (b < 1024) return b + ' B';
+  if (b < 1048576) return (b/1024).toFixed(1) + ' KB';
+  return (b/1048576).toFixed(1) + ' MB';
+}
+
+// ---- Elements browser -----------------------------------------------------
+async function loadElements() {
+  const c = document.getElementById('elementsContainer');
+  c.innerHTML = '<span class="loading">Loading...</span>';
+  const type = document.getElementById('elTypeFilter').value;
+  const q = document.getElementById('elSearch').value;
+  let url = API + `/demo/corpus/elements?limit=40`;
+  if (currentCorpusId) url += `&corpus_id=${currentCorpusId}`;
+  if (type) url += `&type=${type}`;
+  if (q) url += `&q=${encodeURIComponent(q)}`;
+  try {
+    const r = await fetch(url);
+    if (!r.ok) throw new Error((await r.json()).detail || r.statusText);
+    const els = await r.json();
+    if (!els.length) { c.innerHTML = '<em>No elements found.</em>'; return; }
+    c.innerHTML = els.map(el => `
+      <details>
+        <summary>
+          <span class="badge">${el.element_type}</span>
+          <strong>${el.paragraph_ref || ''}</strong> ${el.title || el.element_id}
+          <span style="color:#888;font-size:11px">(p.${el.page_number})</span>
+        </summary>
+        <div class="detail-body">
+          <div class="kv-row"><span class="kv-key">ID</span><span class="kv-val mono">${el.element_id}</span></div>
+          <div class="kv-row"><span class="kv-key">Parent</span><span class="kv-val mono">${el.parent_id||'—'}</span></div>
+          <div class="kv-row"><span class="kv-key">Cross-refs</span><span class="kv-val">${el.num_cross_refs}</span></div>
+          <div class="kv-row"><span class="kv-key">Has table</span><span class="kv-val">${el.has_table}</span></div>
+          <div class="kv-row"><span class="kv-key">Has formula</span><span class="kv-val">${el.has_formula}</span></div>
+          <pre>${escHtml(el.content)}</pre>
+        </div>
+      </details>
+    `).join('');
+  } catch(e) {
+    c.innerHTML = `<span class="error">${e.message}</span>`;
+  }
+}
+
+// ---- Tables viewer --------------------------------------------------------
+async function loadTables() {
+  const c = document.getElementById('tablesContainer');
+  c.innerHTML = '<span class="loading">Loading...</span>';
+  let url = API + '/demo/corpus/tables';
+  if (currentCorpusId) url += `?corpus_id=${currentCorpusId}`;
+  try {
+    const r = await fetch(url);
+    if (!r.ok) throw new Error((await r.json()).detail || r.statusText);
+    const tables = await r.json();
+    if (!tables.length) { c.innerHTML = '<em>No tables found.</em>'; return; }
+    c.innerHTML = tables.map(t => `
+      <div class="card">
+        <div class="card-title">${t.table_id} ${t.caption||''} <span style="color:#888;font-size:11px">(${t.paragraph_ref||''})</span></div>
+        <table>
+          <thead><tr>${t.headers.map(h=>`<th>${escHtml(h)}</th>`).join('')}</tr></thead>
+          <tbody>${t.rows.map(row=>`<tr>${row.map(cell=>`<td>${escHtml(cell)}</td>`).join('')}</tr>`).join('')}</tbody>
+        </table>
+      </div>
+    `).join('');
+  } catch(e) {
+    c.innerHTML = `<span class="error">${e.message}</span>`;
+  }
+}
+
+// ---- Graph edge list ------------------------------------------------------
+async function loadGraph() {
+  const c = document.getElementById('graphContainer');
+  c.innerHTML = '<span class="loading">Loading...</span>';
+  let url = API + '/demo/corpus/graph?limit=100';
+  if (currentCorpusId) url += `&corpus_id=${currentCorpusId}`;
+  try {
+    const r = await fetch(url);
+    if (!r.ok) throw new Error((await r.json()).detail || r.statusText);
+    const data = await r.json();
+    let html = `<p>${data.num_nodes} nodes, ${data.num_edges} edges (showing first ${data.edges.length})</p>`;
+    html += '<table><thead><tr><th>Source</th><th>Target</th><th>Edge Type</th><th>Reference</th></tr></thead><tbody>';
+    html += data.edges.map(e =>
+      `<tr><td class="mono">${escHtml(e.source)}</td><td class="mono">${escHtml(e.target)}</td><td>${e.edge_type}</td><td>${escHtml(e.reference_text)}</td></tr>`
+    ).join('');
+    html += '</tbody></table>';
+    c.innerHTML = html;
+  } catch(e) {
+    c.innerHTML = `<span class="error">${e.message}</span>`;
+  }
+}
+
+// ---- Pinned data ----------------------------------------------------------
+let pinnedLoaded = false;
+async function loadPinnedData() {
+  if (pinnedLoaded) return;
+  pinnedLoaded = true;
+  loadMaterialsList();
+  loadJointEfficiencies();
+}
+
+async function loadMaterialsList() {
+  const c = document.getElementById('materialsListContainer');
+  try {
+    const r = await fetch(API + '/demo/pinned/materials');
+    const mats = await r.json();
+    let html = '<table><thead><tr><th>Material</th><th>Spec</th><th>Grade</th><th>Form</th><th>Composition</th><th>Tensile (MPa)</th><th>Yield (MPa)</th><th>Max T (\u00b0C)</th><th>Notes</th></tr></thead><tbody>';
+    html += mats.map(m =>
+      `<tr style="cursor:pointer" onclick="loadMaterialDetail('${m.key}')">
+        <td><strong>${m.key}</strong></td><td>${m.spec_no}</td><td>${m.grade||'—'}</td>
+        <td>${m.product_form}</td><td>${m.nominal_composition}</td>
+        <td>${m.min_tensile_mpa}</td><td>${m.min_yield_mpa}</td><td>${m.max_temp_c}</td>
+        <td>${m.notes.join('; ')||'—'}</td>
+      </tr>`
+    ).join('');
+    html += '</tbody></table>';
+    html += '<p style="color:#888;font-size:12px">Click a row to see stress-by-temperature detail.</p>';
+    c.innerHTML = html;
+  } catch(e) {
+    c.innerHTML = `<span class="error">${e.message}</span>`;
+  }
+}
+
+async function loadMaterialDetail(key) {
+  const dc = document.getElementById('materialDetailContainer');
+  const dd = document.getElementById('materialDetail');
+  const dt = document.getElementById('materialDetailTitle');
+  dc.style.display = 'block';
+  dt.textContent = key + ' \u2014 Allowable Stress by Temperature';
+  dd.innerHTML = '<span class="loading">Loading...</span>';
+  try {
+    const r = await fetch(API + `/demo/pinned/materials/${encodeURIComponent(key)}`);
+    const m = await r.json();
+    let html = `<div class="kv-row"><span class="kv-key">P-No / Group</span><span class="kv-val">${m.p_no} / ${m.group_no}</span></div>`;
+    html += '<table><thead><tr><th>Temperature (\u00b0C)</th><th>Allowable Stress S (MPa)</th></tr></thead><tbody>';
+    html += Object.entries(m.stress_by_temp_c).sort((a,b)=>Number(a[0])-Number(b[0]))
+      .map(([t,s]) => `<tr><td>${t}</td><td>${s}</td></tr>`).join('');
+    html += '</tbody></table>';
+    if (m.notes.length) html += `<p style="color:#888;font-size:12px">Notes: ${m.notes.join('; ')}</p>`;
+    dd.innerHTML = html;
+  } catch(e) {
+    dd.innerHTML = `<span class="error">${e.message}</span>`;
+  }
+}
+
+async function loadJointEfficiencies() {
+  const c = document.getElementById('jointEffContainer');
+  try {
+    const r = await fetch(API + '/demo/pinned/joint-efficiencies');
+    const data = await r.json();
+    let html = '<table><thead><tr><th>Joint Type</th>';
+    html += data.rt_levels.map(l => `<th>${l}</th>`).join('');
+    html += '</tr></thead><tbody>';
+    html += data.rows.map(row => {
+      let tr = `<tr><td><strong>Type ${row.type}</strong></td>`;
+      tr += data.rt_levels.map(l => `<td>${row.efficiencies[l]}</td>`).join('');
+      return tr + '</tr>';
+    }).join('');
+    html += '</tbody></table>';
+    c.innerHTML = html;
+  } catch(e) {
+    c.innerHTML = `<span class="error">${e.message}</span>`;
+  }
+}
+
+// ---- Query demo -----------------------------------------------------------
+async function refreshCorpusSelect() {
+  const sel = document.getElementById('corpusSelect');
+  try {
+    const r = await fetch(API + '/demo/corpora');
+    const corpora = await r.json();
+    sel.innerHTML = corpora.length
+      ? corpora.map(c => `<option value="${c.corpus_id}" ${c.corpus_id===currentCorpusId?'selected':''}>${c.filename}${c.is_spes1?' (SPES-1)':''} [${c.num_elements} elements]</option>`).join('')
+      : '<option value="">None loaded</option>';
+    if (corpora.length && !currentCorpusId) currentCorpusId = corpora[corpora.length-1].corpus_id;
+  } catch(e) { /* ignore */ }
+}
+
+async function loadQuerySuggestions() {
+  const c = document.getElementById('querySuggestions');
+  const framing = document.getElementById('queryFraming');
+  const cid = document.getElementById('corpusSelect').value;
+  if (cid) currentCorpusId = cid;
+  if (!currentCorpusId) {
+    c.innerHTML = '<p class="loading">Load a corpus first (Upload tab).</p>';
+    framing.style.display = 'none';
+    return;
+  }
+  try {
+    const r = await fetch(API + `/demo/corpus/suggestions?corpus_id=${currentCorpusId}`);
+    const suggestions = await r.json();
+
+    // Determine framing
+    const isSpes1 = suggestions.some(s => s.label === 'Pinned calculation demo');
+    if (isSpes1) {
+      framing.style.display = 'block';
+      framing.innerHTML = '<strong>SPES-1 corpus:</strong> Full calculation pipeline is supported. Queries use pinned tables and deterministic formulas.';
+    } else {
+      framing.style.display = 'block';
+      framing.innerHTML = '<strong>Uploaded PDF corpus:</strong> Retrieval and citation demos are functional. Deterministic calculation requires validated pinned tables and formula tools (not yet onboarded for this document).';
+    }
+
+    c.innerHTML = suggestions.map((s, i) => `
+      <button class="query-btn" onclick="runQuery('${escAttr(s.query)}', this)" ${!healthData||!healthData.real_backend_configured?'disabled':''}>
+        <div class="qlabel">${escHtml(s.label)}</div>
+        <div class="qtext">${escHtml(s.query)}</div>
+      </button>
+    `).join('');
+  } catch(e) {
+    c.innerHTML = `<span class="error">${e.message}</span>`;
+  }
+}
+
+async function runQuery(query, btnEl) {
+  if (btnEl) btnEl.disabled = true;
+  const rc = document.getElementById('queryResult');
+  const rcc = document.getElementById('queryResultContent');
+  rc.style.display = 'block';
+  rcc.innerHTML = '<span class="loading">Running query against real pipeline...</span>';
+  try {
+    const r = await fetch(API + '/demo/query', {
+      method: 'POST',
+      headers: {'Content-Type': 'application/json'},
+      body: JSON.stringify({query, top_k: 10, corpus_id: currentCorpusId})
+    });
+    if (!r.ok) {
+      const err = await r.json();
+      throw new Error(err.detail || r.statusText);
+    }
+    const data = await r.json();
+    rcc.innerHTML = renderQueryResult(data);
+  } catch(e) {
+    rcc.innerHTML = `<div class="error">${escHtml(e.message)}</div>`;
+  }
+  if (btnEl) btnEl.disabled = false;
+}
+
+function runCustomQuery() {
+  const q = document.getElementById('customQuery').value.trim();
+  if (!q) return;
+  runQuery(q, document.getElementById('btnRunQuery'));
+}
+
+function renderQueryResult(d) {
+  const confClass = d.confidence === 'high' ? 'badge-high' : d.confidence === 'medium' ? 'badge-medium' : 'badge-insufficient';
+  let html = `
+    <div class="kv-row"><span class="kv-key">Confidence</span><span class="kv-val"><span class="badge ${confClass}">${d.confidence}</span></span></div>
+    <div class="kv-row"><span class="kv-key">Latency</span><span class="kv-val">${d.latency_ms} ms</span></div>
+    <div class="kv-row"><span class="kv-key">Backend / Model</span><span class="kv-val">${d.backend} / ${d.model}</span></div>
+    <div class="kv-row"><span class="kv-key">Embedder</span><span class="kv-val">${d.embedder}</span></div>
+  `;
+  if (d.refusal_reason) {
+    html += `<div class="kv-row"><span class="kv-key">Refusal reason</span><span class="kv-val error">${escHtml(d.refusal_reason)}</span></div>`;
+  }
+  html += `<div style="margin:10px 0;padding:10px;border:1px solid #ccc;background:#fafafa"><strong>Answer:</strong><br>${escHtml(d.answer)}</div>`;
+
+  // Citation validation
+  const cv = d.citation_validation;
+  html += `<div class="kv-row"><span class="kv-key">Citations</span><span class="kv-val">${cv.valid}/${cv.total} valid (${(cv.accuracy*100).toFixed(0)}%)</span></div>`;
+
+  // Retrieved elements
+  if (d.retrieved_element_ids.length) {
+    html += `<details><summary>Retrieved Elements (${d.retrieved_element_ids.length})</summary><div class="detail-body"><ul>`;
+    html += d.retrieved_element_ids.map(id => `<li class="mono">${escHtml(id)}</li>`).join('');
+    html += '</ul></div></details>';
+  }
+
+  // Citations
+  if (d.citations.length) {
+    html += '<details><summary>Citations (' + d.citations.length + ')</summary><div class="detail-body">';
+    html += d.citations.map((c, i) => `
+      <div class="card">
+        <div class="card-title">Citation ${i+1}: ${escHtml(c.paragraph_ref)} (p.${c.page_number})</div>
+        <div class="kv-row"><span class="kv-key">Element ID</span><span class="kv-val mono">${escHtml(c.source_element_id)}</span></div>
+        <pre>${escHtml(c.quoted_text)}</pre>
+      </div>
+    `).join('');
+    html += '</div></details>';
+  }
+
+  // Calculation steps
+  if (d.calculation_steps.length) {
+    html += '<details open><summary>Calculation Steps (' + d.calculation_steps.length + ')</summary><div class="detail-body">';
+    html += d.calculation_steps.map(s => `
+      <div class="card">
+        <div class="card-title">Step ${s.step_number}: ${escHtml(s.description)}</div>
+        <div class="kv-row"><span class="kv-key">Formula</span><span class="kv-val mono">${escHtml(s.formula)}</span></div>
+        <div class="kv-row"><span class="kv-key">Result</span><span class="kv-val"><strong>${s.result} ${s.unit}</strong></span></div>
+        <div class="kv-row"><span class="kv-key">Inputs</span><span class="kv-val">
+          ${Object.entries(s.inputs).map(([k,v]) => `${v.symbol}=${v.value} ${v.unit} [${v.source}]`).join(', ')}
+        </span></div>
+      </div>
+    `).join('');
+    html += '</div></details>';
+  }
+
+  // Validation issues
+  if (cv.issues && cv.issues.length) {
+    html += '<details><summary>Validation Issues (' + cv.issues.length + ')</summary><div class="detail-body">';
+    html += cv.issues.map(iss => `<div class="kv-row"><span class="kv-key">Citation #${iss.index}</span><span class="kv-val error">${escHtml(iss.issue)}</span></div>`).join('');
+    html += '</div></details>';
+  }
+
+  return html;
+}
+
+// ---- Utilities ------------------------------------------------------------
+function escHtml(s) {
+  if (s == null) return '';
+  const d = document.createElement('div');
+  d.textContent = String(s);
+  return d.innerHTML;
+}
+function escAttr(s) {
+  return String(s).replace(/\\/g, "\\\\").replace(/'/g, "\\'").replace(/\r?\n/g, ' ');
+}
+
+// ---- Init -----------------------------------------------------------------
+checkHealth();
+</script>
+</body>
+</html>

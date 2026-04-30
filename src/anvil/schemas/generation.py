@@ -126,7 +126,10 @@ class LLMAnvilResponse(BaseModel):
         if self.confidence == ResponseConfidence.INSUFFICIENT and not self.refusal_reason:
             raise ValueError("Must provide refusal_reason when confidence is insufficient")
         if self.confidence != ResponseConfidence.INSUFFICIENT and self.refusal_reason:
-            raise ValueError("refusal_reason should only be set when confidence is insufficient")
+            # LLMs frequently include a refusal_reason alongside a valid
+            # answer. Auto-correct rather than crash — the answer and
+            # citations are still usable.
+            self.refusal_reason = None
         if self.confidence != ResponseConfidence.INSUFFICIENT and not self.citations:
             raise ValueError("Non-refusal responses must have at least one citation")
         return self

@@ -118,6 +118,19 @@ def test_retrieval_material_query_finds_m1(pipeline) -> None:
     assert any("M-1" in p for p in refs) or any("M-1" in t for t in titles), (refs, titles)
 
 
+def test_retrieval_promotes_explicit_table_reference(pipeline) -> None:
+    q = RetrievalQuery(
+        text="What information is contained in Table M-1?",
+        top_k=10,
+        enable_graph_expansion=True,
+    )
+    results = pipeline.retriever.retrieve(q)
+
+    assert results
+    assert results[0].paragraph_ref == "M-1"
+    assert results[0].retrieval_source == "exact_ref"
+
+
 def test_retrieval_ood_query_low_scores(pipeline) -> None:
     q = RetrievalQuery(text="weather in San Jose today", top_k=10)
     results = pipeline.retriever.retrieve(q)

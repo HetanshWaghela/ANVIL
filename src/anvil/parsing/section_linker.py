@@ -6,22 +6,25 @@ import re
 
 from anvil.schemas.document import CrossReference, DocumentElement
 
-# Patterns tuned for SPES-1 synthetic references:
-#   A-23, A-27, A-27(c)(1), B-12, M-23(a), Table M-1, Table B-12
+_CODE_REF_PATTERN = (
+    r"(?:[A-Z]{1,5}-\d+(?:\.\d+)?(?:-\d+)?(?:\([a-z0-9]+\))?"
+    r"|[0-9]{1,2}-[0-9]+(?:\.\d+)?(?:\([a-z]\))?)"
+)
+
+# Patterns tuned for SPES-1 and real ASME-style references:
+#   A-27, B-12, M-1, UG-27, UW-12, UCS-23, Table UG-43, Table 13-13(c)
 XREF_PATTERN = re.compile(
     r"(?:see|per|as\s+specified\s+in|in\s+accordance\s+with|refer\s+to|from|"
     r"obtained\s+from|consult|shall\s+be\s+(?:obtained|taken)\s+from)\s+"
-    r"(Table\s+[A-Z]-\d+[A-Za-z]?|[A-Z]-\d+(?:\([a-z]\)(?:\(\d+\))?)?)",
+    rf"(Table\s+{_CODE_REF_PATTERN}|{_CODE_REF_PATTERN})",
     re.IGNORECASE,
 )
 
 # Standalone reference to a Table X-N anywhere in text
-TABLE_REF_PATTERN = re.compile(r"Table\s+([A-Z]-\d+[A-Za-z]?)", re.IGNORECASE)
+TABLE_REF_PATTERN = re.compile(rf"Table\s+({_CODE_REF_PATTERN})", re.IGNORECASE)
 
-# Paragraph-like references without leading verbs: A-23, A-27(c)(1), B-12
-PARA_REF_PATTERN = re.compile(
-    r"\b([A-Z]-\d+(?:\([a-z]\)(?:\(\d+\))?)?)\b"
-)
+# Paragraph-like references without leading verbs.
+PARA_REF_PATTERN = re.compile(rf"\b({_CODE_REF_PATTERN})\b", re.IGNORECASE)
 
 # Material specifications: SM-516 Gr 70, SM-240 Type 304
 MATERIAL_SPEC_PATTERN = re.compile(

@@ -75,6 +75,8 @@ def test_xref_pattern_matches_see_pattern() -> None:
 
 def test_table_ref_pattern() -> None:
     assert TABLE_REF_PATTERN.search("see Table B-12") is not None
+    assert TABLE_REF_PATTERN.search("see Table UW-12") is not None
+    assert TABLE_REF_PATTERN.search("see Table 13-13(c)") is not None
     assert TABLE_REF_PATTERN.search("no table here") is None
 
 
@@ -93,6 +95,19 @@ def test_detect_cross_references_with_index() -> None:
     target_ids = {r.target_id for r in refs}
     assert "sec-a-27" in target_ids
     assert "tbl-m-1" in target_ids
+
+
+def test_detect_cross_references_with_real_asme_refs() -> None:
+    idx = {"UG-27": "sec-ug-27", "TABLE UW-12": "tbl-uw-12"}
+    refs = detect_cross_references(
+        "sec-caller",
+        "Thickness is designed per UG-27 and joint efficiency is obtained from Table UW-12.",
+        idx,
+    )
+    target_ids = {r.target_id for r in refs}
+
+    assert "sec-ug-27" in target_ids
+    assert "tbl-uw-12" in target_ids
 
 
 def test_extract_formulas_from_code_block() -> None:
@@ -156,3 +171,72 @@ t = (P × R) / (S × E − 0.6 × P)
 """
     elements = parse_markdown_standard(md)
     assert any(e.paragraph_ref == "A-27" for e in elements)
+
+
+def test_parse_real_asme_style_refs_and_table_ids() -> None:
+    md = """# ASME VIII
+
+## **UG-27 THICKNESS OF SHELLS UNDER INTERNAL PRESSURE**
+
+See Table UW-12 for joint efficiencies.
+
+## **Table UW-12 Maximum Allowable Joint Efficiencies for Welded Joints**
+
+| Joint Type | Full RT | Spot RT |
+|---|---|---|
+| Type No. 1 butt joint | 1.00 | 0.85 |
+| Type No. 2 butt joint | 0.90 | 0.80 |
+
+## ð **23** Þ **UG-99 STANDARD HYDROSTATIC TEST**
+
+Test paragraph.
+"""
+    elements = parse_markdown_standard(md)
+    refs = {e.paragraph_ref for e in elements if e.paragraph_ref}
+
+    assert "UG-27" in refs
+    assert "UG-99" in refs
+
+    table = next(e.table for e in elements if e.table and e.table.table_id == "UW-12")
+    assert table is not None
+    assert table.caption == "Maximum Allowable Joint Efficiencies for Welded Joints"
+    assert table.source_paragraph == "UW-12"
+    table_el = next(e for e in elements if e.table and e.table.table_id == "UW-12")
+    assert table_el.paragraph_ref == "UW-12"
+
+
+def test_duplicate_headings_get_stable_unique_ids() -> None:
+    md = """# Title
+
+## Appendix
+
+### Notes
+
+First note.
+
+### Notes
+
+Second note.
+
+### A-27 Thickness
+
+```
+t = (P × R) / (S × E − 0.6 × P)
+```
+
+### A-27 Thickness
+
+```
+t = (P × R) / (S × E − 0.6 × P)
+```
+"""
+    elements = parse_markdown_standard(md)
+    ids = [e.element_id for e in elements]
+
+    assert len(ids) == len(set(ids))
+    assert "sec-notes" in ids
+    assert "sec-notes-2" in ids
+    assert "sec-a-27" in ids
+    assert "sec-a-27-2" in ids
+    assert "fml-a-27-f0" in ids
+    assert "fml-a-27-f0-2" in ids

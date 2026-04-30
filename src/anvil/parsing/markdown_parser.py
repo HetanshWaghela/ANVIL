@@ -28,24 +28,43 @@ from anvil.schemas.document import DocumentElement, ElementType
 
 # Matches headings like "### A-27 Thickness of Shells" or "### B-12 Joint Efficiency"
 _HEADING_RE = re.compile(r"^(#{2,4})\s+(.+?)\s*$", re.MULTILINE)
-_PARA_REF_IN_HEADING = re.compile(r"^([A-Z]-\d+|M-\d+)\b", re.IGNORECASE)
+_CODE_REF_PATTERN = (
+    r"(?:[A-Z]{1,5}-\d+(?:\.\d+)?(?:-\d+)?(?:\([a-z0-9]+\))?"
+    r"|[0-9]{1,2}-[0-9]+(?:\.\d+)?(?:\([a-z]\))?)"
+)
+_PARA_REF_IN_HEADING = re.compile(rf"\b({_CODE_REF_PATTERN})\b", re.IGNORECASE)
+_TABLE_ID_RE = re.compile(rf"\bTable\s+({_CODE_REF_PATTERN})\b", re.IGNORECASE)
 _CODE_FENCE_RE = re.compile(r"```.*?```", re.DOTALL)
 _TABLE_BLOCK_RE = re.compile(r"(?:^\s*\|.*\|\s*$\n?)+", re.MULTILINE)
 
 
 def _slugify(text: str) -> str:
     s = text.strip().lower()
-    s = re.sub(r"[^a-z0-9]+", "-", s)
+    s = re.sub(r"[^a-z0-9.]+", "-", s)
     return s.strip("-")
+
+
+def _unique_id(base: str, seen: dict[str, int]) -> str:
+    """Return a stable unique id, preserving the first occurrence unchanged."""
+    count = seen.get(base, 0)
+    seen[base] = count + 1
+    if count == 0:
+        return base
+    return f"{base}-{count + 1}"
 
 
 def _strip_md_formatting(text: str) -> str:
     """Strip markdown bold/italic markers (**, *, __) from text."""
     s = text.strip()
+    s = s.replace("<br>", " ")
+    s = s.replace("<br/>", " ")
     # Strip bold (**text**) and italic (*text*) markers
     s = re.sub(r"\*{1,2}([^*]+)\*{1,2}", r"\1", s)
     # Strip underscore-style bold/italic (__text__, _text_)
     s = re.sub(r"_{1,2}([^_]+)_{1,2}", r"\1", s)
+    # Drop common extraction artifacts while preserving ASME paragraph refs.
+    s = re.sub(r"[^\w().\-\s]", " ", s)
+    s = re.sub(r"\s+", " ", s)
     return s.strip()
 
 
@@ -53,7 +72,11 @@ def _extract_paragraph_ref(heading_text: str) -> str | None:
     # Strip bold/italic markers so pymupdf4llm headings like
     # "**A-27 Thickness...**" match the paragraph-ref regex.
     cleaned = _strip_md_formatting(heading_text)
+    if cleaned.lower().startswith("table "):
+        return None
     m = _PARA_REF_IN_HEADING.match(cleaned)
+    if m is None:
+        m = _PARA_REF_IN_HEADING.search(cleaned)
     return m.group(1).upper() if m else None
 
 
@@ -74,6 +97,7 @@ def parse_markdown_standard(source: str | Path) -> list[DocumentElement]:
 
     elements: list[DocumentElement] = []
     parent_stack: list[tuple[int, str]] = []  # (heading_level, element_id)
+    seen_ids: dict[str, int] = {}
 
     # Find all heading spans; for each, the "content" runs until the next heading.
     headings = list(_HEADING_RE.finditer(text))
@@ -91,7 +115,7 @@ def parse_markdown_standard(source: str | Path) -> list[DocumentElement]:
         body = text[m.end() : end].strip("\n")
 
         para_ref = _extract_paragraph_ref(title_full)
-        element_id = f"sec-{_slugify(para_ref or title_full)}"
+        element_id = _unique_id(f"sec-{_slugify(para_ref or title_full)}", seen_ids)
 
         # Maintain parent stack
         while parent_stack and parent_stack[-1][0] >= level:
@@ -115,20 +139,22 @@ def parse_markdown_standard(source: str | Path) -> list[DocumentElement]:
         for t_idx, tm in enumerate(_TABLE_BLOCK_RE.finditer(body)):
             table_block = tm.group(0)
             table_id = _detect_table_id(title_full, body, para_ref, t_idx)
+            table_ref = para_ref or (None if table_id.startswith("TBL-") else table_id)
             table = extract_markdown_table(
                 table_id=table_id,
-                source_paragraph=para_ref or element_id,
+                source_paragraph=table_ref or element_id,
                 source_page=page,
                 md_block=table_block,
+                caption=_detect_table_caption(title_full, table_id),
             )
             if table is None:
                 continue
-            el_id = f"tbl-{_slugify(table_id)}"
+            el_id = _unique_id(f"tbl-{_slugify(table_id)}", seen_ids)
             elements.append(
                 DocumentElement(
                     element_id=el_id,
                     element_type=ElementType.TABLE,
-                    paragraph_ref=para_ref,
+                    paragraph_ref=table_ref,
                     title=f"Table {table_id}",
                     content=table_block.strip(),
                     page_number=page,
@@ -141,9 +167,10 @@ def parse_markdown_standard(source: str | Path) -> list[DocumentElement]:
         if para_ref:
             formulas = extract_formulas(para_ref, body)
             for f in formulas:
+                formula_id = _unique_id(f"fml-{_slugify(f.formula_id)}", seen_ids)
                 elements.append(
                     DocumentElement(
-                        element_id=f"fml-{_slugify(f.formula_id)}",
+                        element_id=formula_id,
                         element_type=ElementType.FORMULA,
                         paragraph_ref=para_ref,
                         title=f.formula_id,
@@ -161,14 +188,38 @@ def _detect_table_id(
     heading: str, body: str, para_ref: str | None, index: int
 ) -> str:
     """Derive a canonical table id like 'M-1' or 'B-12' from surrounding text."""
-    # Look for "Table X-N" in heading first, then body
-    m = re.search(r"Table\s+([A-Z]-\d+[A-Za-z]?)", heading, re.IGNORECASE)
-    if not m:
-        m = re.search(r"Table\s+([A-Z]-\d+[A-Za-z]?)", body, re.IGNORECASE)
+    # Trust explicit table headings. Avoid scanning the whole body for
+    # "Table X" because normal paragraphs often cite other tables; using those
+    # citations as the current table id creates false labels.
+    m = _TABLE_ID_RE.search(_strip_md_formatting(heading))
     if m:
         return m.group(1).upper()
-    # Fall back to paragraph ref + index
-    return f"{para_ref or 'TBL'}-{index}"
+    # In SPES-1, a section like "B-12 Joint Efficiency" contains the table
+    # itself without a separate "Table B-12" heading.
+    if para_ref is not None:
+        return para_ref if index == 0 else f"{para_ref}-{index}"
+    return f"TBL-{index}"
+
+
+def _detect_table_caption(heading: str, table_id: str) -> str | None:
+    """Return text after headings like `Table UW-12 Joint Efficiencies`."""
+    cleaned = _strip_md_formatting(heading)
+    patterns = [
+        rf"\bTable\s+{re.escape(table_id)}\b\s*(.*)$",
+        rf"\b{re.escape(table_id)}\b\s*(.*)$",
+    ]
+    caption = ""
+    for pattern in patterns:
+        m = re.search(pattern, cleaned, flags=re.IGNORECASE)
+        if m is not None:
+            caption = m.group(1).strip(" -:;")
+            break
+    if not caption:
+        return None
+    caption = re.sub(r"\bCont(?:inued)?'?d\b\.?", "", caption, flags=re.IGNORECASE)
+    caption = re.sub(r"\(\s*\)", "", caption)
+    caption = re.sub(r"\s+", " ", caption).strip(" -:;")
+    return caption or None
 
 
 def _load_text(source: str | Path) -> str:

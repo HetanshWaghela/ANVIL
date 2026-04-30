@@ -132,6 +132,9 @@ def should_refuse(
     query: str,
     retrieved_chunks: list[RetrievedChunk],
     relevance_threshold: float = RELEVANCE_THRESHOLD,
+    *,
+    check_material_specs: bool = True,
+    check_calculation_inputs: bool = True,
 ) -> RefusalDecision:
     """Determine if the system should refuse the query.
 
@@ -150,6 +153,15 @@ def should_refuse(
     LLM is invoked. Rule (5) is the compliance-grade requirement: refuse
     to produce a numeric answer if we can't cite every piece of the
     calculation chain.
+
+    Args:
+        check_material_specs: if False, skip rules 2–4 (SPES-1 material
+            checks). Set False for non-SPES-1 corpora where real ASME
+            SA- specs should not trigger refusal.
+        check_calculation_inputs: if False, skip rule 5 (calculation
+            input completeness). Set False for non-SPES-1 corpora where
+            formula-discussion queries should not be treated as calc
+            requests.
     """
     # 1) Relevance threshold
     max_relevance = max((c.score for c in retrieved_chunks), default=0.0)
@@ -165,59 +177,61 @@ def should_refuse(
 
     # 2a) Material mention that is NOT a SM- spec (e.g., "Titanium Grade 5",
     # "SA-516 Gr 70", "Inconel 625") — SPES-1 only covers SM- specs in M-1.
-    sm_mat = _mentions_material(query)
-    unsupported_match = _UNSUPPORTED_MATERIAL_PATTERN.search(query)
-    generic_match = _GENERIC_MATERIAL_PATTERN.search(query)
-    if sm_mat is None and unsupported_match is not None:
-        material_text = unsupported_match.group(0)
-        return RefusalDecision(
-            should_refuse=True,
-            reason=(
-                f"Material '{material_text}' is not an SM- "
-                "specification covered by SPES-1 Table M-1. Please verify "
-                "the specification or consult the supplementary material tables."
-            ),
-        )
-    if sm_mat is None and generic_match is not None:
-        material_text = generic_match.group(0)
-        return RefusalDecision(
-            should_refuse=True,
-            reason=(
-                f"Material '{material_text}' is not an SM- "
-                "specification covered by SPES-1 Table M-1. Please verify "
-                "the specification or consult the supplementary material tables."
-            ),
-        )
-
-    # 2b) Unknown material (only check if explicitly mentioned)
-    mat_text = sm_mat
-    if mat_text is not None:
-        # Normalize 'SM-516 Grade 70' → 'SM-516 Gr 70'
-        norm = re.sub(r"Grade", "Gr", mat_text, flags=re.IGNORECASE)
-        norm = re.sub(r"\s+", " ", norm).strip()
-        mat = get_material(norm)
-        if mat is None:
+    # Skipped for non-SPES-1 corpora where real ASME SA- specs are valid.
+    sm_mat = _mentions_material(query) if check_material_specs else None
+    if check_material_specs:
+        unsupported_match = _UNSUPPORTED_MATERIAL_PATTERN.search(query)
+        generic_match = _GENERIC_MATERIAL_PATTERN.search(query)
+        if sm_mat is None and unsupported_match is not None:
+            material_text = unsupported_match.group(0)
             return RefusalDecision(
                 should_refuse=True,
                 reason=(
-                    f"Material '{mat_text}' is not in the SPES-1 pinned "
-                    "materials table. Please verify the specification or "
-                    "add the material to Table M-1."
+                    f"Material '{material_text}' is not an SM- "
+                    "specification covered by SPES-1 Table M-1. Please verify "
+                    "the specification or consult the supplementary material tables."
                 ),
             )
-        # 3) Out-of-range temperature for this material
-        temp = _extract_design_temp(query)
-        if temp is not None and temp > mat.max_temp_c:
+        if sm_mat is None and generic_match is not None:
+            material_text = generic_match.group(0)
             return RefusalDecision(
                 should_refuse=True,
                 reason=(
-                    f"Design temperature {temp}°C exceeds the maximum "
-                    f"tabulated temperature for {norm} "
-                    f"({mat.max_temp_c}°C per M-23)."
+                    f"Material '{material_text}' is not an SM- "
+                    "specification covered by SPES-1 Table M-1. Please verify "
+                    "the specification or consult the supplementary material tables."
                 ),
             )
 
-    if is_calculation_query(query):
+        # 2b) Unknown material (only check if explicitly mentioned)
+        mat_text = sm_mat
+        if mat_text is not None:
+            # Normalize 'SM-516 Grade 70' → 'SM-516 Gr 70'
+            norm = re.sub(r"Grade", "Gr", mat_text, flags=re.IGNORECASE)
+            norm = re.sub(r"\s+", " ", norm).strip()
+            mat = get_material(norm)
+            if mat is None:
+                return RefusalDecision(
+                    should_refuse=True,
+                    reason=(
+                        f"Material '{mat_text}' is not in the SPES-1 pinned "
+                        "materials table. Please verify the specification or "
+                        "add the material to Table M-1."
+                    ),
+                )
+            # 3) Out-of-range temperature for this material
+            temp = _extract_design_temp(query)
+            if temp is not None and temp > mat.max_temp_c:
+                return RefusalDecision(
+                    should_refuse=True,
+                    reason=(
+                        f"Design temperature {temp}°C exceeds the maximum "
+                        f"tabulated temperature for {norm} "
+                        f"({mat.max_temp_c}°C per M-23)."
+                    ),
+                )
+
+    if check_calculation_inputs and is_calculation_query(query):
         missing_inputs: list[str] = []
         if not _PRESSURE_PARAM.search(query):
             missing_inputs.append("design pressure")

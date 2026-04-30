@@ -99,7 +99,12 @@ class AnvilGenerator:
         # 2) Refusal gate (skipped under the no-refusal ablation —
         #    measures the false-confident rate on OOD queries).
         decision = (
-            should_refuse(query, chunks)
+            should_refuse(
+                query,
+                chunks,
+                check_material_specs=self.use_pinned_data,
+                check_calculation_inputs=self.use_pinned_data,
+            )
             if self.use_refusal_gate and calculation_inputs is None
             else _NO_REFUSAL_DECISION
         )

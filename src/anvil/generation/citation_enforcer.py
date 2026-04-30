@@ -100,6 +100,15 @@ def validate_citations(
             trusting `quoted_text` here is not acceptable.
     """
     chunks_by_id: dict[str, RetrievedChunk] = {c.element_id: c for c in retrieved_chunks}
+    # Also index retrieved chunks by paragraph_ref for fallback resolution.
+    # LLMs often emit the paragraph ref (e.g. "UG-32") as source_element_id
+    # instead of the internal element id ("sec-ug-32").
+    chunks_by_para_ref: dict[str, RetrievedChunk] = {}
+    for c in retrieved_chunks:
+        if c.paragraph_ref:
+            key = c.paragraph_ref.upper()
+            if key not in chunks_by_para_ref:
+                chunks_by_para_ref[key] = c
     issues: list[CitationIssue] = []
 
     all_citations: list[Citation] = list(response.citations)
@@ -116,6 +125,19 @@ def validate_citations(
     valid = 0
     for i, cit in enumerate(all_citations):
         source = chunks_by_id.get(cit.source_element_id)
+        # Fallback: LLM often uses paragraph ref as source_element_id
+        if source is None and cit.source_element_id:
+            source = chunks_by_para_ref.get(cit.source_element_id.upper())
+        # Fallback: try citation's paragraph_ref against retrieved chunks
+        if source is None and cit.paragraph_ref:
+            pr_key = cit.paragraph_ref.upper().strip()
+            if pr_key.startswith("TABLE "):
+                pr_key = pr_key[len("TABLE "):].strip()
+            source = chunks_by_para_ref.get(pr_key)
+            # Also try stripping sub-paragraph markers: UG-32(A) -> UG-32
+            if source is None:
+                stripped = _SUBPARA_STRIP.sub("", pr_key).strip()
+                source = chunks_by_para_ref.get(stripped)
         if source is None:
             # Pinned-data citation: the cited element exists in the parsed
             # standard but wasn't in the top-K retrieval. We accept it ONLY
@@ -260,13 +282,21 @@ def _resolve_canonical_ref(
     return None
 
 
+# Matches both SPES-1 refs (A-27, B-12, M-1) and real ASME refs
+# (UG-27, UW-12, UCS-23, UHT-18.2, Table UG-43, 13-13(c)).
 _CANONICAL_REF = re.compile(
-    r"^(?:Table\s+)?[A-M]-\d+(?:\([a-z]\)(?:\(\d+\))?)?$",
+    r"^(?:Table\s+)?(?:[A-Z]{1,5}-\d+(?:\.\d+)?(?:-\d+)?|\d{1,2}-\d+(?:\.\d+)?)"
+    r"(?:\([a-z0-9]+\)(?:\(\d+\))?)?$",
     re.IGNORECASE,
 )
 
 
 def _looks_like_spes1_ref(ref: str) -> bool:
+    """Return True if ref looks like a valid code paragraph reference.
+
+    Despite the name (kept for backward compatibility), this now recognizes
+    both SPES-1 style (A-27) and real ASME style (UG-27, UW-12, UCS-23).
+    """
     return bool(_CANONICAL_REF.match(ref.strip()))
 
 
