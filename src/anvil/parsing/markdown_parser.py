@@ -223,8 +223,16 @@ def _detect_table_caption(heading: str, table_id: str) -> str | None:
 
 
 def _load_text(source: str | Path) -> str:
-    if isinstance(source, Path) or (isinstance(source, str) and Path(source).exists()):
+    if isinstance(source, Path):
         return Path(source).read_text(encoding="utf-8")
     if isinstance(source, str):
+        if "\n" in source or source.lstrip().startswith("#"):
+            return source
+        try:
+            path = Path(source)
+            if path.exists():
+                return path.read_text(encoding="utf-8")
+        except OSError:
+            return source
         return source
     raise TypeError(f"Unsupported source type: {type(source)}")
