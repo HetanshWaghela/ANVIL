@@ -22,7 +22,7 @@ import uuid
 from collections import Counter
 from dataclasses import dataclass
 from pathlib import Path
-from typing import Any
+from typing import Any, cast
 
 from fastapi import APIRouter, HTTPException, UploadFile
 from pydantic import BaseModel, Field
@@ -218,6 +218,21 @@ def _sha256_bytes(content: bytes) -> str:
     return hashlib.sha256(content).hexdigest()
 
 
+def _read_pdf_page_count(pdf_path: Path) -> int | None:
+    """Return PDF page count when PyMuPDF is available."""
+    try:
+        import pymupdf
+
+        pymupdf_module = cast(Any, pymupdf)
+        doc = pymupdf_module.open(str(pdf_path))
+        try:
+            return int(len(doc))
+        finally:
+            doc.close()
+    except Exception:
+        return None
+
+
 def _load_preindexed_session(
     preindexed: PreindexedCorpus,
     filename: str,
@@ -309,7 +324,7 @@ def _load_pinned_formula_elements() -> list[DocumentElement]:
                 paragraph_ref=ref.split("-alt")[0],  # strip alt suffix
                 title=f"[Pinned] {f['title']}",
                 parent_id=None,
-                cross_refs=[],
+                cross_references=[],
             )
         )
     return elements
@@ -681,14 +696,7 @@ def build_demo_router() -> APIRouter:
         pdf_path = _UPLOADS_DIR / safe_name
         pdf_path.write_bytes(content)
 
-        page_count: int | None = None
-        try:
-            import pymupdf
-            doc = pymupdf.open(str(pdf_path))
-            page_count = len(doc)
-            doc.close()
-        except Exception:
-            pass
+        page_count = _read_pdf_page_count(pdf_path)
 
         embedder = get_default_embedder()
         backend = _get_demo_backend()

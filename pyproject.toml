@@ -90,6 +90,5 @@ module = [
     "instructor.*",
     "sentence_transformers.*",
     "networkx.*",
-    "pdfplumber.*",
 ]
 ignore_missing_imports = true
